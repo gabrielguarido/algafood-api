@@ -5,6 +5,7 @@ import com.algaworks.algafood.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,5 +21,10 @@ public class CategoryController {
     @GetMapping
     public List<Category> findAll() {
         return categoryRepository.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public Category findById(@PathVariable Long id) {
+        return categoryRepository.findById(id).orElse(null);
     }
 }
