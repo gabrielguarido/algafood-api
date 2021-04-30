@@ -1,4 +1,4 @@
-package com.algaworks.algafood.model;
+package com.algaworks.algafood.domain.model;
 
 import lombok.Data;
 
@@ -10,12 +10,12 @@ import javax.persistence.Id;
 
 @Data
 @Entity
-public class Permission {
+public class State {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String role;
+    private String name;
 }
