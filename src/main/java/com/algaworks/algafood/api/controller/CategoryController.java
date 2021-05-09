@@ -1,10 +1,12 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.domain.exception.ResourceInUseException;
+import com.algaworks.algafood.domain.exception.ResourceNotFoundException;
 import com.algaworks.algafood.domain.model.Category;
 import com.algaworks.algafood.domain.repository.CategoryRepository;
+import com.algaworks.algafood.domain.service.CategoryService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,28 +29,27 @@ public class CategoryController {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @GetMapping
-    public ResponseEntity<List<Category>> findAll() {
-        List<Category> categories = categoryRepository.findAll();
+    @Autowired
+    private CategoryService categoryService;
 
-        return ResponseEntity.ok(categories);
+    @GetMapping
+    public ResponseEntity<List<Category>> list() {
+        return ResponseEntity.ok(categoryService.list());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> findById(@PathVariable Long id) {
-        Category category = categoryRepository.findById(id).orElse(null);
-
-        if (category != null) {
-            return ResponseEntity.ok(category);
+    public ResponseEntity<Category> find(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(categoryService.find(id));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.notFound().build();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Category create(@RequestBody Category category) {
-        return categoryRepository.save(category);
+        return categoryService.create(category);
     }
 
     @PutMapping("/{id}")
@@ -67,18 +68,14 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Category> remove(@PathVariable Long id) {
+    public ResponseEntity<Category> delete(@PathVariable Long id) {
         try {
-            Category existingCategory = categoryRepository.findById(id).orElse(null);
+            categoryService.delete(id);
 
-            if (existingCategory != null) {
-                categoryRepository.delete(existingCategory);
-
-                return ResponseEntity.noContent().build();
-            }
-
+            return ResponseEntity.noContent().build();
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
-        } catch (DataIntegrityViolationException e) {
+        } catch (ResourceInUseException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
