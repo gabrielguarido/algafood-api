@@ -54,17 +54,17 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Category> update(@PathVariable Long id, @RequestBody Category category) {
-        Category existingCategory = categoryRepository.findById(id).orElse(null);
+        try {
+            Category existingCategory = categoryService.find(id);
 
-        if (existingCategory != null) {
             BeanUtils.copyProperties(category, existingCategory, "id");
 
-            categoryRepository.save(existingCategory);
+            categoryService.create(existingCategory);
 
             return ResponseEntity.ok(existingCategory);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
