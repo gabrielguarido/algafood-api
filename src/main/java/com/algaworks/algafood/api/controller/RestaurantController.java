@@ -40,7 +40,11 @@ public class RestaurantController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Restaurant create(@RequestBody Restaurant restaurant) {
-        return restaurantService.create(restaurant);
+    public ResponseEntity<?> create(@RequestBody Restaurant restaurant) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.create(restaurant));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

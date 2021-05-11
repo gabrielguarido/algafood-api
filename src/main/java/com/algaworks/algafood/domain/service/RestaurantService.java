@@ -14,6 +14,9 @@ public class RestaurantService {
     @Autowired
     private RestaurantRepository restaurantRepository;
 
+    @Autowired
+    private CategoryService categoryService;
+
     public List<Restaurant> list() {
         return restaurantRepository.findAll();
     }
@@ -25,6 +28,8 @@ public class RestaurantService {
     }
 
     public Restaurant create(Restaurant restaurant) {
+        categoryService.find(restaurant.getCategory().getId());
+
         return restaurantRepository.save(restaurant);
     }
 }
