@@ -4,6 +4,7 @@ import com.algaworks.algafood.domain.exception.ResourceInUseException;
 import com.algaworks.algafood.domain.exception.ResourceNotFoundException;
 import com.algaworks.algafood.domain.model.Category;
 import com.algaworks.algafood.domain.repository.CategoryRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -26,8 +27,16 @@ public class CategoryService {
         ));
     }
 
-    public Category create(Category category) {
+    public Category save(Category category) {
         return categoryRepository.save(category);
+    }
+
+    public Category update(Long id, Category category) {
+        Category existingCategory = find(id);
+
+        BeanUtils.copyProperties(category, existingCategory, "id");
+
+        return save(existingCategory);
     }
 
     public void delete(Long id) {

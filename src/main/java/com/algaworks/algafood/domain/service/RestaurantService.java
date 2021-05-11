@@ -3,6 +3,7 @@ package com.algaworks.algafood.domain.service;
 import com.algaworks.algafood.domain.exception.ResourceNotFoundException;
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.repository.RestaurantRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +28,17 @@ public class RestaurantService {
         ));
     }
 
-    public Restaurant create(Restaurant restaurant) {
+    public Restaurant save(Restaurant restaurant) {
         categoryService.find(restaurant.getCategory().getId());
 
         return restaurantRepository.save(restaurant);
+    }
+
+    public Restaurant update(Long id, Restaurant restaurant) {
+        Restaurant existingRestaurant = find(id);
+
+        BeanUtils.copyProperties(restaurant, existingRestaurant, "id");
+
+        return save(existingRestaurant);
     }
 }

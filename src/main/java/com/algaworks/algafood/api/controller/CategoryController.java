@@ -34,32 +34,26 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> find(@PathVariable Long id) {
+    public ResponseEntity<?> find(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(categoryService.find(id));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Category create(@RequestBody Category category) {
-        return categoryService.create(category);
+        return categoryService.save(category);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> update(@PathVariable Long id, @RequestBody Category category) {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Category category) {
         try {
-            Category existingCategory = categoryService.find(id);
-
-            BeanUtils.copyProperties(category, existingCategory, "id");
-
-            categoryService.create(existingCategory);
-
-            return ResponseEntity.ok(existingCategory);
+            return ResponseEntity.ok(categoryService.update(id, category));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
