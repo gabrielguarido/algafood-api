@@ -1,10 +1,12 @@
 package com.algaworks.algafood.domain.service;
 
+import com.algaworks.algafood.domain.exception.ResourceInUseException;
 import com.algaworks.algafood.domain.exception.ResourceNotFoundException;
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.repository.RestaurantRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,5 +42,15 @@ public class RestaurantService {
         BeanUtils.copyProperties(restaurant, existingRestaurant, "id");
 
         return save(existingRestaurant);
+    }
+
+    public void delete(Long id) {
+        try {
+            restaurantRepository.delete(find(id));
+        } catch (DataIntegrityViolationException e) {
+            throw new ResourceInUseException(
+                    String.format("The restaurant %s is currently being used and cannot be removed", id)
+            );
+        }
     }
 }
