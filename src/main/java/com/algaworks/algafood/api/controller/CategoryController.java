@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,12 +34,31 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> find(@PathVariable Long id) {
+    public ResponseEntity<Category> find(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(categoryService.find(id));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/by-type")
+    public ResponseEntity<Category> findByType(@RequestParam String type) {
+        try {
+            return ResponseEntity.ok(categoryService.findByType(type));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> existsByType(@RequestParam String type) {
+        return ResponseEntity.ok(categoryService.existsByType(type));
+    }
+
+    @GetMapping("/first")
+    public ResponseEntity<Category> findFirst() {
+        return ResponseEntity.ok(categoryService.findFirst());
     }
 
     @PostMapping

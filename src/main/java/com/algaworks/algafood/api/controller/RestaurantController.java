@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +44,46 @@ public class RestaurantController {
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/by-shipping-tax")
+    public ResponseEntity<List<Restaurant>> listByShippingTax(BigDecimal initialShippingTax, BigDecimal finalShippingTax) {
+        return ResponseEntity.ok(restaurantService.listByShippingTax(initialShippingTax, finalShippingTax));
+    }
+
+    @GetMapping("/by-name")
+    public ResponseEntity<List<Restaurant>> listByName(String name) {
+        return ResponseEntity.ok(restaurantService.listByName(name));
+    }
+
+    @GetMapping("/first-by-name")
+    public ResponseEntity<Restaurant> findFirstByName(String name) {
+        return ResponseEntity.ok(restaurantService.findFirstByName(name));
+    }
+
+    @GetMapping("/top2-by-name")
+    public ResponseEntity<List<Restaurant>> findTop2ByName(String name) {
+        return ResponseEntity.ok(restaurantService.findTop2ByName(name));
+    }
+
+    @GetMapping("/custom")
+    public ResponseEntity<List<Restaurant>> customSearch(String name, BigDecimal initialShippingTax, BigDecimal finalShippingTax) {
+        return ResponseEntity.ok(restaurantService.customSearch(name, initialShippingTax, finalShippingTax));
+    }
+
+    @GetMapping("/count-by-category")
+    public ResponseEntity<Integer> countByCategory(@RequestParam Long categoryId) {
+        return ResponseEntity.ok(restaurantService.countByCategory(categoryId));
+    }
+
+    @GetMapping("/free-shipping")
+    public ResponseEntity<List<Restaurant>> findWithFreeShipping(String name) {
+        return ResponseEntity.ok(restaurantService.findWithFreeShipping(name));
+    }
+
+    @GetMapping("/first")
+    public ResponseEntity<Restaurant> findFirst() {
+        return ResponseEntity.ok(restaurantService.findFirst());
     }
 
     @PostMapping
