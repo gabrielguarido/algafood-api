@@ -12,5 +12,8 @@ This project has been designed to implement a food delivery app, using the best 
 - Docker
 - MySQL
 
+## :white_check_mark: Testing
+[This is the Postman Collection](https://www.getpostman.com/collections/e01b9cf7fd91bc8ef457) used to test this project's APIs, you can import it to your workspace and start testing as well.
+
 ## :clipboard: License
 This project is under MIT License, see the [LICENSE](LICENSE) file for more information.
