@@ -27,12 +27,26 @@ public class CategoryService {
         ));
     }
 
+    public Category findByType(String type) {
+        return categoryRepository.findByType(type).orElseThrow(() -> new ResourceNotFoundException(
+                String.format("Category %s not found", type)
+        ));
+    }
+
+    public boolean existsByType(String type) {
+        return categoryRepository.existsByType(type);
+    }
+
+    public Category findFirst() {
+        return categoryRepository.findFirst().orElse(null);
+    }
+
     public Category save(Category category) {
         return categoryRepository.save(category);
     }
 
     public Category update(Long id, Category category) {
-        Category existingCategory = find(id);
+        var existingCategory = find(id);
 
         BeanUtils.copyProperties(category, existingCategory, "id");
 
