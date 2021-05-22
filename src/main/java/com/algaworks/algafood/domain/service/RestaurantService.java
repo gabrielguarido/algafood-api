@@ -11,7 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +34,38 @@ public class RestaurantService {
         ));
     }
 
+    public List<Restaurant> listByShippingTax(BigDecimal initialShippingTax, BigDecimal finalShippingTax) {
+        return restaurantRepository.queryByShippingTaxBetween(initialShippingTax, finalShippingTax);
+    }
+
+    public List<Restaurant> listByName(String name) {
+        return restaurantRepository.findByName(name);
+    }
+
+    public Restaurant findFirstByName(String name) {
+        return restaurantRepository.findFirstByNameContaining(name).orElse(null);
+    }
+
+    public List<Restaurant> findTop2ByName(String name) {
+        return restaurantRepository.findTop2ByNameContaining(name);
+    }
+
+    public List<Restaurant> customSearch(String name, BigDecimal initialShippingTax, BigDecimal finalShippingTax) {
+        return restaurantRepository.find(name, initialShippingTax, finalShippingTax);
+    }
+
+    public Integer countByCategory(Long categoryId) {
+        return restaurantRepository.countByCategoryId(categoryId);
+    }
+
+    public List<Restaurant> findWithFreeShipping(String name) {
+        return restaurantRepository.findWithFreeShippingTax(name);
+    }
+
+    public Restaurant findFirst() {
+        return restaurantRepository.findFirst().orElse(null);
+    }
+
     public Restaurant save(Restaurant restaurant) {
         categoryService.find(restaurant.getCategory().getId());
 
@@ -41,7 +73,7 @@ public class RestaurantService {
     }
 
     public Restaurant update(Long id, Restaurant restaurant) {
-        Restaurant existingRestaurant = find(id);
+        var existingRestaurant = find(id);
 
         BeanUtils.copyProperties(restaurant, existingRestaurant, "id");
 
@@ -49,7 +81,7 @@ public class RestaurantService {
     }
 
     public Restaurant updatePartially(Long id, Map<String, Object> fields) {
-        Restaurant existingRestaurant = find(id);
+        var existingRestaurant = find(id);
 
         merge(fields, existingRestaurant);
 
@@ -67,11 +99,11 @@ public class RestaurantService {
     }
 
     private void merge(Map<String, Object> fields, Restaurant restaurant) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Restaurant convertedRestaurant = objectMapper.convertValue(fields, Restaurant.class);
+        var objectMapper = new ObjectMapper();
+        var convertedRestaurant = objectMapper.convertValue(fields, Restaurant.class);
 
         fields.forEach((key, value) -> {
-            Field field = ReflectionUtils.findField(Restaurant.class, key);
+            var field = ReflectionUtils.findField(Restaurant.class, key);
             field.setAccessible(true);
 
             Object newValue = ReflectionUtils.getField(field, convertedRestaurant);
