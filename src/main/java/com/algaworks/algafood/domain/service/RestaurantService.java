@@ -75,7 +75,7 @@ public class RestaurantService {
     public Restaurant update(Long id, Restaurant restaurant) {
         var existingRestaurant = find(id);
 
-        BeanUtils.copyProperties(restaurant, existingRestaurant, "id", "paymentMethods", "address", "created");
+        BeanUtils.copyProperties(restaurant, existingRestaurant, "id", "paymentMethods", "address", "created", "products");
 
         return save(existingRestaurant);
     }
