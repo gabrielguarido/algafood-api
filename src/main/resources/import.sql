@@ -24,3 +24,7 @@ INSERT INTO algafood.permission (permission.id, permission.role) VALUES (2, 'UPD
 
 -- POPULATE RESTAURANT_PAYMENT_METHOD TABLE
 INSERT INTO algafood.restaurant_payment_method (restaurant_id, payment_method_id) VALUES (1, 1), (1, 2), (2, 1), (2, 2);
+
+-- POPULATE PRODUCT TABLE
+INSERT INTO algafood.product (active, description, name, price, restaurant_id) VALUES (1, 'Delicious bacon double burger', 'Double Bacon', 33.50, 2);
+INSERT INTO algafood.product (active, description, name, price, restaurant_id) VALUES (1, 'Cheddar bacon burger', 'Ned Kelly', 40.00, 1);
