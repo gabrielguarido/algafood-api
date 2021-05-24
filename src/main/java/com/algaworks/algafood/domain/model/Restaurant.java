@@ -39,6 +39,7 @@ public class Restaurant {
     private Category category;
 
     @Embedded
+    @JsonIgnore
     private Address address;
 
     @JsonIgnore
