@@ -21,3 +21,6 @@ INSERT INTO algafood.payment_method (payment_method.id, payment_method.method) V
 -- POPULATE PERMISSION TABLE
 INSERT INTO algafood.permission (permission.id, permission.role) VALUES (1, 'CREATE');
 INSERT INTO algafood.permission (permission.id, permission.role) VALUES (2, 'UPDATE');
+
+-- POPULATE RESTAURANT_PAYMENT_METHOD TABLE
+INSERT INTO algafood.restaurant_payment_method (restaurant_id, payment_method_id) VALUES (1, 1), (1, 2), (2, 1), (2, 2);
