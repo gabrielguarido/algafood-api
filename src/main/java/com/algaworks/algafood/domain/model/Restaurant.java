@@ -45,10 +45,12 @@ public class Restaurant {
     @JsonIgnore
     private Address address;
 
+    @JsonIgnore
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime created;
 
+    @JsonIgnore
     @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime updated;
