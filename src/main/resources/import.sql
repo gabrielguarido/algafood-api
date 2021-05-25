@@ -23,8 +23,15 @@ INSERT INTO algafood.permission (permission.id, permission.role) VALUES (1, 'CRE
 INSERT INTO algafood.permission (permission.id, permission.role) VALUES (2, 'UPDATE');
 
 -- POPULATE RESTAURANT_PAYMENT_METHOD TABLE
-INSERT INTO algafood.restaurant_payment_method (restaurant_id, payment_method_id) VALUES (1, 1), (1, 2), (2, 1), (2, 2);
+INSERT INTO algafood.restaurant_payment_method (restaurant_payment_method.restaurant_id, restaurant_payment_method.payment_method_id) VALUES (1, 1), (1, 2), (2, 1), (2, 2);
 
 -- POPULATE PRODUCT TABLE
-INSERT INTO algafood.product (active, description, name, price, restaurant_id) VALUES (1, 'Delicious bacon double burger', 'Double Bacon', 33.50, 2);
-INSERT INTO algafood.product (active, description, name, price, restaurant_id) VALUES (1, 'Cheddar bacon burger', 'Ned Kelly', 40.00, 1);
+INSERT INTO algafood.product (product.id, product.active, product.description, product.name, product.price, product.restaurant_id) VALUES (1, 1, 'Delicious bacon double burger', 'Double Bacon', 33.50, 2);
+INSERT INTO algafood.product (product.id, product.active, product.description, product.name, product.price, product.restaurant_id) VALUES (2, 1, 'Cheddar bacon burger', 'Ned Kelly', 40.00, 1);
+
+-- POPULATE PROFILE TABLE
+INSERT INTO algafood.profile (profile.id, profile.name) VALUES (1, 'ADMIN');
+INSERT INTO algafood.profile (profile.id, profile.name) VALUES (2, 'QA');
+
+-- POPULATE PROFILE_PERMISSION TABLE
+INSERT INTO algafood.profile_permission (profile_permission.profile_id, profile_permission.permission_id) VALUES (1, 1), (1, 2), (2, 1), (2, 2);
