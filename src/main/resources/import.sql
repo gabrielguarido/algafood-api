@@ -35,3 +35,10 @@ INSERT INTO algafood.profile (profile.id, profile.name) VALUES (2, 'QA');
 
 -- POPULATE PROFILE_PERMISSION TABLE
 INSERT INTO algafood.profile_permission (profile_permission.profile_id, profile_permission.permission_id) VALUES (1, 1), (1, 2), (2, 1), (2, 2);
+
+-- POPULATE USER TABLE
+INSERT INTO algafood.user (user.id, user.created, user.email, user.name, user.password) VALUES (1, utc_timestamp, 'gabriel@gmail.com', 'Gabriel Oliveira', '123');
+INSERT INTO algafood.user (user.id, user.created, user.email, user.name, user.password) VALUES (2, utc_timestamp, 'qa@gmail.com', 'QA Team', '123');
+
+-- POPULATE USER_PROFILE TABLE
+INSERT INTO algafood.user_profile (user_profile.user_id, user_profile.profile_id) VALUES (1, 1), (1, 2), (2, 1), (2, 2);
