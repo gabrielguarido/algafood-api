@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,9 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +20,7 @@ import java.util.List;
 @Data
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Restaurant {
+public class User {
 
     @Id
     @EqualsAndHashCode.Include
@@ -36,34 +31,20 @@ public class Restaurant {
     private String name;
 
     @Column(nullable = false)
-    private BigDecimal shippingTax;
+    private String email;
 
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private Category category;
+    @Column(nullable = false)
+    private String password;
 
-    @Embedded
     @JsonIgnore
-    private Address address;
+    @ManyToMany
+    @JoinTable(name = "user_profile",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "profile_id"))
+    private List<Profile> profiles = new ArrayList<>();
 
     @JsonIgnore
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime created;
-
-    @JsonIgnore
-    @UpdateTimestamp
-    @Column(nullable = false)
-    private LocalDateTime updated;
-
-    @JsonIgnore
-    @ManyToMany
-    @JoinTable(name = "restaurant_payment_method",
-            joinColumns = @JoinColumn(name = "restaurant_id"),
-            inverseJoinColumns = @JoinColumn(name = "payment_method_id"))
-    private List<PaymentMethod> paymentMethods = new ArrayList<>();
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "restaurant")
-    private List<Product> products = new ArrayList<>();
 }

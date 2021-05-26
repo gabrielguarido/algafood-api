@@ -9,14 +9,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Category {
+public class Profile {
 
     @Id
     @EqualsAndHashCode.Include
@@ -24,9 +26,12 @@ public class Category {
     private Long id;
 
     @Column(nullable = false)
-    private String type;
+    private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "category")
-    private List<Restaurant> restaurants = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(name = "profile_permission",
+            joinColumns = @JoinColumn(name = "profile_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id"))
+    private List<Permission> permissions = new ArrayList<>();
 }
