@@ -1,3 +1,35 @@
+-- RESET TABLES
+SET FOREIGN_KEY_CHECKS = 0;
+
+DELETE FROM state;
+DELETE FROM city;
+DELETE FROM category;
+DELETE FROM restaurant;
+DELETE FROM payment_method;
+DELETE FROM permission;
+DELETE FROM profile;
+DELETE FROM product;
+DELETE FROM restaurant_payment_method;
+DELETE FROM profile_permission;
+DELETE FROM user;
+DELETE FROM user_profile;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- RESET ID VALUES
+ALTER TABLE state AUTO_INCREMENT = 1;
+ALTER TABLE city AUTO_INCREMENT = 1;
+ALTER TABLE category AUTO_INCREMENT = 1;
+ALTER TABLE restaurant AUTO_INCREMENT = 1;
+ALTER TABLE payment_method AUTO_INCREMENT = 1;
+ALTER TABLE permission AUTO_INCREMENT = 1;
+ALTER TABLE profile AUTO_INCREMENT = 1;
+ALTER TABLE product AUTO_INCREMENT = 1;
+ALTER TABLE restaurant_payment_method AUTO_INCREMENT = 1;
+ALTER TABLE profile_permission AUTO_INCREMENT = 1;
+ALTER TABLE user AUTO_INCREMENT = 1;
+ALTER TABLE user_profile AUTO_INCREMENT = 1;
+
 -- POPULATE STATE TABLE
 INSERT IGNORE INTO algafood.state (state.id, state.name) VALUES (1, 'São Paulo');
 INSERT IGNORE INTO algafood.state (state.id, state.name) VALUES (2, 'Rio de Janeiro');
