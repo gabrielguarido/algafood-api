@@ -1,7 +1,5 @@
 package com.algaworks.algafood.api.controller;
 
-import com.algaworks.algafood.domain.exception.ResourceInUseException;
-import com.algaworks.algafood.domain.exception.ResourceNotFoundException;
 import com.algaworks.algafood.domain.model.Category;
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.service.RestaurantService;
@@ -38,12 +36,8 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> find(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(restaurantService.find(id));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<Restaurant> find(@PathVariable Long id) {
+        return ResponseEntity.ok(restaurantService.find(id));
     }
 
     @GetMapping("/by-shipping-tax")
@@ -88,42 +82,28 @@ public class RestaurantController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> create(@RequestBody Restaurant restaurant) {
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.save(restaurant));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<Restaurant> create(@RequestBody Restaurant restaurant) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.save(restaurant));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
-        try {
-            return ResponseEntity.ok(restaurantService.update(id, restaurant));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<Restaurant> update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
+        return ResponseEntity.ok(restaurantService.update(id, restaurant));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> updatePartially(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
         try {
             return ResponseEntity.ok(restaurantService.updatePartially(id, fields));
-        } catch (ResourceNotFoundException | IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Category> delete(@PathVariable Long id) {
-        try {
-            restaurantService.delete(id);
+        restaurantService.delete(id);
 
-            return ResponseEntity.noContent().build();
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (ResourceInUseException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
+        return ResponseEntity.noContent().build();
     }
 }

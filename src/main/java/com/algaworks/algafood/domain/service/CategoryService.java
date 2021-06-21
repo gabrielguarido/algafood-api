@@ -1,7 +1,8 @@
 package com.algaworks.algafood.domain.service;
 
+import com.algaworks.algafood.domain.exception.BusinessException;
+import com.algaworks.algafood.domain.exception.CategoryNotFoundException;
 import com.algaworks.algafood.domain.exception.ResourceInUseException;
-import com.algaworks.algafood.domain.exception.ResourceNotFoundException;
 import com.algaworks.algafood.domain.model.Category;
 import com.algaworks.algafood.domain.repository.CategoryRepository;
 import org.springframework.beans.BeanUtils;
@@ -22,13 +23,12 @@ public class CategoryService {
     }
 
     public Category find(Long id) {
-        return categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(
-                String.format("Category ID %s not found", id)
-        ));
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException(id));
     }
 
     public Category findByType(String type) {
-        return categoryRepository.findByType(type).orElseThrow(() -> new ResourceNotFoundException(
+        return categoryRepository.findByType(type).orElseThrow(() -> new CategoryNotFoundException(
                 String.format("Category %s not found", type)
         ));
     }
@@ -46,11 +46,15 @@ public class CategoryService {
     }
 
     public Category update(Long id, Category category) {
-        var existingCategory = find(id);
+        try {
+            var existingCategory = find(id);
 
-        BeanUtils.copyProperties(category, existingCategory, "id");
+            BeanUtils.copyProperties(category, existingCategory, "id");
 
-        return save(existingCategory);
+            return save(existingCategory);
+        } catch (CategoryNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
+        }
     }
 
     public void delete(Long id) {
@@ -60,6 +64,8 @@ public class CategoryService {
             throw new ResourceInUseException(
                     String.format("The category %s is currently being used and cannot be removed", id)
             );
+        } catch (CategoryNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
         }
     }
 }

@@ -1,9 +1,14 @@
 package com.algaworks.algafood.domain.exception;
 
-public class ResourceNotFoundException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(value = HttpStatus.NOT_FOUND)
+public abstract class ResourceNotFoundException extends BusinessException {
+
     private static final long serialVersionUID = 1L;
 
-    public ResourceNotFoundException(String message) {
+    protected ResourceNotFoundException(String message) {
         super(message);
     }
 }

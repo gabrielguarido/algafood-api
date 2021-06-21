@@ -1,7 +1,5 @@
 package com.algaworks.algafood.api.controller;
 
-import com.algaworks.algafood.domain.exception.ResourceInUseException;
-import com.algaworks.algafood.domain.exception.ResourceNotFoundException;
 import com.algaworks.algafood.domain.model.Category;
 import com.algaworks.algafood.domain.model.City;
 import com.algaworks.algafood.domain.service.CityService;
@@ -34,43 +32,25 @@ public class CityController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> find(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(cityService.find(id));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<City> find(@PathVariable Long id) {
+        return ResponseEntity.ok(cityService.find(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> create(@RequestBody City city) {
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(cityService.save(city));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<City> create(@RequestBody City city) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(cityService.save(city));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody City city) {
-        try {
-            return ResponseEntity.ok(cityService.update(id, city));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<City> update(@PathVariable Long id, @RequestBody City city) {
+        return ResponseEntity.ok(cityService.update(id, city));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Category> delete(@PathVariable Long id) {
-        try {
-            cityService.delete(id);
+        cityService.delete(id);
 
-            return ResponseEntity.noContent().build();
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (ResourceInUseException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
+        return ResponseEntity.noContent().build();
     }
 }

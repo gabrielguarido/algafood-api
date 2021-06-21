@@ -1,7 +1,5 @@
 package com.algaworks.algafood.api.controller;
 
-import com.algaworks.algafood.domain.exception.ResourceInUseException;
-import com.algaworks.algafood.domain.exception.ResourceNotFoundException;
 import com.algaworks.algafood.domain.model.Category;
 import com.algaworks.algafood.domain.model.State;
 import com.algaworks.algafood.domain.service.StateService;
@@ -33,12 +31,8 @@ public class StateController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> find(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(stateService.find(id));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<State> find(@PathVariable Long id) {
+        return ResponseEntity.ok(stateService.find(id));
     }
 
     @PostMapping
@@ -47,24 +41,14 @@ public class StateController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody State state) {
-        try {
-            return ResponseEntity.ok(stateService.update(id, state));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<State> update(@PathVariable Long id, @RequestBody State state) {
+        return ResponseEntity.ok(stateService.update(id, state));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Category> delete(@PathVariable Long id) {
-        try {
-            stateService.delete(id);
+        stateService.delete(id);
 
-            return ResponseEntity.noContent().build();
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (ResourceInUseException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
+        return ResponseEntity.noContent().build();
     }
 }

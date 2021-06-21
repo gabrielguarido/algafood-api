@@ -1,7 +1,9 @@
 package com.algaworks.algafood.domain.service;
 
+import com.algaworks.algafood.domain.exception.BusinessException;
+import com.algaworks.algafood.domain.exception.CityNotFoundException;
 import com.algaworks.algafood.domain.exception.ResourceInUseException;
-import com.algaworks.algafood.domain.exception.ResourceNotFoundException;
+import com.algaworks.algafood.domain.exception.StateNotFoundException;
 import com.algaworks.algafood.domain.model.City;
 import com.algaworks.algafood.domain.repository.CityRepository;
 import org.springframework.beans.BeanUtils;
@@ -25,23 +27,29 @@ public class CityService {
     }
 
     public City find(Long id) {
-        return cityRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(
-                String.format("City ID %s not found", id)
-        ));
+        return cityRepository.findById(id).orElseThrow(() -> new CityNotFoundException(id));
     }
 
     public City save(City city) {
-        stateService.find(city.getState().getId());
+        try {
+            stateService.find(city.getState().getId());
+        } catch (StateNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
+        }
 
         return cityRepository.save(city);
     }
 
     public City update(Long id, City city) {
-        City existingCity = find(id);
+        try {
+            var existingCity = find(id);
 
-        BeanUtils.copyProperties(city, existingCity, "id");
+            BeanUtils.copyProperties(city, existingCity, "id");
 
-        return save(existingCity);
+            return save(existingCity);
+        } catch (CityNotFoundException | StateNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
+        }
     }
 
     public void delete(Long id) {
@@ -51,6 +59,8 @@ public class CityService {
             throw new ResourceInUseException(
                     String.format("The city %s is currently being used and cannot be removed", id)
             );
+        } catch (CityNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
         }
     }
 }

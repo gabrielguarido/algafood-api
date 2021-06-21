@@ -1,7 +1,9 @@
 package com.algaworks.algafood.domain.service;
 
+import com.algaworks.algafood.domain.exception.BusinessException;
+import com.algaworks.algafood.domain.exception.CategoryNotFoundException;
 import com.algaworks.algafood.domain.exception.ResourceInUseException;
-import com.algaworks.algafood.domain.exception.ResourceNotFoundException;
+import com.algaworks.algafood.domain.exception.RestaurantNotFoundException;
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.repository.RestaurantRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,9 +31,8 @@ public class RestaurantService {
     }
 
     public Restaurant find(Long id) {
-        return restaurantRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(
-                String.format("Restaurant ID %s not found", id)
-        ));
+        return restaurantRepository.findById(id)
+                .orElseThrow(() -> new RestaurantNotFoundException(id));
     }
 
     public List<Restaurant> listByShippingTax(BigDecimal initialShippingTax, BigDecimal finalShippingTax) {
@@ -67,25 +68,37 @@ public class RestaurantService {
     }
 
     public Restaurant save(Restaurant restaurant) {
-        categoryService.find(restaurant.getCategory().getId());
+        try {
+            categoryService.find(restaurant.getCategory().getId());
+        } catch (CategoryNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
+        }
 
         return restaurantRepository.save(restaurant);
     }
 
     public Restaurant update(Long id, Restaurant restaurant) {
-        var existingRestaurant = find(id);
+        try {
+            var existingRestaurant = find(id);
 
-        BeanUtils.copyProperties(restaurant, existingRestaurant, "id", "paymentMethods", "address", "created", "products");
+            BeanUtils.copyProperties(restaurant, existingRestaurant, "id", "paymentMethods", "address", "created", "products");
 
-        return save(existingRestaurant);
+            return save(existingRestaurant);
+        } catch (RestaurantNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
+        }
     }
 
     public Restaurant updatePartially(Long id, Map<String, Object> fields) {
-        var existingRestaurant = find(id);
+        try {
+            var existingRestaurant = find(id);
 
-        merge(fields, existingRestaurant);
+            merge(fields, existingRestaurant);
 
-        return update(id, existingRestaurant);
+            return update(id, existingRestaurant);
+        } catch (RestaurantNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
+        }
     }
 
     public void delete(Long id) {
@@ -95,6 +108,8 @@ public class RestaurantService {
             throw new ResourceInUseException(
                     String.format("The restaurant %s is currently being used and cannot be removed", id)
             );
+        } catch (RestaurantNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
         }
     }
 
