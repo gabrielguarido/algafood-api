@@ -8,12 +8,16 @@ import com.algaworks.algafood.domain.repository.CategoryRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class CategoryService {
+
+    private static final String CATEGORY_IN_USE_EXCEPTION_MESSAGE = "The category ID %s is currently being used and cannot be removed";
+    private static final String CATEGORY_TYPE_NOT_FOUND_EXCEPTION_MESSAGE = "Category type %s not found";
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -29,7 +33,7 @@ public class CategoryService {
 
     public Category findByType(String type) {
         return categoryRepository.findByType(type).orElseThrow(() -> new CategoryNotFoundException(
-                String.format("Category %s not found", type)
+                String.format(CATEGORY_TYPE_NOT_FOUND_EXCEPTION_MESSAGE, type)
         ));
     }
 
@@ -59,13 +63,13 @@ public class CategoryService {
 
     public void delete(Long id) {
         try {
-            categoryRepository.delete(find(id));
+            categoryRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new ResourceInUseException(
-                    String.format("The category %s is currently being used and cannot be removed", id)
+                    String.format(CATEGORY_IN_USE_EXCEPTION_MESSAGE, id)
             );
-        } catch (CategoryNotFoundException e) {
-            throw new BusinessException(e.getMessage(), e);
+        } catch (EmptyResultDataAccessException e) {
+            throw new CategoryNotFoundException(id);
         }
     }
 }

@@ -9,12 +9,15 @@ import com.algaworks.algafood.domain.repository.CityRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class CityService {
+
+    private static final String CITY_IN_USE_EXCEPTION_MESSAGE = "The city ID %s is currently being used and cannot be removed";
 
     @Autowired
     private CityRepository cityRepository;
@@ -54,13 +57,13 @@ public class CityService {
 
     public void delete(Long id) {
         try {
-            cityRepository.delete(find(id));
+            cityRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new ResourceInUseException(
-                    String.format("The city %s is currently being used and cannot be removed", id)
+                    String.format(CITY_IN_USE_EXCEPTION_MESSAGE, id)
             );
-        } catch (CityNotFoundException e) {
-            throw new BusinessException(e.getMessage(), e);
+        } catch (EmptyResultDataAccessException e) {
+            throw new CityNotFoundException(id);
         }
     }
 }

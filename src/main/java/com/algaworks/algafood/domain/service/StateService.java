@@ -8,12 +8,15 @@ import com.algaworks.algafood.domain.repository.StateRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class StateService {
+
+    private static final String STATE_IN_USE_EXCEPTION_MESSAGE = "The state ID %s is currently being used and cannot be removed";
 
     @Autowired
     private StateRepository stateRepository;
@@ -44,13 +47,13 @@ public class StateService {
 
     public void delete(Long id) {
         try {
-            stateRepository.delete(find(id));
+            stateRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new ResourceInUseException(
-                    String.format("The state %s is currently being used and cannot be removed", id)
+                    String.format(STATE_IN_USE_EXCEPTION_MESSAGE, id)
             );
-        } catch (StateNotFoundException e) {
-            throw new BusinessException(e.getMessage(), e);
+        } catch (EmptyResultDataAccessException e) {
+            throw new StateNotFoundException(id);
         }
     }
 }

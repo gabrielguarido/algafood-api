@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
@@ -19,6 +20,8 @@ import java.util.Map;
 
 @Service
 public class RestaurantService {
+
+    private static final String RESTAURANT_IN_USE_EXCEPTION_MESSAGE = "The restaurant ID %s is currently being used and cannot be removed";
 
     @Autowired
     private RestaurantRepository restaurantRepository;
@@ -103,13 +106,13 @@ public class RestaurantService {
 
     public void delete(Long id) {
         try {
-            restaurantRepository.delete(find(id));
+            restaurantRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new ResourceInUseException(
-                    String.format("The restaurant %s is currently being used and cannot be removed", id)
+                    String.format(RESTAURANT_IN_USE_EXCEPTION_MESSAGE, id)
             );
-        } catch (RestaurantNotFoundException e) {
-            throw new BusinessException(e.getMessage(), e);
+        } catch (EmptyResultDataAccessException e) {
+            throw new RestaurantNotFoundException(id);
         }
     }
 
