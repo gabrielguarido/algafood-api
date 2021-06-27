@@ -25,21 +25,21 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
-        Error error = buildError(NOT_FOUND, RESOURCE_NOT_FOUND, ex.getMessage());
+        var error = buildError(NOT_FOUND, RESOURCE_NOT_FOUND, ex.getMessage());
 
         return handleExceptionInternal(ex, error, new HttpHeaders(), NOT_FOUND, request);
     }
 
     @ExceptionHandler(ResourceInUseException.class)
     public ResponseEntity<Object> handleResourceInUseException(ResourceInUseException ex, WebRequest request) {
-        Error error = buildError(CONFLICT, RESOURCE_IN_USE, ex.getMessage());
+        var error = buildError(CONFLICT, RESOURCE_IN_USE, ex.getMessage());
 
         return handleExceptionInternal(ex, error, new HttpHeaders(), CONFLICT, request);
     }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<Object> handleBusinessException(BusinessException ex, WebRequest request) {
-        Error error = buildError(BAD_REQUEST, BUSINESS_RULE_VIOLATION, ex.getMessage());
+        var error = buildError(BAD_REQUEST, BUSINESS_RULE_VIOLATION, ex.getMessage());
 
         return handleExceptionInternal(ex, error, new HttpHeaders(), BAD_REQUEST, request);
     }
