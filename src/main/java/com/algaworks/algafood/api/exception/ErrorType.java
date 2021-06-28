@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum ErrorType {
     RESOURCE_NOT_FOUND("Resource not found"),
     RESOURCE_IN_USE("Resource in use"),
-    BUSINESS_RULE_VIOLATION("Business rule violation");
+    BUSINESS_RULE_VIOLATION("Business rule violation"),
+    PAYLOAD_MALFORMED("Payload malformed");
 
     private final String type;
 
