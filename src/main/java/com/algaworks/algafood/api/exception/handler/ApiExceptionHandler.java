@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.Objects;
@@ -38,6 +39,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     private static final String INVALID_FORMAT_EXCEPTION_MESSAGE = "The property '%s' received a value '%s' which is of an invalid type. Inform a value that is compatible with the type '%s'";
     private static final String PROPERTY_NONEXISTENT_MESSAGE = "The given property '%s' does not exist";
     private static final String INVALID_PARAMETER_MESSAGE = "The URL parameter '%s' received the value '%s', which is of an invalid type. Inform a value that is compatible with the type '%s'";
+    private static final String RESOURCE_NOT_FOUND_MESSAGE = "The resource '%s' does not exist";
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Object> handleResourceNotFound(ResourceNotFoundException ex, WebRequest request) {
@@ -108,6 +110,15 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         var detail = String.format(INVALID_PARAMETER_MESSAGE, ex.getName(), ex.getValue(), Objects.requireNonNull(ex.getRequiredType()).getSimpleName());
 
         var error = buildError(status, INVALID_PARAMETER, detail);
+
+        return handleExceptionInternal(ex, error, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        var detail = String.format(RESOURCE_NOT_FOUND_MESSAGE, ex.getRequestURL());
+
+        var error = buildError(status, RESOURCE_NOT_FOUND, detail);
 
         return handleExceptionInternal(ex, error, headers, status, request);
     }
