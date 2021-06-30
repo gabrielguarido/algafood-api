@@ -1,6 +1,5 @@
 package com.algaworks.algafood.api.exception.handler;
 
-import com.algaworks.algafood.api.exception.Error;
 import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.exception.ResourceInUseException;
 import com.algaworks.algafood.domain.exception.ResourceNotFoundException;
@@ -28,6 +27,7 @@ import static com.algaworks.algafood.api.exception.ErrorType.PAYLOAD_MALFORMED;
 import static com.algaworks.algafood.api.exception.ErrorType.RESOURCE_IN_USE;
 import static com.algaworks.algafood.api.exception.ErrorType.RESOURCE_NOT_FOUND;
 import static com.algaworks.algafood.api.exception.util.ExceptionHandlerUtil.buildError;
+import static com.algaworks.algafood.api.exception.util.ExceptionHandlerUtil.buildInternalError;
 import static com.algaworks.algafood.api.exception.util.ExceptionHandlerUtil.joinPath;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
@@ -139,15 +139,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
         if (body == null) {
-            body = Error.builder()
-                    .title(status.getReasonPhrase())
-                    .status(status.value())
-                    .build();
+            body = buildInternalError(status, status.getReasonPhrase());
         } else if (body instanceof String) {
-            body = Error.builder()
-                    .title((String) body)
-                    .status(status.value())
-                    .build();
+            body = buildInternalError(status, (String) body);
         }
 
         return super.handleExceptionInternal(ex, body, headers, status, request);

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +21,15 @@ public final class ExceptionHandlerUtil {
                 .status(status.value())
                 .title(errorType.getType())
                 .detail(detail)
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    public static Error buildInternalError(HttpStatus status, String title) {
+        return Error.builder()
+                .status(status.value())
+                .title(title)
+                .timestamp(LocalDateTime.now())
                 .build();
     }
 
