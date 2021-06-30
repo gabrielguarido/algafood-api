@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -92,9 +93,9 @@ public class RestaurantController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updatePartially(@PathVariable Long id, @RequestBody Map<String, Object> fields) {
+    public ResponseEntity<Object> updatePartially(@PathVariable Long id, @RequestBody Map<String, Object> fields, HttpServletRequest request) {
         try {
-            return ResponseEntity.ok(restaurantService.updatePartially(id, fields));
+            return ResponseEntity.ok(restaurantService.updatePartially(id, fields, request));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

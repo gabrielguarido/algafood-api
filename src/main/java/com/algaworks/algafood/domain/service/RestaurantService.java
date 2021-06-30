@@ -6,17 +6,23 @@ import com.algaworks.algafood.domain.exception.ResourceInUseException;
 import com.algaworks.algafood.domain.exception.RestaurantNotFoundException;
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.repository.RestaurantRepository;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+
+import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCause;
 
 @Service
 public class RestaurantService {
@@ -92,11 +98,11 @@ public class RestaurantService {
         }
     }
 
-    public Restaurant updatePartially(Long id, Map<String, Object> fields) {
+    public Restaurant updatePartially(Long id, Map<String, Object> fields, HttpServletRequest request) {
         try {
             var existingRestaurant = find(id);
 
-            merge(fields, existingRestaurant);
+            merge(fields, existingRestaurant, request);
 
             return update(id, existingRestaurant);
         } catch (RestaurantNotFoundException e) {
@@ -116,17 +122,27 @@ public class RestaurantService {
         }
     }
 
-    private void merge(Map<String, Object> fields, Restaurant restaurant) {
-        var objectMapper = new ObjectMapper();
-        var convertedRestaurant = objectMapper.convertValue(fields, Restaurant.class);
+    private void merge(Map<String, Object> fields, Restaurant restaurant, HttpServletRequest request) {
+        var httpRequest = new ServletServerHttpRequest(request);
 
-        fields.forEach((key, value) -> {
-            var field = ReflectionUtils.findField(Restaurant.class, key);
-            field.setAccessible(true);
+        try {
+            var objectMapper = new ObjectMapper();
 
-            Object newValue = ReflectionUtils.getField(field, convertedRestaurant);
+            objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, true);
 
-            ReflectionUtils.setField(field, restaurant, newValue);
-        });
+            var convertedRestaurant = objectMapper.convertValue(fields, Restaurant.class);
+
+            fields.forEach((key, value) -> {
+                var field = ReflectionUtils.findField(Restaurant.class, key);
+                assert field != null;
+                field.setAccessible(true);
+
+                Object newValue = ReflectionUtils.getField(field, convertedRestaurant);
+
+                ReflectionUtils.setField(field, restaurant, newValue);
+            });
+        } catch (IllegalArgumentException e) {
+            throw new HttpMessageNotReadableException(e.getMessage(), getRootCause(e), httpRequest);
+        }
     }
 }
