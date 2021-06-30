@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.Objects;
 
 import static com.algaworks.algafood.api.exception.ErrorType.BUSINESS_RULE_VIOLATION;
+import static com.algaworks.algafood.api.exception.ErrorType.INTERNAL_SERVER_ERROR;
 import static com.algaworks.algafood.api.exception.ErrorType.INVALID_PARAMETER;
 import static com.algaworks.algafood.api.exception.ErrorType.PAYLOAD_MALFORMED;
 import static com.algaworks.algafood.api.exception.ErrorType.RESOURCE_IN_USE;
@@ -40,6 +41,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     private static final String PROPERTY_NONEXISTENT_MESSAGE = "The given property '%s' does not exist";
     private static final String INVALID_PARAMETER_MESSAGE = "The URL parameter '%s' received the value '%s', which is of an invalid type. Inform a value that is compatible with the type '%s'";
     private static final String RESOURCE_NOT_FOUND_MESSAGE = "The resource '%s' does not exist";
+    private static final String INTERNAL_SERVER_ERROR_MESSAGE = "An unexpected internal error occurred. Try again, and if the problem persist, contact the system admin";
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
+        var status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+        ex.printStackTrace();
+
+        var error = buildError(status, INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR_MESSAGE);
+
+        return handleExceptionInternal(ex, error, new HttpHeaders(), status, request);
+    }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Object> handleResourceNotFound(ResourceNotFoundException ex, WebRequest request) {
