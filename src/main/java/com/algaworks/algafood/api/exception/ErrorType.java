@@ -7,7 +7,8 @@ public enum ErrorType {
     RESOURCE_NOT_FOUND("Resource not found"),
     RESOURCE_IN_USE("Resource in use"),
     BUSINESS_RULE_VIOLATION("Business rule violation"),
-    PAYLOAD_MALFORMED("Payload malformed");
+    PAYLOAD_MALFORMED("Payload malformed"),
+    INVALID_PARAMETER("Invalid parameter");
 
     private final String type;
 
