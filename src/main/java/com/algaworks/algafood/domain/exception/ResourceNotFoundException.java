@@ -1,9 +1,10 @@
 package com.algaworks.algafood.domain.exception;
 
-public class ResourceNotFoundException extends RuntimeException {
+public abstract class ResourceNotFoundException extends BusinessException {
+
     private static final long serialVersionUID = 1L;
 
-    public ResourceNotFoundException(String message) {
+    protected ResourceNotFoundException(String message) {
         super(message);
     }
 }

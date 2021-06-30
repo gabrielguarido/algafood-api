@@ -1,18 +1,22 @@
 package com.algaworks.algafood.domain.service;
 
+import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.exception.ResourceInUseException;
-import com.algaworks.algafood.domain.exception.ResourceNotFoundException;
+import com.algaworks.algafood.domain.exception.StateNotFoundException;
 import com.algaworks.algafood.domain.model.State;
 import com.algaworks.algafood.domain.repository.StateRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class StateService {
+
+    private static final String STATE_IN_USE_EXCEPTION_MESSAGE = "The state ID %s is currently being used and cannot be removed";
 
     @Autowired
     private StateRepository stateRepository;
@@ -22,9 +26,7 @@ public class StateService {
     }
 
     public State find(Long id) {
-        return stateRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(
-                String.format("State ID %s not found", id)
-        ));
+        return stateRepository.findById(id).orElseThrow(() -> new StateNotFoundException(id));
     }
 
     public State save(State state) {
@@ -32,20 +34,26 @@ public class StateService {
     }
 
     public State update(Long id, State state) {
-        State existingState = find(id);
+        try {
+            var existingState = find(id);
 
-        BeanUtils.copyProperties(state, existingState, "id");
+            BeanUtils.copyProperties(state, existingState, "id");
 
-        return save(existingState);
+            return save(existingState);
+        } catch (StateNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
+        }
     }
 
     public void delete(Long id) {
         try {
-            stateRepository.delete(find(id));
+            stateRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new ResourceInUseException(
-                    String.format("The state %s is currently being used and cannot be removed", id)
+                    String.format(STATE_IN_USE_EXCEPTION_MESSAGE, id)
             );
+        } catch (EmptyResultDataAccessException e) {
+            throw new StateNotFoundException(id);
         }
     }
 }

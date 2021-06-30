@@ -1,7 +1,5 @@
 package com.algaworks.algafood.api.controller;
 
-import com.algaworks.algafood.domain.exception.ResourceInUseException;
-import com.algaworks.algafood.domain.exception.ResourceNotFoundException;
 import com.algaworks.algafood.domain.model.Category;
 import com.algaworks.algafood.domain.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,20 +33,12 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Category> find(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(categoryService.find(id));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(categoryService.find(id));
     }
 
     @GetMapping("/by-type")
     public ResponseEntity<Category> findByType(@RequestParam String type) {
-        try {
-            return ResponseEntity.ok(categoryService.findByType(type));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(categoryService.findByType(type));
     }
 
     @GetMapping("/exists")
@@ -68,24 +58,14 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Category category) {
-        try {
-            return ResponseEntity.ok(categoryService.update(id, category));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<Category> update(@PathVariable Long id, @RequestBody Category category) {
+        return ResponseEntity.ok(categoryService.update(id, category));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Category> delete(@PathVariable Long id) {
-        try {
-            categoryService.delete(id);
+        categoryService.delete(id);
 
-            return ResponseEntity.noContent().build();
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (ResourceInUseException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
+        return ResponseEntity.noContent().build();
     }
 }

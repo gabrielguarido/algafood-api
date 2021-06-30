@@ -1,18 +1,23 @@
 package com.algaworks.algafood.domain.service;
 
+import com.algaworks.algafood.domain.exception.BusinessException;
+import com.algaworks.algafood.domain.exception.CityNotFoundException;
 import com.algaworks.algafood.domain.exception.ResourceInUseException;
-import com.algaworks.algafood.domain.exception.ResourceNotFoundException;
+import com.algaworks.algafood.domain.exception.StateNotFoundException;
 import com.algaworks.algafood.domain.model.City;
 import com.algaworks.algafood.domain.repository.CityRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class CityService {
+
+    private static final String CITY_IN_USE_EXCEPTION_MESSAGE = "The city ID %s is currently being used and cannot be removed";
 
     @Autowired
     private CityRepository cityRepository;
@@ -25,32 +30,40 @@ public class CityService {
     }
 
     public City find(Long id) {
-        return cityRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(
-                String.format("City ID %s not found", id)
-        ));
+        return cityRepository.findById(id).orElseThrow(() -> new CityNotFoundException(id));
     }
 
     public City save(City city) {
-        stateService.find(city.getState().getId());
+        try {
+            stateService.find(city.getState().getId());
+        } catch (StateNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
+        }
 
         return cityRepository.save(city);
     }
 
     public City update(Long id, City city) {
-        City existingCity = find(id);
+        try {
+            var existingCity = find(id);
 
-        BeanUtils.copyProperties(city, existingCity, "id");
+            BeanUtils.copyProperties(city, existingCity, "id");
 
-        return save(existingCity);
+            return save(existingCity);
+        } catch (CityNotFoundException | StateNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
+        }
     }
 
     public void delete(Long id) {
         try {
-            cityRepository.delete(find(id));
+            cityRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new ResourceInUseException(
-                    String.format("The city %s is currently being used and cannot be removed", id)
+                    String.format(CITY_IN_USE_EXCEPTION_MESSAGE, id)
             );
+        } catch (EmptyResultDataAccessException e) {
+            throw new CityNotFoundException(id);
         }
     }
 }
