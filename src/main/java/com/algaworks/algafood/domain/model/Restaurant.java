@@ -17,7 +17,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -42,6 +44,8 @@ public class Restaurant {
     @Column(nullable = false)
     private BigDecimal shippingTax;
 
+    @Valid
+    @NotNull
     @ManyToOne
     @JoinColumn(nullable = false)
     private Category category;
