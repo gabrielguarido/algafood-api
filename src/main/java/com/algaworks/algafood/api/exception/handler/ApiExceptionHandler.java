@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -23,9 +24,17 @@ import java.util.Objects;
 import static com.algaworks.algafood.api.exception.ErrorType.BUSINESS_RULE_VIOLATION;
 import static com.algaworks.algafood.api.exception.ErrorType.INTERNAL_SERVER_ERROR;
 import static com.algaworks.algafood.api.exception.ErrorType.INVALID_PARAMETER;
+import static com.algaworks.algafood.api.exception.ErrorType.INVALID_PAYLOAD;
 import static com.algaworks.algafood.api.exception.ErrorType.PAYLOAD_MALFORMED;
 import static com.algaworks.algafood.api.exception.ErrorType.RESOURCE_IN_USE;
 import static com.algaworks.algafood.api.exception.ErrorType.RESOURCE_NOT_FOUND;
+import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.HTTP_MESSAGE_NOT_READABLE_EXCEPTION_MESSAGE;
+import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.INTERNAL_SERVER_ERROR_MESSAGE;
+import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.INVALID_FORMAT_EXCEPTION_MESSAGE;
+import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.INVALID_PARAMETER_MESSAGE;
+import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.INVALID_PAYLOAD_MESSAGE;
+import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.PROPERTY_NONEXISTENT_MESSAGE;
+import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.RESOURCE_NOT_FOUND_MESSAGE;
 import static com.algaworks.algafood.api.exception.util.ExceptionHandlerUtil.buildError;
 import static com.algaworks.algafood.api.exception.util.ExceptionHandlerUtil.buildInternalError;
 import static com.algaworks.algafood.api.exception.util.ExceptionHandlerUtil.joinPath;
@@ -35,13 +44,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
-
-    private static final String HTTP_MESSAGE_NOT_READABLE_EXCEPTION_MESSAGE = "The request body is invalid. Check syntax";
-    private static final String INVALID_FORMAT_EXCEPTION_MESSAGE = "The property '%s' received a value '%s' which is of an invalid type. Inform a value that is compatible with the type '%s'";
-    private static final String PROPERTY_NONEXISTENT_MESSAGE = "The given property '%s' does not exist";
-    private static final String INVALID_PARAMETER_MESSAGE = "The URL parameter '%s' received the value '%s', which is of an invalid type. Inform a value that is compatible with the type '%s'";
-    private static final String RESOURCE_NOT_FOUND_MESSAGE = "The resource '%s' does not exist";
-    private static final String INTERNAL_SERVER_ERROR_MESSAGE = "An unexpected internal error occurred. Try again, and if the problem persist, contact the system admin";
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
@@ -132,6 +134,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         var detail = String.format(RESOURCE_NOT_FOUND_MESSAGE, ex.getRequestURL());
 
         var error = buildError(status, RESOURCE_NOT_FOUND, detail);
+
+        return handleExceptionInternal(ex, error, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        var error = buildError(status, INVALID_PAYLOAD, INVALID_PAYLOAD_MESSAGE);
 
         return handleExceptionInternal(ex, error, headers, status, request);
     }
