@@ -22,6 +22,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,18 +39,19 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Column(nullable = false)
-    @NotBlank(groups = Groups.CreateRestaurant.class)
     private String name;
 
+    @PositiveOrZero
     @Column(nullable = false)
-    @PositiveOrZero(groups = Groups.CreateRestaurant.class)
     private BigDecimal shippingTax;
 
     @Valid
+    @NotNull
     @ManyToOne
     @JoinColumn(nullable = false)
-    @NotNull(groups = Groups.CreateRestaurant.class)
+    @ConvertGroup(to = Groups.CategoryId.class)
     private Category category;
 
     @Embedded

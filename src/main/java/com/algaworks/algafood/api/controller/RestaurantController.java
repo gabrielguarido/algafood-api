@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +86,7 @@ public class RestaurantController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Restaurant> create(@RequestBody @Validated(Groups.CreateRestaurant.class) Restaurant restaurant) {
+    public ResponseEntity<Restaurant> create(@RequestBody @Valid Restaurant restaurant) {
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.save(restaurant));
     }
 

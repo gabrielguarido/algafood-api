@@ -23,7 +23,7 @@ public class Category {
 
     @Id
     @EqualsAndHashCode.Include
-    @NotNull(groups = Groups.CreateRestaurant.class)
+    @NotNull(groups = Groups.CategoryId.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
