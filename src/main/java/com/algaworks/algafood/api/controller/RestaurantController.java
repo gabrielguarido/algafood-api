@@ -3,10 +3,12 @@ package com.algaworks.algafood.api.controller;
 import com.algaworks.algafood.domain.model.Category;
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.service.RestaurantService;
+import com.algaworks.algafood.infrastructure.groups.Groups;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +85,7 @@ public class RestaurantController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Restaurant> create(@RequestBody @Valid Restaurant restaurant) {
+    public ResponseEntity<Restaurant> create(@RequestBody @Validated(Groups.CreateRestaurant.class) Restaurant restaurant) {
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.save(restaurant));
     }
 
