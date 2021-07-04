@@ -16,6 +16,14 @@ public final class ExceptionHandlerUtil {
     private ExceptionHandlerUtil() {
     }
 
+    public static Error buildError(HttpStatus status, String title) {
+        return Error.builder()
+                .status(status.value())
+                .title(title)
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
     public static Error buildError(HttpStatus status, ErrorType errorType, String detail) {
         return Error.builder()
                 .status(status.value())
@@ -25,11 +33,13 @@ public final class ExceptionHandlerUtil {
                 .build();
     }
 
-    public static Error buildInternalError(HttpStatus status, String title) {
+    public static Error buildError(HttpStatus status, ErrorType errorType, String detail, List<Error.Field> fields) {
         return Error.builder()
                 .status(status.value())
-                .title(title)
+                .title(errorType.getType())
+                .detail(detail)
                 .timestamp(LocalDateTime.now())
+                .fields(fields)
                 .build();
     }
 

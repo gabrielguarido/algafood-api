@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.exception.handler;
 
+import com.algaworks.algafood.api.exception.Error;
 import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.exception.ResourceInUseException;
 import com.algaworks.algafood.domain.exception.ResourceNotFoundException;
@@ -19,7 +20,9 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.algaworks.algafood.api.exception.ErrorType.BUSINESS_RULE_VIOLATION;
 import static com.algaworks.algafood.api.exception.ErrorType.INTERNAL_SERVER_ERROR;
@@ -36,7 +39,6 @@ import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.
 import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.PROPERTY_NONEXISTENT_MESSAGE;
 import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.RESOURCE_NOT_FOUND_MESSAGE;
 import static com.algaworks.algafood.api.exception.util.ExceptionHandlerUtil.buildError;
-import static com.algaworks.algafood.api.exception.util.ExceptionHandlerUtil.buildInternalError;
 import static com.algaworks.algafood.api.exception.util.ExceptionHandlerUtil.joinPath;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
@@ -140,7 +142,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        var error = buildError(status, INVALID_PAYLOAD, INVALID_PAYLOAD_MESSAGE);
+        List<Error.Field> fields = ex.getBindingResult().getFieldErrors().stream()
+                .map(fieldError -> Error.Field.builder()
+                        .name(fieldError.getField())
+                        .detail(fieldError.getDefaultMessage())
+                        .build())
+                .collect(Collectors.toList());
+
+        var error = buildError(status, INVALID_PAYLOAD, INVALID_PAYLOAD_MESSAGE, fields);
 
         return handleExceptionInternal(ex, error, headers, status, request);
     }
@@ -148,9 +157,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
         if (body == null) {
-            body = buildInternalError(status, status.getReasonPhrase());
+            body = buildError(status, status.getReasonPhrase());
         } else if (body instanceof String) {
-            body = buildInternalError(status, (String) body);
+            body = buildError(status, (String) body);
         }
 
         return super.handleExceptionInternal(ex, body, headers, status, request);
