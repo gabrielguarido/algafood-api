@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -36,12 +37,12 @@ public class StateController {
     }
 
     @PostMapping
-    public ResponseEntity<State> create(@RequestBody State state) {
+    public ResponseEntity<State> create(@RequestBody @Valid State state) {
         return ResponseEntity.status(HttpStatus.CREATED).body(stateService.save(state));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<State> update(@PathVariable Long id, @RequestBody State state) {
+    public ResponseEntity<State> update(@PathVariable Long id, @RequestBody @Valid State state) {
         return ResponseEntity.ok(stateService.update(id, state));
     }
 
