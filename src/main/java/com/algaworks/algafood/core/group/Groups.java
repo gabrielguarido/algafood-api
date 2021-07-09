@@ -1,4 +1,4 @@
-package com.algaworks.algafood.infrastructure.groups;
+package com.algaworks.algafood.core.group;
 
 public interface Groups {
     interface CategoryId {}

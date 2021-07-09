@@ -1,6 +1,6 @@
 package com.algaworks.algafood.domain.model;
 
-import com.algaworks.algafood.infrastructure.groups.Groups;
+import com.algaworks.algafood.core.group.Groups;
 import lombok.Data;
 
 import javax.persistence.Column;

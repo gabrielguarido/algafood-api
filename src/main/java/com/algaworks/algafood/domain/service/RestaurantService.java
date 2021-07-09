@@ -44,8 +44,8 @@ public class RestaurantService {
                 .orElseThrow(() -> new RestaurantNotFoundException(id));
     }
 
-    public List<Restaurant> listByShippingTax(BigDecimal initialShippingTax, BigDecimal finalShippingTax) {
-        return restaurantRepository.queryByShippingTaxBetween(initialShippingTax, finalShippingTax);
+    public List<Restaurant> listByDeliveryFee(BigDecimal initialDeliveryFee, BigDecimal finalDeliveryFee) {
+        return restaurantRepository.queryByDeliveryFeeBetween(initialDeliveryFee, finalDeliveryFee);
     }
 
     public List<Restaurant> listByName(String name) {
@@ -60,16 +60,16 @@ public class RestaurantService {
         return restaurantRepository.findTop2ByNameContaining(name);
     }
 
-    public List<Restaurant> customSearch(String name, BigDecimal initialShippingTax, BigDecimal finalShippingTax) {
-        return restaurantRepository.find(name, initialShippingTax, finalShippingTax);
+    public List<Restaurant> customSearch(String name, BigDecimal initialDeliveryFee, BigDecimal finalDeliveryFee) {
+        return restaurantRepository.find(name, initialDeliveryFee, finalDeliveryFee);
     }
 
     public Integer countByCategory(Long categoryId) {
         return restaurantRepository.countByCategoryId(categoryId);
     }
 
-    public List<Restaurant> findWithFreeShipping(String name) {
-        return restaurantRepository.findWithFreeShippingTax(name);
+    public List<Restaurant> findWithFreeDelivery(String name) {
+        return restaurantRepository.findWithFreeDeliveryFee(name);
     }
 
     public Restaurant findFirst() {

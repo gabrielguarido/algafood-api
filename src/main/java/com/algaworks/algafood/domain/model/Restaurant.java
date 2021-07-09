@@ -1,6 +1,7 @@
 package com.algaworks.algafood.domain.model;
 
-import com.algaworks.algafood.infrastructure.groups.Groups;
+import com.algaworks.algafood.core.validation.DeliveryFee;
+import com.algaworks.algafood.core.group.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,7 +22,6 @@ import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
 import javax.validation.groups.ConvertGroup;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -43,9 +43,9 @@ public class Restaurant {
     private String name;
 
     @NotNull
-    @PositiveOrZero
+    @DeliveryFee
     @Column(nullable = false)
-    private BigDecimal shippingTax;
+    private BigDecimal deliveryFee;
 
     @Valid
     @NotNull

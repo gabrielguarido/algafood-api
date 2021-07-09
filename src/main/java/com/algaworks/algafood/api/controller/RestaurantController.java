@@ -3,12 +3,10 @@ package com.algaworks.algafood.api.controller;
 import com.algaworks.algafood.domain.model.Category;
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.service.RestaurantService;
-import com.algaworks.algafood.infrastructure.groups.Groups;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -44,9 +42,9 @@ public class RestaurantController {
         return ResponseEntity.ok(restaurantService.find(id));
     }
 
-    @GetMapping("/by-shipping-tax")
-    public ResponseEntity<List<Restaurant>> listByShippingTax(BigDecimal initialShippingTax, BigDecimal finalShippingTax) {
-        return ResponseEntity.ok(restaurantService.listByShippingTax(initialShippingTax, finalShippingTax));
+    @GetMapping("/by-delivery-fee")
+    public ResponseEntity<List<Restaurant>> listByDeliveryFee(BigDecimal initialFee, BigDecimal finalFee) {
+        return ResponseEntity.ok(restaurantService.listByDeliveryFee(initialFee, finalFee));
     }
 
     @GetMapping("/by-name")
@@ -65,8 +63,8 @@ public class RestaurantController {
     }
 
     @GetMapping("/custom")
-    public ResponseEntity<List<Restaurant>> customSearch(String name, BigDecimal initialShippingTax, BigDecimal finalShippingTax) {
-        return ResponseEntity.ok(restaurantService.customSearch(name, initialShippingTax, finalShippingTax));
+    public ResponseEntity<List<Restaurant>> customSearch(String name, BigDecimal initialDeliveryFee, BigDecimal finalDeliveryFee) {
+        return ResponseEntity.ok(restaurantService.customSearch(name, initialDeliveryFee, finalDeliveryFee));
     }
 
     @GetMapping("/count-by-category")
@@ -74,9 +72,9 @@ public class RestaurantController {
         return ResponseEntity.ok(restaurantService.countByCategory(categoryId));
     }
 
-    @GetMapping("/free-shipping")
-    public ResponseEntity<List<Restaurant>> findWithFreeShipping(String name) {
-        return ResponseEntity.ok(restaurantService.findWithFreeShipping(name));
+    @GetMapping("/free-delivery")
+    public ResponseEntity<List<Restaurant>> findWithFreeDelivery(String name) {
+        return ResponseEntity.ok(restaurantService.findWithFreeDelivery(name));
     }
 
     @GetMapping("/first")

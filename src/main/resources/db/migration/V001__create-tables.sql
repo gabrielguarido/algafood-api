@@ -38,7 +38,7 @@ create table restaurant
     address_zip_code   varchar(9),
     created            datetime       not null,
     name               varchar(80)    not null,
-    shipping_tax       decimal(10, 2) not null,
+    delivery_fee       decimal(10, 2) not null,
     updated            datetime       not null,
     address_city_id    bigint,
     category_id        bigint         not null,
