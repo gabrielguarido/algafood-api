@@ -42,6 +42,7 @@ public class Restaurant {
     @Column(nullable = false)
     private String name;
 
+    @NotNull
     @PositiveOrZero
     @Column(nullable = false)
     private BigDecimal shippingTax;
