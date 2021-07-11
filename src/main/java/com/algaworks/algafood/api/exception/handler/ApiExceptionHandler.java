@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +24,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static com.algaworks.algafood.api.exception.ErrorType.BUSINESS_RULE_VIOLATION;
 import static com.algaworks.algafood.api.exception.ErrorType.INTERNAL_SERVER_ERROR;
@@ -39,6 +40,7 @@ import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.
 import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.PROPERTY_NONEXISTENT_MESSAGE;
 import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.RESOURCE_NOT_FOUND_MESSAGE;
 import static com.algaworks.algafood.api.exception.util.ExceptionHandlerUtil.buildError;
+import static com.algaworks.algafood.api.exception.util.ExceptionHandlerUtil.buildErrorFields;
 import static com.algaworks.algafood.api.exception.util.ExceptionHandlerUtil.joinPath;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
@@ -46,6 +48,9 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @Autowired
+    private MessageSource messageSource;
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
@@ -142,12 +147,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        List<Error.Field> fields = ex.getBindingResult().getFieldErrors().stream()
-                .map(fieldError -> Error.Field.builder()
-                        .name(fieldError.getField())
-                        .detail(fieldError.getDefaultMessage())
-                        .build())
-                .collect(Collectors.toList());
+        List<Error.Field> fields = buildErrorFields(ex, messageSource);
 
         var error = buildError(status, INVALID_PAYLOAD, INVALID_PAYLOAD_MESSAGE, fields);
 

@@ -3,8 +3,11 @@ package com.algaworks.algafood.api.exception.util;
 import com.algaworks.algafood.api.exception.Error;
 import com.algaworks.algafood.api.exception.ErrorType;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,6 +44,19 @@ public final class ExceptionHandlerUtil {
                 .timestamp(LocalDateTime.now())
                 .fields(fields)
                 .build();
+    }
+
+    public static List<Error.Field> buildErrorFields(MethodArgumentNotValidException ex, MessageSource messageSource) {
+        return ex.getBindingResult().getFieldErrors().stream()
+                .map(fieldError -> {
+                    String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+
+                    return Error.Field.builder()
+                            .name(fieldError.getField())
+                            .detail(message)
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 
     public static String joinPath(List<Reference> references) {
