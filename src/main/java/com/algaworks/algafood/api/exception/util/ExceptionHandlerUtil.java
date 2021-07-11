@@ -7,6 +7,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.LocalDateTime;
@@ -49,11 +50,24 @@ public final class ExceptionHandlerUtil {
     public static List<Error.Field> buildErrorFields(MethodArgumentNotValidException ex, MessageSource messageSource) {
         return ex.getBindingResult().getFieldErrors().stream()
                 .map(fieldError -> {
-                    String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+                    String detail = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
 
                     return Error.Field.builder()
                             .name(fieldError.getField())
-                            .detail(message)
+                            .detail(detail)
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+
+    public static List<Error.Field> buildErrorFields(BindingResult bindingResult, MessageSource messageSource) {
+        return bindingResult.getFieldErrors().stream()
+                .map(fieldError -> {
+                    String detail = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+
+                    return Error.Field.builder()
+                            .name(fieldError.getField())
+                            .detail(detail)
                             .build();
                 })
                 .collect(Collectors.toList());

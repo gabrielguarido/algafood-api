@@ -1,9 +1,9 @@
 package com.algaworks.algafood.api.exception.handler;
 
-import com.algaworks.algafood.api.exception.Error;
 import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.exception.ResourceInUseException;
 import com.algaworks.algafood.domain.exception.ResourceNotFoundException;
+import com.algaworks.algafood.domain.exception.ValidationException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,7 +23,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.List;
 import java.util.Objects;
 
 import static com.algaworks.algafood.api.exception.ErrorType.BUSINESS_RULE_VIOLATION;
@@ -82,6 +82,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         var error = buildError(BAD_REQUEST, BUSINESS_RULE_VIOLATION, ex.getMessage());
 
         return handleExceptionInternal(ex, error, new HttpHeaders(), BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<Object> handleValidationException(ValidationException ex, WebRequest request) {
+        return handleInternalValidation(ex, ex.getBindingResult(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @Override
@@ -147,9 +152,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        List<Error.Field> fields = buildErrorFields(ex, messageSource);
+        return handleInternalValidation(ex, ex.getBindingResult(), headers, status, request);
+    }
 
-        var error = buildError(status, INVALID_PAYLOAD, INVALID_PAYLOAD_MESSAGE, fields);
+    private ResponseEntity<Object> handleInternalValidation(Exception ex, BindingResult bindingResult, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        var errorFields = buildErrorFields(bindingResult, messageSource);
+
+        var error = buildError(status, INVALID_PAYLOAD, INVALID_PAYLOAD_MESSAGE, errorFields);
 
         return handleExceptionInternal(ex, error, headers, status, request);
     }

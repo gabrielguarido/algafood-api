@@ -4,6 +4,7 @@ import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.exception.CategoryNotFoundException;
 import com.algaworks.algafood.domain.exception.ResourceInUseException;
 import com.algaworks.algafood.domain.exception.RestaurantNotFoundException;
+import com.algaworks.algafood.domain.exception.ValidationException;
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.repository.RestaurantRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -16,6 +17,8 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.SmartValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -34,6 +37,9 @@ public class RestaurantService {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private SmartValidator smartValidator;
 
     public List<Restaurant> list() {
         return restaurantRepository.findAll();
@@ -104,6 +110,8 @@ public class RestaurantService {
 
             merge(fields, existingRestaurant, request);
 
+            validate(existingRestaurant, "restaurant");
+
             return update(id, existingRestaurant);
         } catch (RestaurantNotFoundException e) {
             throw new BusinessException(e.getMessage(), e);
@@ -143,6 +151,16 @@ public class RestaurantService {
             });
         } catch (IllegalArgumentException e) {
             throw new HttpMessageNotReadableException(e.getMessage(), getRootCause(e), httpRequest);
+        }
+    }
+
+    private void validate(Restaurant restaurant, String objectName) {
+        var bindingResult = new BeanPropertyBindingResult(restaurant, objectName);
+
+        smartValidator.validate(restaurant, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult);
         }
     }
 }
