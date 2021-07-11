@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.algaworks.algafood.infrastructure.repository.spec.RestaurantSpecs.withFreeShipping;
+import static com.algaworks.algafood.infrastructure.repository.spec.RestaurantSpecs.withFreeDelivery;
 import static com.algaworks.algafood.infrastructure.repository.spec.RestaurantSpecs.withNameLike;
 
 @Repository
@@ -29,7 +29,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryQueries {
     private RestaurantRepository restaurantRepository;
 
     @Override
-    public List<Restaurant> find(String name, BigDecimal initialShippingTax, BigDecimal finalShippingTax) {
+    public List<Restaurant> find(String name, BigDecimal initialDeliveryFee, BigDecimal finalDeliveryFee) {
         var builder = manager.getCriteriaBuilder();
         var criteria = builder.createQuery(Restaurant.class);
         var root = criteria.from(Restaurant.class);
@@ -39,12 +39,12 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryQueries {
             predicates.add(builder.like(root.get("name"), "%" + name + "%"));
         }
 
-        if (initialShippingTax != null) {
-            predicates.add(builder.greaterThanOrEqualTo(root.get("shippingTax"), initialShippingTax));
+        if (initialDeliveryFee != null) {
+            predicates.add(builder.greaterThanOrEqualTo(root.get("deliveryFee"), initialDeliveryFee));
         }
 
-        if (finalShippingTax != null) {
-            predicates.add(builder.lessThanOrEqualTo(root.get("shippingTax"), finalShippingTax));
+        if (finalDeliveryFee != null) {
+            predicates.add(builder.lessThanOrEqualTo(root.get("deliveryFee"), finalDeliveryFee));
         }
 
         criteria.where(predicates.toArray(new Predicate[0]));
@@ -55,7 +55,7 @@ public class RestaurantRepositoryImpl implements RestaurantRepositoryQueries {
     }
 
     @Override
-    public List<Restaurant> findWithFreeShippingTax(String name) {
-        return restaurantRepository.findAll(withFreeShipping().and(withNameLike(name)));
+    public List<Restaurant> findWithFreeDeliveryFee(String name) {
+        return restaurantRepository.findAll(withFreeDelivery().and(withNameLike(name)));
     }
 }

@@ -1,5 +1,7 @@
 package com.algaworks.algafood.domain.model;
 
+import com.algaworks.algafood.core.group.Groups;
+import com.algaworks.algafood.core.validation.Multiple;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,6 +19,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.groups.ConvertGroup;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,14 +39,21 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Column(nullable = false)
     private String name;
 
+    @NotNull
+    @PositiveOrZero
+    @Multiple(number = 5)
     @Column(nullable = false)
-    private BigDecimal shippingTax;
+    private BigDecimal deliveryFee;
 
+    @Valid
+    @NotNull
     @ManyToOne
     @JoinColumn(nullable = false)
+    @ConvertGroup(to = Groups.CategoryId.class)
     private Category category;
 
     @Embedded

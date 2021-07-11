@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -41,9 +42,9 @@ public class RestaurantController {
         return ResponseEntity.ok(restaurantService.find(id));
     }
 
-    @GetMapping("/by-shipping-tax")
-    public ResponseEntity<List<Restaurant>> listByShippingTax(BigDecimal initialShippingTax, BigDecimal finalShippingTax) {
-        return ResponseEntity.ok(restaurantService.listByShippingTax(initialShippingTax, finalShippingTax));
+    @GetMapping("/by-delivery-fee")
+    public ResponseEntity<List<Restaurant>> listByDeliveryFee(BigDecimal initialFee, BigDecimal finalFee) {
+        return ResponseEntity.ok(restaurantService.listByDeliveryFee(initialFee, finalFee));
     }
 
     @GetMapping("/by-name")
@@ -62,8 +63,8 @@ public class RestaurantController {
     }
 
     @GetMapping("/custom")
-    public ResponseEntity<List<Restaurant>> customSearch(String name, BigDecimal initialShippingTax, BigDecimal finalShippingTax) {
-        return ResponseEntity.ok(restaurantService.customSearch(name, initialShippingTax, finalShippingTax));
+    public ResponseEntity<List<Restaurant>> customSearch(String name, BigDecimal initialDeliveryFee, BigDecimal finalDeliveryFee) {
+        return ResponseEntity.ok(restaurantService.customSearch(name, initialDeliveryFee, finalDeliveryFee));
     }
 
     @GetMapping("/count-by-category")
@@ -71,9 +72,9 @@ public class RestaurantController {
         return ResponseEntity.ok(restaurantService.countByCategory(categoryId));
     }
 
-    @GetMapping("/free-shipping")
-    public ResponseEntity<List<Restaurant>> findWithFreeShipping(String name) {
-        return ResponseEntity.ok(restaurantService.findWithFreeShipping(name));
+    @GetMapping("/free-delivery")
+    public ResponseEntity<List<Restaurant>> findWithFreeDelivery(String name) {
+        return ResponseEntity.ok(restaurantService.findWithFreeDelivery(name));
     }
 
     @GetMapping("/first")
@@ -83,12 +84,12 @@ public class RestaurantController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Restaurant> create(@RequestBody Restaurant restaurant) {
+    public ResponseEntity<Restaurant> create(@RequestBody @Valid Restaurant restaurant) {
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.save(restaurant));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Restaurant> update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
+    public ResponseEntity<Restaurant> update(@PathVariable Long id, @RequestBody @Valid Restaurant restaurant) {
         return ResponseEntity.ok(restaurantService.update(id, restaurant));
     }
 

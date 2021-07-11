@@ -31,7 +31,7 @@ public class Order {
     private Long id;
 
     private BigDecimal subtotal;
-    private BigDecimal shippingTax;
+    private BigDecimal deliveryFee;
     private BigDecimal totalPrice;
 
     @Embedded

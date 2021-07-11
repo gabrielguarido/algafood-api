@@ -3,8 +3,12 @@ package com.algaworks.algafood.api.exception.util;
 import com.algaworks.algafood.api.exception.Error;
 import com.algaworks.algafood.api.exception.ErrorType;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +20,14 @@ public final class ExceptionHandlerUtil {
     private ExceptionHandlerUtil() {
     }
 
+    public static Error buildError(HttpStatus status, String title) {
+        return Error.builder()
+                .status(status.value())
+                .title(title)
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
     public static Error buildError(HttpStatus status, ErrorType errorType, String detail) {
         return Error.builder()
                 .status(status.value())
@@ -25,12 +37,40 @@ public final class ExceptionHandlerUtil {
                 .build();
     }
 
-    public static Error buildInternalError(HttpStatus status, String title) {
+    public static Error buildError(HttpStatus status, ErrorType errorType, String detail, List<Error.Field> fields) {
         return Error.builder()
                 .status(status.value())
-                .title(title)
+                .title(errorType.getType())
+                .detail(detail)
                 .timestamp(LocalDateTime.now())
+                .fields(fields)
                 .build();
+    }
+
+    public static List<Error.Field> buildErrorFields(MethodArgumentNotValidException ex, MessageSource messageSource) {
+        return ex.getBindingResult().getFieldErrors().stream()
+                .map(fieldError -> {
+                    String detail = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+
+                    return Error.Field.builder()
+                            .name(fieldError.getField())
+                            .detail(detail)
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+
+    public static List<Error.Field> buildErrorFields(BindingResult bindingResult, MessageSource messageSource) {
+        return bindingResult.getFieldErrors().stream()
+                .map(fieldError -> {
+                    String detail = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+
+                    return Error.Field.builder()
+                            .name(fieldError.getField())
+                            .detail(detail)
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 
     public static String joinPath(List<Reference> references) {

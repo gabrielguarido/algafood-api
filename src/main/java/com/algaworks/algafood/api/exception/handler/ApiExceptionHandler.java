@@ -3,14 +3,19 @@ package com.algaworks.algafood.api.exception.handler;
 import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.exception.ResourceInUseException;
 import com.algaworks.algafood.domain.exception.ResourceNotFoundException;
+import com.algaworks.algafood.domain.exception.ValidationException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -23,11 +28,19 @@ import java.util.Objects;
 import static com.algaworks.algafood.api.exception.ErrorType.BUSINESS_RULE_VIOLATION;
 import static com.algaworks.algafood.api.exception.ErrorType.INTERNAL_SERVER_ERROR;
 import static com.algaworks.algafood.api.exception.ErrorType.INVALID_PARAMETER;
+import static com.algaworks.algafood.api.exception.ErrorType.INVALID_PAYLOAD;
 import static com.algaworks.algafood.api.exception.ErrorType.PAYLOAD_MALFORMED;
 import static com.algaworks.algafood.api.exception.ErrorType.RESOURCE_IN_USE;
 import static com.algaworks.algafood.api.exception.ErrorType.RESOURCE_NOT_FOUND;
+import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.HTTP_MESSAGE_NOT_READABLE_EXCEPTION_MESSAGE;
+import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.INTERNAL_SERVER_ERROR_MESSAGE;
+import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.INVALID_FORMAT_EXCEPTION_MESSAGE;
+import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.INVALID_PARAMETER_MESSAGE;
+import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.INVALID_PAYLOAD_MESSAGE;
+import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.PROPERTY_NONEXISTENT_MESSAGE;
+import static com.algaworks.algafood.api.exception.handler.ApiExceptionMessages.RESOURCE_NOT_FOUND_MESSAGE;
 import static com.algaworks.algafood.api.exception.util.ExceptionHandlerUtil.buildError;
-import static com.algaworks.algafood.api.exception.util.ExceptionHandlerUtil.buildInternalError;
+import static com.algaworks.algafood.api.exception.util.ExceptionHandlerUtil.buildErrorFields;
 import static com.algaworks.algafood.api.exception.util.ExceptionHandlerUtil.joinPath;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
@@ -36,12 +49,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final String HTTP_MESSAGE_NOT_READABLE_EXCEPTION_MESSAGE = "The request body is invalid. Check syntax";
-    private static final String INVALID_FORMAT_EXCEPTION_MESSAGE = "The property '%s' received a value '%s' which is of an invalid type. Inform a value that is compatible with the type '%s'";
-    private static final String PROPERTY_NONEXISTENT_MESSAGE = "The given property '%s' does not exist";
-    private static final String INVALID_PARAMETER_MESSAGE = "The URL parameter '%s' received the value '%s', which is of an invalid type. Inform a value that is compatible with the type '%s'";
-    private static final String RESOURCE_NOT_FOUND_MESSAGE = "The resource '%s' does not exist";
-    private static final String INTERNAL_SERVER_ERROR_MESSAGE = "An unexpected internal error occurred. Try again, and if the problem persist, contact the system admin";
+    @Autowired
+    private MessageSource messageSource;
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
@@ -73,6 +82,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         var error = buildError(BAD_REQUEST, BUSINESS_RULE_VIOLATION, ex.getMessage());
 
         return handleExceptionInternal(ex, error, new HttpHeaders(), BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<Object> handleValidationException(ValidationException ex, WebRequest request) {
+        return handleInternalValidation(ex, ex.getBindingResult(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @Override
@@ -137,11 +151,24 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return handleInternalValidation(ex, ex.getBindingResult(), headers, status, request);
+    }
+
+    private ResponseEntity<Object> handleInternalValidation(Exception ex, BindingResult bindingResult, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        var errorFields = buildErrorFields(bindingResult, messageSource);
+
+        var error = buildError(status, INVALID_PAYLOAD, INVALID_PAYLOAD_MESSAGE, errorFields);
+
+        return handleExceptionInternal(ex, error, headers, status, request);
+    }
+
+    @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
         if (body == null) {
-            body = buildInternalError(status, status.getReasonPhrase());
+            body = buildError(status, status.getReasonPhrase());
         } else if (body instanceof String) {
-            body = buildInternalError(status, (String) body);
+            body = buildError(status, (String) body);
         }
 
         return super.handleExceptionInternal(ex, body, headers, status, request);

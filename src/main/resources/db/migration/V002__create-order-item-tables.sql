@@ -2,7 +2,7 @@ create table `order`
 (
     id                 bigint         not null auto_increment,
     subtotal           decimal(10, 2) not null,
-    shipping_tax       decimal(10, 2) not null,
+    delivery_fee       decimal(10, 2) not null,
     total_price        decimal(10, 2) not null,
 
     restaurant_id      bigint         not null,

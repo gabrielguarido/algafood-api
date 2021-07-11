@@ -7,8 +7,11 @@ import java.math.BigDecimal;
 
 public class RestaurantSpecs {
 
-    public static Specification<Restaurant> withFreeShipping() {
-        return (root, query, builder) -> builder.equal(root.get("shippingTax"), BigDecimal.ZERO);
+    private RestaurantSpecs() {
+    }
+
+    public static Specification<Restaurant> withFreeDelivery() {
+        return (root, query, builder) -> builder.equal(root.get("deliveryFee"), BigDecimal.ZERO);
     }
 
     public static Specification<Restaurant> withNameLike(String name) {
