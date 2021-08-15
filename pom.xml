@@ -14,7 +14,7 @@
     <name>algafood-api</name>
     <description>Food Delivery API - Spring REST Specialist Training</description>
     <properties>
-        <java.version>12</java.version>
+        <java.version>11</java.version>
         <junit.version>5.7.0</junit.version>
         <failsafe.version>3.0.0-M5</failsafe.version>
     </properties>
