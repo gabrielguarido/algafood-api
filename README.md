@@ -24,7 +24,7 @@ $ ./mvnw clean package
 ```
 
 ## :computer: Technology Stack
-- Java 12
+- Java 11
 - Spring Framework (Boot, Data JPA, Security, JWT)
 - Maven
 - Docker
