@@ -1,0 +1,7 @@
+{
+  "name": "Shake Shack",
+  "deliveryFee": 11.00,
+  "category": {
+    "id": 999
+  }
+}

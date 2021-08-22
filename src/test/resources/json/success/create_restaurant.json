@@ -1,0 +1,7 @@
+{
+  "name": "Five Guys",
+  "shippingTax": 8.00,
+  "category": {
+    "id": 1
+  }
+}
