@@ -1,0 +1,7 @@
+{
+  "name": "Five Guys",
+  "deliveryFee": 10.00,
+  "category": {
+    "id": 1
+  }
+}

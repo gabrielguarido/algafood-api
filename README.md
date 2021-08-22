@@ -5,6 +5,24 @@
 ## :question: About
 This project has been designed to implement a food delivery app, using the best practices and newest technologies related to Java and Spring. This project is part of the Spring REST Specialist training by Algaworks.
 
+## :white_check_mark: Testing
+This project implements the `Maven FailSafe plugin`, that will prevent the application from not being built due to tests failure, so in order to test the application, see the following.
+
+### Unit Tests
+```
+$ ./mvnw test
+```
+
+### Integration Tests
+```
+$ ./mvnw verify
+```
+
+### Building the project without running tests
+```
+$ ./mvnw clean package
+```
+
 ## :computer: Technology Stack
 - Java 12
 - Spring Framework (Boot, Data JPA, Security, JWT)
