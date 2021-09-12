@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,10 +30,12 @@ public class StateService {
         return stateRepository.findById(id).orElseThrow(() -> new StateNotFoundException(id));
     }
 
+    @Transactional
     public State save(State state) {
         return stateRepository.save(state);
     }
 
+    @Transactional
     public State update(Long id, State state) {
         try {
             var existingState = find(id);
@@ -45,6 +48,7 @@ public class StateService {
         }
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             stateRepository.deleteById(id);

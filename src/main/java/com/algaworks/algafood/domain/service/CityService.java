@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class CityService {
         return cityRepository.findById(id).orElseThrow(() -> new CityNotFoundException(id));
     }
 
+    @Transactional
     public City save(City city) {
         try {
             stateService.find(city.getState().getId());
@@ -43,6 +45,7 @@ public class CityService {
         return cityRepository.save(city);
     }
 
+    @Transactional
     public City update(Long id, City city) {
         try {
             var existingCity = find(id);
@@ -55,6 +58,7 @@ public class CityService {
         }
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             cityRepository.deleteById(id);

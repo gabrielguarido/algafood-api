@@ -16,6 +16,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.SmartValidator;
@@ -82,6 +83,7 @@ public class RestaurantService {
         return restaurantRepository.findFirst().orElse(null);
     }
 
+    @Transactional
     public Restaurant save(Restaurant restaurant) {
         try {
             categoryService.find(restaurant.getCategory().getId());
@@ -92,6 +94,7 @@ public class RestaurantService {
         return restaurantRepository.save(restaurant);
     }
 
+    @Transactional
     public Restaurant update(Long id, Restaurant restaurant) {
         try {
             var existingRestaurant = find(id);
@@ -104,6 +107,7 @@ public class RestaurantService {
         }
     }
 
+    @Transactional
     public Restaurant updatePartially(Long id, Map<String, Object> fields, HttpServletRequest request) {
         try {
             var existingRestaurant = find(id);
@@ -118,6 +122,7 @@ public class RestaurantService {
         }
     }
 
+    @Transactional
     public void delete(Long id) {
         try {
             restaurantRepository.deleteById(id);
