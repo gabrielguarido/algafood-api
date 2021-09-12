@@ -44,7 +44,7 @@ class RestaurantResourceIT {
     void setUpTestContext() {
         enableLoggingOfRequestAndResponseIfValidationFails();
 
-//        databaseCleaner.clearTables();
+        databaseCleaner.clearTables();
         addTestData(restaurantRepository, categoryRepository);
     }
 
