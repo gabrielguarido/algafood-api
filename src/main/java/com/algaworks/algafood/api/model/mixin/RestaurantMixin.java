@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RestaurantMixin {
+public abstract class RestaurantMixin {
 
     @JsonIgnoreProperties(value = "type", allowGetters = true)
     private Category category;
