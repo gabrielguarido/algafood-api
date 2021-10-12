@@ -1,8 +1,8 @@
-package com.algaworks.algafood.api.resource;
+package com.algaworks.algafood.api;
 
 import com.algaworks.algafood.domain.repository.CategoryRepository;
 import com.algaworks.algafood.util.DatabaseCleaner;
-import com.algaworks.algafood.util.ResourceUtils;
+import com.algaworks.algafood.util.ResourceUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -23,7 +23,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestPropertySource("/application-test.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CategoryResourceIT {
+class CategoryControllerIT {
 
     @LocalServerPort
     private int applicationPort;
@@ -85,7 +85,7 @@ class CategoryResourceIT {
 
     @Test
     void shouldReturnHttpStatus201_WhenCreateNewCategory() {
-        String requestPayload = ResourceUtils.getContentFromResource("/json/success/create_category.json");
+        String requestPayload = ResourceUtil.getContentFromResource("/json/success/create_category.json");
 
         buildRequestSpecification(applicationPort, BASE_PATH)
                 .body(requestPayload)
