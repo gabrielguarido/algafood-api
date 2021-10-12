@@ -7,7 +7,7 @@ import com.algaworks.algafood.domain.model.Product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +20,10 @@ public abstract class RestaurantMixin {
     private Address address;
 
     @JsonIgnore
-    private LocalDateTime created;
+    private OffsetDateTime created;
 
     @JsonIgnore
-    private LocalDateTime updated;
+    private OffsetDateTime updated;
 
     @JsonIgnore
     private List<PaymentMethod> paymentMethods = new ArrayList<>();

@@ -5,15 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import java.time.LocalDateTime;
+import javax.persistence.*;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,5 +39,5 @@ public class User {
     @JsonIgnore
     @CreationTimestamp
     @Column(nullable = false)
-    private LocalDateTime created;
+    private OffsetDateTime created;
 }
