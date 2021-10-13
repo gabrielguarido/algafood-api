@@ -1,122 +1,110 @@
 package com.algaworks.algafood.domain.service;
 
+import com.algaworks.algafood.api.model.RestaurantRequest;
+import com.algaworks.algafood.api.model.RestaurantResponse;
+import com.algaworks.algafood.api.transformer.RestaurantTransformer;
 import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.exception.CategoryNotFoundException;
 import com.algaworks.algafood.domain.exception.ResourceInUseException;
 import com.algaworks.algafood.domain.exception.RestaurantNotFoundException;
-import com.algaworks.algafood.domain.exception.ValidationException;
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.repository.RestaurantRepository;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.SmartValidator;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
-
-import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCause;
+import java.util.Optional;
 
 @Service
 public class RestaurantService {
 
     private static final String RESTAURANT_IN_USE_EXCEPTION_MESSAGE = "The restaurant ID %s is currently being used and cannot be removed";
 
-    @Autowired
-    private RestaurantRepository restaurantRepository;
+    private final RestaurantRepository restaurantRepository;
+
+    private final CategoryService categoryService;
+
+    private final RestaurantTransformer restaurantTransformer;
 
     @Autowired
-    private CategoryService categoryService;
-
-    @Autowired
-    private SmartValidator smartValidator;
-
-    public List<Restaurant> list() {
-        return restaurantRepository.findAll();
+    public RestaurantService(RestaurantRepository restaurantRepository, CategoryService categoryService, RestaurantTransformer restaurantTransformer) {
+        this.restaurantRepository = restaurantRepository;
+        this.categoryService = categoryService;
+        this.restaurantTransformer = restaurantTransformer;
     }
 
-    public Restaurant find(Long id) {
-        return restaurantRepository.findById(id)
-                .orElseThrow(() -> new RestaurantNotFoundException(id));
+    public List<RestaurantResponse> list() {
+        return restaurantTransformer.toResponse(restaurantRepository.findAll());
     }
 
-    public List<Restaurant> listByDeliveryFee(BigDecimal initialDeliveryFee, BigDecimal finalDeliveryFee) {
-        return restaurantRepository.queryByDeliveryFeeBetween(initialDeliveryFee, finalDeliveryFee);
+    public RestaurantResponse find(Long id) {
+        return restaurantTransformer.toResponse(verifyIfExists(id));
     }
 
-    public List<Restaurant> listByName(String name) {
-        return restaurantRepository.findByName(name);
+    public List<RestaurantResponse> listByDeliveryFee(BigDecimal initialDeliveryFee, BigDecimal finalDeliveryFee) {
+        return restaurantTransformer.toResponse(restaurantRepository.queryByDeliveryFeeBetween(initialDeliveryFee, finalDeliveryFee));
     }
 
-    public Restaurant findFirstByName(String name) {
-        return restaurantRepository.findFirstByNameContaining(name).orElse(null);
+    public List<RestaurantResponse> listByName(String name) {
+        return restaurantTransformer.toResponse(restaurantRepository.findByName(name));
     }
 
-    public List<Restaurant> findTop2ByName(String name) {
-        return restaurantRepository.findTop2ByNameContaining(name);
+    public RestaurantResponse findFirstByName(String name) {
+        Optional<Restaurant> restaurant = restaurantRepository.findFirstByNameContaining(name);
+
+        if (restaurant.isEmpty()) {
+            return null;
+        }
+
+        return restaurantTransformer.toResponse(restaurant.get());
     }
 
-    public List<Restaurant> customSearch(String name, BigDecimal initialDeliveryFee, BigDecimal finalDeliveryFee) {
-        return restaurantRepository.find(name, initialDeliveryFee, finalDeliveryFee);
+    public List<RestaurantResponse> findTop2ByName(String name) {
+        return restaurantTransformer.toResponse(restaurantRepository.findTop2ByNameContaining(name));
+    }
+
+    public List<RestaurantResponse> customSearch(String name, BigDecimal initialDeliveryFee, BigDecimal finalDeliveryFee) {
+        return restaurantTransformer.toResponse(restaurantRepository.find(name, initialDeliveryFee, finalDeliveryFee));
     }
 
     public Integer countByCategory(Long categoryId) {
         return restaurantRepository.countByCategoryId(categoryId);
     }
 
-    public List<Restaurant> findWithFreeDelivery(String name) {
-        return restaurantRepository.findWithFreeDeliveryFee(name);
+    public List<RestaurantResponse> findWithFreeDelivery(String name) {
+        return restaurantTransformer.toResponse(restaurantRepository.findWithFreeDeliveryFee(name));
     }
 
-    public Restaurant findFirst() {
-        return restaurantRepository.findFirst().orElse(null);
-    }
-
-    @Transactional
-    public Restaurant save(Restaurant restaurant) {
-        try {
-            categoryService.find(restaurant.getCategory().getId());
-        } catch (CategoryNotFoundException e) {
-            throw new BusinessException(e.getMessage(), e);
-        }
-
-        return restaurantRepository.save(restaurant);
+    public RestaurantResponse findFirst() {
+        return restaurantTransformer.toResponse(restaurantRepository.findFirst().orElse(null));
     }
 
     @Transactional
-    public Restaurant update(Long id, Restaurant restaurant) {
+    public RestaurantResponse save(RestaurantRequest restaurantRequest) {
+        var restaurant = restaurantTransformer.toEntity(restaurantRequest);
+
+        validateCategory(restaurant.getCategory().getId());
+
+        return restaurantTransformer.toResponse(restaurantRepository.save(restaurant));
+    }
+
+    @Transactional
+    public RestaurantResponse update(Long id, RestaurantRequest restaurantRequest) {
         try {
-            var existingRestaurant = find(id);
+            var restaurant = restaurantTransformer.toEntity(restaurantRequest);
+
+            var existingRestaurant = verifyIfExists(id);
 
             BeanUtils.copyProperties(restaurant, existingRestaurant, "id", "paymentMethods", "address", "created", "products");
 
-            return save(existingRestaurant);
-        } catch (RestaurantNotFoundException e) {
-            throw new BusinessException(e.getMessage(), e);
-        }
-    }
+            validateCategory(restaurant.getCategory().getId());
 
-    @Transactional
-    public Restaurant updatePartially(Long id, Map<String, Object> fields, HttpServletRequest request) {
-        try {
-            var existingRestaurant = find(id);
-
-            merge(fields, existingRestaurant, request);
-
-            validate(existingRestaurant, "restaurant");
-
-            return update(id, existingRestaurant);
+            return restaurantTransformer.toResponse(restaurantRepository.save(existingRestaurant));
         } catch (RestaurantNotFoundException e) {
             throw new BusinessException(e.getMessage(), e);
         }
@@ -135,37 +123,15 @@ public class RestaurantService {
         }
     }
 
-    private void merge(Map<String, Object> fields, Restaurant restaurant, HttpServletRequest request) {
-        var httpRequest = new ServletServerHttpRequest(request);
-
-        try {
-            var objectMapper = new ObjectMapper();
-
-            objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, true);
-
-            var convertedRestaurant = objectMapper.convertValue(fields, Restaurant.class);
-
-            fields.forEach((key, value) -> {
-                var field = ReflectionUtils.findField(Restaurant.class, key);
-                assert field != null;
-                field.setAccessible(true);
-
-                Object newValue = ReflectionUtils.getField(field, convertedRestaurant);
-
-                ReflectionUtils.setField(field, restaurant, newValue);
-            });
-        } catch (IllegalArgumentException e) {
-            throw new HttpMessageNotReadableException(e.getMessage(), getRootCause(e), httpRequest);
-        }
+    private Restaurant verifyIfExists(Long id) {
+        return restaurantRepository.findById(id).orElseThrow(() -> new RestaurantNotFoundException(id));
     }
 
-    private void validate(Restaurant restaurant, String objectName) {
-        var bindingResult = new BeanPropertyBindingResult(restaurant, objectName);
-
-        smartValidator.validate(restaurant, bindingResult);
-
-        if (bindingResult.hasErrors()) {
-            throw new ValidationException(bindingResult);
+    private void validateCategory(Long categoryId) {
+        try {
+            categoryService.find(categoryId);
+        } catch (CategoryNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
         }
     }
 }

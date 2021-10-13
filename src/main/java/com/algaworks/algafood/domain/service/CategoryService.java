@@ -20,8 +20,12 @@ public class CategoryService {
     private static final String CATEGORY_IN_USE_EXCEPTION_MESSAGE = "The category ID %s is currently being used and cannot be removed";
     private static final String CATEGORY_TYPE_NOT_FOUND_EXCEPTION_MESSAGE = "Category type %s not found";
 
+    private final CategoryRepository categoryRepository;
+
     @Autowired
-    private CategoryRepository categoryRepository;
+    public CategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 
     public List<Category> list() {
         return categoryRepository.findAll();

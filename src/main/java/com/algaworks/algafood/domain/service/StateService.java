@@ -19,8 +19,12 @@ public class StateService {
 
     private static final String STATE_IN_USE_EXCEPTION_MESSAGE = "The state ID %s is currently being used and cannot be removed";
 
+    private final StateRepository stateRepository;
+
     @Autowired
-    private StateRepository stateRepository;
+    public StateService(StateRepository stateRepository) {
+        this.stateRepository = stateRepository;
+    }
 
     public List<State> list() {
         return stateRepository.findAll();

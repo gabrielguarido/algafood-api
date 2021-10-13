@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +24,7 @@ public final class ExceptionHandlerUtil {
         return Error.builder()
                 .status(status.value())
                 .title(title)
-                .timestamp(LocalDateTime.now())
+                .timestamp(OffsetDateTime.now())
                 .build();
     }
 
@@ -33,7 +33,7 @@ public final class ExceptionHandlerUtil {
                 .status(status.value())
                 .title(errorType.getType())
                 .detail(detail)
-                .timestamp(LocalDateTime.now())
+                .timestamp(OffsetDateTime.now())
                 .build();
     }
 
@@ -42,7 +42,7 @@ public final class ExceptionHandlerUtil {
                 .status(status.value())
                 .title(errorType.getType())
                 .detail(detail)
-                .timestamp(LocalDateTime.now())
+                .timestamp(OffsetDateTime.now())
                 .fields(fields)
                 .build();
     }

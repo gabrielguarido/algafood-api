@@ -20,11 +20,15 @@ public class CityService {
 
     private static final String CITY_IN_USE_EXCEPTION_MESSAGE = "The city ID %s is currently being used and cannot be removed";
 
-    @Autowired
-    private CityRepository cityRepository;
+    private final CityRepository cityRepository;
+
+    private final StateService stateService;
 
     @Autowired
-    private StateService stateService;
+    public CityService(CityRepository cityRepository, StateService stateService) {
+        this.cityRepository = cityRepository;
+        this.stateService = stateService;
+    }
 
     public List<City> list() {
         return cityRepository.findAll();
