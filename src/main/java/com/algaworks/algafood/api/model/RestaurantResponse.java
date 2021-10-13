@@ -10,5 +10,5 @@ public class RestaurantResponse {
     private Long id;
     private String name;
     private BigDecimal deliveryFee;
-    private Long categoryId;
+    private CategoryResponse category;
 }
