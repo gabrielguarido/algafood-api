@@ -111,6 +111,7 @@ public class RestaurantService {
     public void delete(Long id) {
         try {
             restaurantRepository.deleteById(id);
+            restaurantRepository.flush();
         } catch (DataIntegrityViolationException e) {
             throw new ResourceInUseException(
                     String.format(RESTAURANT_IN_USE_EXCEPTION_MESSAGE, id)

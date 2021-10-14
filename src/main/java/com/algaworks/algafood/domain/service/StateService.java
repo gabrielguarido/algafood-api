@@ -63,6 +63,7 @@ public class StateService {
     public void delete(Long id) {
         try {
             stateRepository.deleteById(id);
+            stateRepository.flush();
         } catch (DataIntegrityViolationException e) {
             throw new ResourceInUseException(
                     String.format(STATE_IN_USE_EXCEPTION_MESSAGE, id)

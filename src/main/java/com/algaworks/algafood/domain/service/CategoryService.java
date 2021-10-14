@@ -86,6 +86,7 @@ public class CategoryService {
     public void delete(Long id) {
         try {
             categoryRepository.deleteById(id);
+            categoryRepository.flush();
         } catch (DataIntegrityViolationException e) {
             throw new ResourceInUseException(
                     String.format(CATEGORY_IN_USE_EXCEPTION_MESSAGE, id)

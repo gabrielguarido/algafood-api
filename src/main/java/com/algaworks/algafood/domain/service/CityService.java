@@ -66,6 +66,7 @@ public class CityService {
     public void delete(Long id) {
         try {
             cityRepository.deleteById(id);
+            cityRepository.flush();
         } catch (DataIntegrityViolationException e) {
             throw new ResourceInUseException(
                     String.format(CITY_IN_USE_EXCEPTION_MESSAGE, id)
