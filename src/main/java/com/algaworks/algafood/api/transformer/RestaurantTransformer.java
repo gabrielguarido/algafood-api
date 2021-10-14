@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.transformer;
 
 import com.algaworks.algafood.api.model.RestaurantRequest;
 import com.algaworks.algafood.api.model.RestaurantResponse;
+import com.algaworks.algafood.domain.model.Category;
 import com.algaworks.algafood.domain.model.Restaurant;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +34,11 @@ public class RestaurantTransformer {
 
     public Restaurant toEntity(RestaurantRequest restaurantRequest) {
         return mapper.map(restaurantRequest, Restaurant.class);
+    }
+
+    public void copyPropertiesToEntity(RestaurantRequest restaurantRequest, Restaurant restaurant) {
+        restaurant.setCategory(new Category());
+
+        mapper.map(restaurantRequest, restaurant);
     }
 }

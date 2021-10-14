@@ -9,7 +9,6 @@ import com.algaworks.algafood.domain.exception.ResourceInUseException;
 import com.algaworks.algafood.domain.exception.RestaurantNotFoundException;
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.repository.RestaurantRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -96,13 +95,11 @@ public class RestaurantService {
     @Transactional
     public RestaurantResponse update(Long id, RestaurantRequest restaurantRequest) {
         try {
-            var restaurant = restaurantTransformer.toEntity(restaurantRequest);
-
             var existingRestaurant = verifyIfExists(id);
 
-            BeanUtils.copyProperties(restaurant, existingRestaurant, "id", "paymentMethods", "address", "created", "products");
+            restaurantTransformer.copyPropertiesToEntity(restaurantRequest, existingRestaurant);
 
-            validateCategory(restaurant.getCategory().getId());
+            validateCategory(existingRestaurant.getCategory().getId());
 
             return restaurantTransformer.toResponse(restaurantRepository.save(existingRestaurant));
         } catch (RestaurantNotFoundException e) {

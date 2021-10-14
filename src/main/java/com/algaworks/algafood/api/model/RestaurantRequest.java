@@ -20,5 +20,5 @@ public class RestaurantRequest {
 
     @Valid
     @NotNull
-    private Long categoryId;
+    private CategoryIdRequest category;
 }
