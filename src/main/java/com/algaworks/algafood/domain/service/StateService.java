@@ -1,11 +1,13 @@
 package com.algaworks.algafood.domain.service;
 
+import com.algaworks.algafood.api.model.StateRequest;
+import com.algaworks.algafood.api.model.StateResponse;
+import com.algaworks.algafood.api.transformer.StateTransformer;
 import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.exception.ResourceInUseException;
 import com.algaworks.algafood.domain.exception.StateNotFoundException;
 import com.algaworks.algafood.domain.model.State;
 import com.algaworks.algafood.domain.repository.StateRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -21,32 +23,37 @@ public class StateService {
 
     private final StateRepository stateRepository;
 
+    private final StateTransformer stateTransformer;
+
     @Autowired
-    public StateService(StateRepository stateRepository) {
+    public StateService(StateRepository stateRepository, StateTransformer stateTransformer) {
         this.stateRepository = stateRepository;
+        this.stateTransformer = stateTransformer;
     }
 
-    public List<State> list() {
-        return stateRepository.findAll();
+    public List<StateResponse> list() {
+        return stateTransformer.toResponse(stateRepository.findAll());
     }
 
-    public State find(Long id) {
-        return stateRepository.findById(id).orElseThrow(() -> new StateNotFoundException(id));
-    }
-
-    @Transactional
-    public State save(State state) {
-        return stateRepository.save(state);
+    public StateResponse find(Long id) {
+        return stateTransformer.toResponse(verifyIfExists(id));
     }
 
     @Transactional
-    public State update(Long id, State state) {
+    public StateResponse save(StateRequest stateRequest) {
+        var state = stateTransformer.toEntity(stateRequest);
+
+        return stateTransformer.toResponse(stateRepository.save(state));
+    }
+
+    @Transactional
+    public StateResponse update(Long id, StateRequest stateRequest) {
         try {
-            var existingState = find(id);
+            var existingState = verifyIfExists(id);
 
-            BeanUtils.copyProperties(state, existingState, "id");
+            stateTransformer.copyPropertiesToEntity(stateRequest, existingState);
 
-            return save(existingState);
+            return stateTransformer.toResponse(stateRepository.save(existingState));
         } catch (StateNotFoundException e) {
             throw new BusinessException(e.getMessage(), e);
         }
@@ -63,5 +70,9 @@ public class StateService {
         } catch (EmptyResultDataAccessException e) {
             throw new StateNotFoundException(id);
         }
+    }
+
+    private State verifyIfExists(Long id) {
+        return stateRepository.findById(id).orElseThrow(() -> new StateNotFoundException(id));
     }
 }
