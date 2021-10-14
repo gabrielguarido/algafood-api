@@ -8,7 +8,6 @@ import com.algaworks.algafood.domain.exception.CategoryNotFoundException;
 import com.algaworks.algafood.domain.exception.ResourceInUseException;
 import com.algaworks.algafood.domain.model.Category;
 import com.algaworks.algafood.domain.repository.CategoryRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -70,11 +69,9 @@ public class CategoryService {
     @Transactional
     public CategoryResponse update(Long id, CategoryRequest categoryRequest) {
         try {
-            var category = categoryTransformer.toEntity(categoryRequest);
-
             var existingCategory = verifyIfExists(id);
 
-            BeanUtils.copyProperties(category, existingCategory, "id");
+            categoryTransformer.copyPropertiesToEntity(categoryRequest, existingCategory);
 
             return categoryTransformer.toResponse(categoryRepository.save(existingCategory));
         } catch (CategoryNotFoundException e) {

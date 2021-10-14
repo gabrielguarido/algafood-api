@@ -23,8 +23,12 @@ import java.util.List;
 @RequestMapping(value = "state", produces = MediaType.APPLICATION_JSON_VALUE)
 public class StateController {
 
+    private final StateService stateService;
+
     @Autowired
-    private StateService stateService;
+    public StateController(StateService stateService) {
+        this.stateService = stateService;
+    }
 
     @GetMapping
     public ResponseEntity<List<StateResponse>> list() {
