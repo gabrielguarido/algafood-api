@@ -50,6 +50,8 @@ public class Restaurant {
     @Embedded
     private Address address;
 
+    private Boolean active = Boolean.TRUE;
+
     @CreationTimestamp
     @Column(nullable = false)
     private OffsetDateTime created;
@@ -66,4 +68,12 @@ public class Restaurant {
 
     @OneToMany(mappedBy = "restaurant")
     private List<Product> products = new ArrayList<>();
+
+    public void activate() {
+        setActive(true);
+    }
+
+    public void deactivate() {
+        setActive(false);
+    }
 }

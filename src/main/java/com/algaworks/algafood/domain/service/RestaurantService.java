@@ -23,6 +23,8 @@ import java.util.Optional;
 public class RestaurantService {
 
     private static final String RESTAURANT_IN_USE_EXCEPTION_MESSAGE = "The restaurant ID %s is currently being used and cannot be removed";
+    private static final String RESTAURANT_ALREADY_ACTIVE_EXCEPTION_MESSAGE = "The restaurant ID %s is already active";
+    private static final String RESTAURANT_ALREADY_INACTIVE_EXCEPTION_MESSAGE = "The restaurant ID %s is already inactive";
 
     private final RestaurantRepository restaurantRepository;
 
@@ -119,6 +121,28 @@ public class RestaurantService {
         } catch (EmptyResultDataAccessException e) {
             throw new RestaurantNotFoundException(id);
         }
+    }
+
+    @Transactional
+    public void activate(Long id) {
+        var restaurant = verifyIfExists(id);
+
+        if (Boolean.TRUE.equals(restaurant.getActive())) {
+            throw new BusinessException(String.format(RESTAURANT_ALREADY_ACTIVE_EXCEPTION_MESSAGE, id));
+        }
+
+        restaurant.activate();
+    }
+
+    @Transactional
+    public void deactivate(Long id) {
+        var restaurant = verifyIfExists(id);
+
+        if (Boolean.FALSE.equals(restaurant.getActive())) {
+            throw new BusinessException(String.format(RESTAURANT_ALREADY_INACTIVE_EXCEPTION_MESSAGE, id));
+        }
+
+        restaurant.deactivate();
     }
 
     private Restaurant verifyIfExists(Long id) {

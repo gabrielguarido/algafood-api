@@ -1,0 +1,1 @@
+alter table restaurant add active tinyint(1) not null default 1;
