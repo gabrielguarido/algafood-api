@@ -12,4 +12,5 @@ public class RestaurantResponse {
     private BigDecimal deliveryFee;
     private CategoryResponse category;
     private Boolean active;
+    private AddressResponse address;
 }
