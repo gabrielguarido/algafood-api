@@ -1,7 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
-import com.algaworks.algafood.domain.model.Category;
-import com.algaworks.algafood.domain.model.Restaurant;
+import com.algaworks.algafood.api.model.RestaurantRequest;
+import com.algaworks.algafood.api.model.RestaurantResponse;
 import com.algaworks.algafood.domain.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,51 +18,53 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "restaurant", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantController {
 
+    private final RestaurantService restaurantService;
+
     @Autowired
-    private RestaurantService restaurantService;
+    public RestaurantController(RestaurantService restaurantService) {
+        this.restaurantService = restaurantService;
+    }
 
     @GetMapping
-    public ResponseEntity<List<Restaurant>> list() {
+    public ResponseEntity<List<RestaurantResponse>> list() {
         return ResponseEntity.ok(restaurantService.list());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Restaurant> find(@PathVariable Long id) {
+    public ResponseEntity<RestaurantResponse> find(@PathVariable Long id) {
         return ResponseEntity.ok(restaurantService.find(id));
     }
 
     @GetMapping("/by-delivery-fee")
-    public ResponseEntity<List<Restaurant>> listByDeliveryFee(BigDecimal initialFee, BigDecimal finalFee) {
+    public ResponseEntity<List<RestaurantResponse>> listByDeliveryFee(BigDecimal initialFee, BigDecimal finalFee) {
         return ResponseEntity.ok(restaurantService.listByDeliveryFee(initialFee, finalFee));
     }
 
     @GetMapping("/by-name")
-    public ResponseEntity<List<Restaurant>> listByName(String name) {
+    public ResponseEntity<List<RestaurantResponse>> listByName(String name) {
         return ResponseEntity.ok(restaurantService.listByName(name));
     }
 
     @GetMapping("/first-by-name")
-    public ResponseEntity<Restaurant> findFirstByName(String name) {
+    public ResponseEntity<RestaurantResponse> findFirstByName(String name) {
         return ResponseEntity.ok(restaurantService.findFirstByName(name));
     }
 
     @GetMapping("/top2-by-name")
-    public ResponseEntity<List<Restaurant>> findTop2ByName(String name) {
+    public ResponseEntity<List<RestaurantResponse>> findTop2ByName(String name) {
         return ResponseEntity.ok(restaurantService.findTop2ByName(name));
     }
 
     @GetMapping("/custom")
-    public ResponseEntity<List<Restaurant>> customSearch(String name, BigDecimal initialDeliveryFee, BigDecimal finalDeliveryFee) {
+    public ResponseEntity<List<RestaurantResponse>> customSearch(String name, BigDecimal initialDeliveryFee, BigDecimal finalDeliveryFee) {
         return ResponseEntity.ok(restaurantService.customSearch(name, initialDeliveryFee, finalDeliveryFee));
     }
 
@@ -73,37 +74,42 @@ public class RestaurantController {
     }
 
     @GetMapping("/free-delivery")
-    public ResponseEntity<List<Restaurant>> findWithFreeDelivery(String name) {
+    public ResponseEntity<List<RestaurantResponse>> findWithFreeDelivery(String name) {
         return ResponseEntity.ok(restaurantService.findWithFreeDelivery(name));
     }
 
     @GetMapping("/first")
-    public ResponseEntity<Restaurant> findFirst() {
+    public ResponseEntity<RestaurantResponse> findFirst() {
         return ResponseEntity.ok(restaurantService.findFirst());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Restaurant> create(@RequestBody @Valid Restaurant restaurant) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.save(restaurant));
+    public ResponseEntity<RestaurantResponse> create(@RequestBody @Valid RestaurantRequest restaurantRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.save(restaurantRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Restaurant> update(@PathVariable Long id, @RequestBody @Valid Restaurant restaurant) {
-        return ResponseEntity.ok(restaurantService.update(id, restaurant));
+    public ResponseEntity<RestaurantResponse> update(@PathVariable Long id, @RequestBody @Valid RestaurantRequest restaurantRequest) {
+        return ResponseEntity.ok(restaurantService.update(id, restaurantRequest));
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Object> updatePartially(@PathVariable Long id, @RequestBody Map<String, Object> fields, HttpServletRequest request) {
-        try {
-            return ResponseEntity.ok(restaurantService.updatePartially(id, fields, request));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @PutMapping("/{id}/activate")
+    public ResponseEntity<Void> activate(@PathVariable Long id) {
+        restaurantService.activate(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}/deactivate")
+    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
+        restaurantService.deactivate(id);
+
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Category> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         restaurantService.delete(id);
 
         return ResponseEntity.noContent().build();

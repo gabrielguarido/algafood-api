@@ -1,7 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
-import com.algaworks.algafood.domain.model.Category;
-import com.algaworks.algafood.domain.model.City;
+import com.algaworks.algafood.api.model.CityRequest;
+import com.algaworks.algafood.api.model.CityResponse;
 import com.algaworks.algafood.domain.service.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -24,32 +23,35 @@ import java.util.List;
 @RequestMapping(value = "city", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CityController {
 
+    private final CityService cityService;
+
     @Autowired
-    private CityService cityService;
+    public CityController(CityService cityService) {
+        this.cityService = cityService;
+    }
 
     @GetMapping
-    public ResponseEntity<List<City>> list() {
+    public ResponseEntity<List<CityResponse>> list() {
         return ResponseEntity.ok(cityService.list());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<City> find(@PathVariable Long id) {
+    public ResponseEntity<CityResponse> find(@PathVariable Long id) {
         return ResponseEntity.ok(cityService.find(id));
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<City> create(@RequestBody @Valid City city) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(cityService.save(city));
+    public ResponseEntity<CityResponse> create(@RequestBody @Valid CityRequest cityRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(cityService.save(cityRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<City> update(@PathVariable Long id, @RequestBody @Valid City city) {
-        return ResponseEntity.ok(cityService.update(id, city));
+    public ResponseEntity<CityResponse> update(@PathVariable Long id, @RequestBody @Valid CityRequest cityRequest) {
+        return ResponseEntity.ok(cityService.update(id, cityRequest));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Category> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         cityService.delete(id);
 
         return ResponseEntity.noContent().build();

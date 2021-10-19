@@ -1,7 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
-import com.algaworks.algafood.domain.model.Category;
-import com.algaworks.algafood.domain.model.State;
+import com.algaworks.algafood.api.model.StateRequest;
+import com.algaworks.algafood.api.model.StateResponse;
 import com.algaworks.algafood.domain.service.StateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,31 +23,35 @@ import java.util.List;
 @RequestMapping(value = "state", produces = MediaType.APPLICATION_JSON_VALUE)
 public class StateController {
 
+    private final StateService stateService;
+
     @Autowired
-    private StateService stateService;
+    public StateController(StateService stateService) {
+        this.stateService = stateService;
+    }
 
     @GetMapping
-    public ResponseEntity<List<State>> list() {
+    public ResponseEntity<List<StateResponse>> list() {
         return ResponseEntity.ok(stateService.list());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<State> find(@PathVariable Long id) {
+    public ResponseEntity<StateResponse> find(@PathVariable Long id) {
         return ResponseEntity.ok(stateService.find(id));
     }
 
     @PostMapping
-    public ResponseEntity<State> create(@RequestBody @Valid State state) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(stateService.save(state));
+    public ResponseEntity<StateResponse> create(@RequestBody @Valid StateRequest stateRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(stateService.save(stateRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<State> update(@PathVariable Long id, @RequestBody @Valid State state) {
-        return ResponseEntity.ok(stateService.update(id, state));
+    public ResponseEntity<StateResponse> update(@PathVariable Long id, @RequestBody @Valid StateRequest stateRequest) {
+        return ResponseEntity.ok(stateService.update(id, stateRequest));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Category> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         stateService.delete(id);
 
         return ResponseEntity.noContent().build();

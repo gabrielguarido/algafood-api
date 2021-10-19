@@ -1,8 +1,5 @@
 package com.algaworks.algafood.domain.model;
 
-import com.algaworks.algafood.core.group.Groups;
-import com.algaworks.algafood.core.validation.Multiple;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,13 +19,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.groups.ConvertGroup;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,45 +37,43 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     @Column(nullable = false)
     private String name;
 
-    @NotNull
-    @PositiveOrZero
-    @Multiple(number = 5)
     @Column(nullable = false)
     private BigDecimal deliveryFee;
 
-    @Valid
-    @NotNull
     @ManyToOne
     @JoinColumn(nullable = false)
-    @ConvertGroup(to = Groups.CategoryId.class)
     private Category category;
 
     @Embedded
-    @JsonIgnore
     private Address address;
 
-    @JsonIgnore
+    private Boolean active = Boolean.TRUE;
+
     @CreationTimestamp
     @Column(nullable = false)
-    private LocalDateTime created;
+    private OffsetDateTime created;
 
-    @JsonIgnore
     @UpdateTimestamp
     @Column(nullable = false)
-    private LocalDateTime updated;
+    private OffsetDateTime updated;
 
-    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "restaurant_payment_method",
             joinColumns = @JoinColumn(name = "restaurant_id"),
             inverseJoinColumns = @JoinColumn(name = "payment_method_id"))
     private List<PaymentMethod> paymentMethods = new ArrayList<>();
 
-    @JsonIgnore
     @OneToMany(mappedBy = "restaurant")
     private List<Product> products = new ArrayList<>();
+
+    public void activate() {
+        setActive(true);
+    }
+
+    public void deactivate() {
+        setActive(false);
+    }
 }

@@ -17,6 +17,9 @@ import java.util.List;
 @Component
 public class DatabaseCleaner {
 
+    private static final String CANNOT_CLEAR_TABLE_EXCEPTION_MESSAGE = "Cannot clear database tables because %s is not a test database (suffix 'test' not found)";
+    private static final String TEST_DATABASE = "algafood_test.";
+
     @Autowired
     private DataSource dataSource;
 
@@ -39,8 +42,7 @@ public class DatabaseCleaner {
         String catalog = connection.getCatalog();
 
         if (catalog == null || !catalog.endsWith("test")) {
-            throw new RuntimeException(
-                    "Cannot clear database tables because '" + catalog + "' is not a test database (suffix 'test' not found).");
+            throw new RuntimeException(String.format(CANNOT_CLEAR_TABLE_EXCEPTION_MESSAGE, catalog));
         }
     }
 
@@ -84,7 +86,7 @@ public class DatabaseCleaner {
     private void addTruncateStatements(List<String> tableNames, Statement statement) {
         tableNames.forEach(tableName -> {
             try {
-                statement.addBatch(sql("TRUNCATE TABLE " + tableName));
+                statement.addBatch(sql("TRUNCATE TABLE " + TEST_DATABASE + tableName));
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

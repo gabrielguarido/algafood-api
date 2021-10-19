@@ -1,9 +1,9 @@
-package com.algaworks.algafood.api.resource;
+package com.algaworks.algafood.api;
 
 import com.algaworks.algafood.domain.repository.CategoryRepository;
 import com.algaworks.algafood.domain.repository.RestaurantRepository;
 import com.algaworks.algafood.util.DatabaseCleaner;
-import com.algaworks.algafood.util.ResourceUtils;
+import com.algaworks.algafood.util.ResourceUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -24,7 +24,7 @@ import static org.springframework.http.HttpStatus.OK;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestPropertySource("/application-test.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class RestaurantResourceIT {
+class RestaurantCotrollerIT {
 
     @LocalServerPort
     private int applicationPort;
@@ -44,7 +44,7 @@ class RestaurantResourceIT {
     void setUpTestContext() {
         enableLoggingOfRequestAndResponseIfValidationFails();
 
-//        databaseCleaner.clearTables();
+        databaseCleaner.clearTables();
         addTestData(restaurantRepository, categoryRepository);
     }
 
@@ -59,7 +59,7 @@ class RestaurantResourceIT {
 
     @Test
     void shouldReturnHttpStatus201_WhenCreateNewRestaurant() {
-        String requestPayload = ResourceUtils.getContentFromResource("/json/success/create_restaurant.json");
+        String requestPayload = ResourceUtil.getContentFromResource("/json/success/create_restaurant.json");
 
         buildRequestSpecification(applicationPort, BASE_PATH)
                 .body(requestPayload)
@@ -71,7 +71,7 @@ class RestaurantResourceIT {
 
     @Test
     void shouldReturnHttpStatus400_WhenCreateNewRestaurantWithoutCategory() {
-        String requestPayload = ResourceUtils.getContentFromResource("/json/success/create_restaurant_without_category.json");
+        String requestPayload = ResourceUtil.getContentFromResource("/json/success/create_restaurant_without_category.json");
 
         buildRequestSpecification(applicationPort, BASE_PATH)
                 .body(requestPayload)
@@ -83,7 +83,7 @@ class RestaurantResourceIT {
 
     @Test
     void shouldReturnHttpStatus400_WhenCreateNewRestaurantWithInvalidCategory() {
-        String requestPayload = ResourceUtils.getContentFromResource("/json/success/create_restaurant_with_invalid_category.json");
+        String requestPayload = ResourceUtil.getContentFromResource("/json/success/create_restaurant_with_invalid_category.json");
 
         buildRequestSpecification(applicationPort, BASE_PATH)
                 .body(requestPayload)
@@ -95,7 +95,7 @@ class RestaurantResourceIT {
 
     @Test
     void shouldReturnHttpStatus400_WhenCreateNewRestaurantWithoutDeliveryFee() {
-        String requestPayload = ResourceUtils.getContentFromResource("/json/success/create_restaurant_without_delivery_fee.json");
+        String requestPayload = ResourceUtil.getContentFromResource("/json/success/create_restaurant_without_delivery_fee.json");
 
         buildRequestSpecification(applicationPort, BASE_PATH)
                 .body(requestPayload)

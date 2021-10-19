@@ -15,8 +15,9 @@
     <description>Food Delivery API - Spring REST Specialist Training</description>
     <properties>
         <java.version>11</java.version>
-        <junit.version>5.7.0</junit.version>
+        <junit.version>5.8.1</junit.version>
         <failsafe.version>3.0.0-M5</failsafe.version>
+        <modelmapper.version>2.4.4</modelmapper.version>
     </properties>
     <dependencies>
         <dependency>
@@ -79,6 +80,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>${modelmapper.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.version}</version>
@@ -90,6 +97,7 @@
             <artifactId>rest-assured</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

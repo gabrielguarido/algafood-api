@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
-import com.algaworks.algafood.domain.model.Category;
+import com.algaworks.algafood.api.model.CategoryRequest;
+import com.algaworks.algafood.api.model.CategoryResponse;
 import com.algaworks.algafood.domain.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,21 +25,25 @@ import java.util.List;
 @RequestMapping(value = "category", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CategoryController {
 
+    private final CategoryService categoryService;
+
     @Autowired
-    private CategoryService categoryService;
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping
-    public ResponseEntity<List<Category>> list() {
+    public ResponseEntity<List<CategoryResponse>> list() {
         return ResponseEntity.ok(categoryService.list());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> find(@PathVariable Long id) {
+    public ResponseEntity<CategoryResponse> find(@PathVariable Long id) {
         return ResponseEntity.ok(categoryService.find(id));
     }
 
     @GetMapping("/by-type")
-    public ResponseEntity<Category> findByType(@RequestParam String type) {
+    public ResponseEntity<CategoryResponse> findByType(@RequestParam String type) {
         return ResponseEntity.ok(categoryService.findByType(type));
     }
 
@@ -48,23 +53,23 @@ public class CategoryController {
     }
 
     @GetMapping("/first")
-    public ResponseEntity<Category> findFirst() {
+    public ResponseEntity<CategoryResponse> findFirst() {
         return ResponseEntity.ok(categoryService.findFirst());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Category create(@RequestBody @Valid Category category) {
-        return categoryService.save(category);
+    public ResponseEntity<CategoryResponse> create(@RequestBody @Valid CategoryRequest categoryRequest) {
+        return new ResponseEntity<>(categoryService.save(categoryRequest), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> update(@PathVariable Long id, @RequestBody @Valid Category category) {
-        return ResponseEntity.ok(categoryService.update(id, category));
+    public ResponseEntity<CategoryResponse> update(@PathVariable Long id, @RequestBody @Valid CategoryRequest categoryRequest) {
+        return ResponseEntity.ok(categoryService.update(id, categoryRequest));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Category> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         categoryService.delete(id);
 
         return ResponseEntity.noContent().build();
