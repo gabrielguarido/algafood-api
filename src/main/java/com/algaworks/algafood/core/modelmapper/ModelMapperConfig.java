@@ -1,6 +1,6 @@
 package com.algaworks.algafood.core.modelmapper;
 
-import com.algaworks.algafood.api.model.AddressResponse;
+import com.algaworks.algafood.api.model.response.AddressResponse;
 import com.algaworks.algafood.domain.model.Address;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

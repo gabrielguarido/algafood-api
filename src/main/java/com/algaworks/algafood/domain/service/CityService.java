@@ -1,7 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
-import com.algaworks.algafood.api.model.CityRequest;
-import com.algaworks.algafood.api.model.CityResponse;
+import com.algaworks.algafood.api.model.request.CityRequest;
+import com.algaworks.algafood.api.model.response.CityResponse;
 import com.algaworks.algafood.api.transformer.CityTransformer;
 import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.exception.CityNotFoundException;

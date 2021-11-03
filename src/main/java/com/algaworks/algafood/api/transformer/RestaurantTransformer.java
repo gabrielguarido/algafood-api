@@ -1,7 +1,7 @@
 package com.algaworks.algafood.api.transformer;
 
-import com.algaworks.algafood.api.model.RestaurantRequest;
-import com.algaworks.algafood.api.model.RestaurantResponse;
+import com.algaworks.algafood.api.model.request.RestaurantRequest;
+import com.algaworks.algafood.api.model.response.RestaurantResponse;
 import com.algaworks.algafood.domain.model.Category;
 import com.algaworks.algafood.domain.model.City;
 import com.algaworks.algafood.domain.model.Restaurant;

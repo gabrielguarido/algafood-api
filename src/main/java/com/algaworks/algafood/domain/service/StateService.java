@@ -1,7 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
-import com.algaworks.algafood.api.model.StateRequest;
-import com.algaworks.algafood.api.model.StateResponse;
+import com.algaworks.algafood.api.model.request.StateRequest;
+import com.algaworks.algafood.api.model.response.StateResponse;
 import com.algaworks.algafood.api.transformer.StateTransformer;
 import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.exception.ResourceInUseException;

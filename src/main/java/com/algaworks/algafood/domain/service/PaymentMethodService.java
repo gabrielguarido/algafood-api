@@ -1,7 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
-import com.algaworks.algafood.api.model.PaymentMethodRequest;
-import com.algaworks.algafood.api.model.PaymentMethodResponse;
+import com.algaworks.algafood.api.model.request.PaymentMethodRequest;
+import com.algaworks.algafood.api.model.response.PaymentMethodResponse;
 import com.algaworks.algafood.api.transformer.PaymentMethodTransformer;
 import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.exception.PaymentMethodNotFoundException;

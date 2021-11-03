@@ -1,7 +1,7 @@
 package com.algaworks.algafood.api.transformer;
 
-import com.algaworks.algafood.api.model.CategoryRequest;
-import com.algaworks.algafood.api.model.CategoryResponse;
+import com.algaworks.algafood.api.model.request.CategoryRequest;
+import com.algaworks.algafood.api.model.response.CategoryResponse;
 import com.algaworks.algafood.domain.model.Category;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

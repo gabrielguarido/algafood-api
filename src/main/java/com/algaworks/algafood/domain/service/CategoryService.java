@@ -1,7 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
-import com.algaworks.algafood.api.model.CategoryRequest;
-import com.algaworks.algafood.api.model.CategoryResponse;
+import com.algaworks.algafood.api.model.request.CategoryRequest;
+import com.algaworks.algafood.api.model.response.CategoryResponse;
 import com.algaworks.algafood.api.transformer.CategoryTransformer;
 import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.exception.CategoryNotFoundException;
