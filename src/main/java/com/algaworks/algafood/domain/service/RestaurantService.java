@@ -3,10 +3,9 @@ package com.algaworks.algafood.domain.service;
 import com.algaworks.algafood.api.model.RestaurantRequest;
 import com.algaworks.algafood.api.model.RestaurantResponse;
 import com.algaworks.algafood.api.transformer.RestaurantTransformer;
-import com.algaworks.algafood.domain.exception.BusinessException;
-import com.algaworks.algafood.domain.exception.CategoryNotFoundException;
-import com.algaworks.algafood.domain.exception.ResourceInUseException;
-import com.algaworks.algafood.domain.exception.RestaurantNotFoundException;
+import com.algaworks.algafood.domain.exception.*;
+import com.algaworks.algafood.domain.model.Category;
+import com.algaworks.algafood.domain.model.City;
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.repository.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +29,15 @@ public class RestaurantService {
 
     private final CategoryService categoryService;
 
+    private final CityService cityService;
+
     private final RestaurantTransformer restaurantTransformer;
 
     @Autowired
-    public RestaurantService(RestaurantRepository restaurantRepository, CategoryService categoryService, RestaurantTransformer restaurantTransformer) {
+    public RestaurantService(RestaurantRepository restaurantRepository, CategoryService categoryService, CityService cityService, RestaurantTransformer restaurantTransformer) {
         this.restaurantRepository = restaurantRepository;
         this.categoryService = categoryService;
+        this.cityService = cityService;
         this.restaurantTransformer = restaurantTransformer;
     }
 
@@ -89,7 +91,8 @@ public class RestaurantService {
     public RestaurantResponse save(RestaurantRequest restaurantRequest) {
         var restaurant = restaurantTransformer.toEntity(restaurantRequest);
 
-        validateCategory(restaurant.getCategory().getId());
+        validateCategory(restaurant.getCategory().getId(), restaurant);
+        validateCity(restaurant.getAddress().getCity().getId(), restaurant);
 
         return restaurantTransformer.toResponse(restaurantRepository.save(restaurant));
     }
@@ -101,7 +104,8 @@ public class RestaurantService {
 
             restaurantTransformer.copyPropertiesToEntity(restaurantRequest, existingRestaurant);
 
-            validateCategory(existingRestaurant.getCategory().getId());
+            validateCategory(existingRestaurant.getCategory().getId(), existingRestaurant);
+            validateCity(existingRestaurant.getAddress().getCity().getId(), existingRestaurant);
 
             return restaurantTransformer.toResponse(restaurantRepository.save(existingRestaurant));
         } catch (RestaurantNotFoundException e) {
@@ -149,10 +153,20 @@ public class RestaurantService {
         return restaurantRepository.findById(id).orElseThrow(() -> new RestaurantNotFoundException(id));
     }
 
-    private void validateCategory(Long categoryId) {
+    private void validateCategory(Long categoryId, Restaurant restaurant) {
         try {
-            categoryService.find(categoryId);
+            Category category = categoryService.verifyIfExists(categoryId);
+            restaurant.setCategory(category);
         } catch (CategoryNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
+        }
+    }
+
+    private void validateCity(Long cityId, Restaurant restaurant) {
+        try {
+            City city = cityService.verifyIfExists(cityId);
+            restaurant.getAddress().setCity(city);
+        } catch (CityNotFoundException e) {
             throw new BusinessException(e.getMessage(), e);
         }
     }

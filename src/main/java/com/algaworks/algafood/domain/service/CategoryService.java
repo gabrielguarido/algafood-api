@@ -93,7 +93,7 @@ public class CategoryService {
         }
     }
 
-    private Category verifyIfExists(Long id) {
+    public Category verifyIfExists(Long id) {
         return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
     }
 

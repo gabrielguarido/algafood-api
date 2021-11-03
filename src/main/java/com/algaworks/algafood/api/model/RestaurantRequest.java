@@ -21,4 +21,8 @@ public class RestaurantRequest {
     @Valid
     @NotNull
     private CategoryIdRequest category;
+
+    @Valid
+    @NotNull
+    private AddressRequest address;
 }

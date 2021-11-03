@@ -81,7 +81,7 @@ public class CityService {
         }
     }
 
-    private City verifyIfExists(Long id) {
+    public City verifyIfExists(Long id) {
         return cityRepository.findById(id).orElseThrow(() -> new CityNotFoundException(id));
     }
 
