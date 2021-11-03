@@ -22,6 +22,7 @@ public class CategoryService {
 
     private static final String CATEGORY_IN_USE_EXCEPTION_MESSAGE = "The category ID %s is currently being used and cannot be removed";
     private static final String CATEGORY_TYPE_NOT_FOUND_EXCEPTION_MESSAGE = "Category type %s not found";
+    private static final String CATEGORY_ALREADY_EXISTS_EXCEPTION_MESSAGE = "The category type %s already exists with ID %s";
 
     private final CategoryRepository categoryRepository;
 
@@ -63,6 +64,8 @@ public class CategoryService {
     public CategoryResponse save(CategoryRequest categoryRequest) {
         var category = categoryTransformer.toEntity(categoryRequest);
 
+        validateType(category.getType());
+
         return categoryTransformer.toResponse(categoryRepository.save(category));
     }
 
@@ -70,6 +73,8 @@ public class CategoryService {
     public CategoryResponse update(Long id, CategoryRequest categoryRequest) {
         try {
             var existingCategory = verifyIfExists(id);
+
+            validateType(categoryRequest.getType());
 
             categoryTransformer.copyPropertiesToEntity(categoryRequest, existingCategory);
 
@@ -101,5 +106,13 @@ public class CategoryService {
         return categoryRepository.findByType(type).orElseThrow(() -> new CategoryNotFoundException(
                 String.format(CATEGORY_TYPE_NOT_FOUND_EXCEPTION_MESSAGE, type)
         ));
+    }
+
+    private void validateType(String type) {
+        var category = categoryRepository.findByType(type);
+
+        if (category.isPresent()) {
+            throw new BusinessException(String.format(CATEGORY_ALREADY_EXISTS_EXCEPTION_MESSAGE, type, category.get().getId()));
+        }
     }
 }

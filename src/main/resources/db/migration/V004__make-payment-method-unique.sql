@@ -1,1 +1,0 @@
-alter table payment_method modify method varchar(60) not null unique;

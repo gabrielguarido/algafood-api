@@ -155,7 +155,7 @@ public class RestaurantService {
 
     private void validateCategory(Long categoryId, Restaurant restaurant) {
         try {
-            Category category = categoryService.verifyIfExists(categoryId);
+            var category = categoryService.verifyIfExists(categoryId);
             restaurant.setCategory(category);
         } catch (CategoryNotFoundException e) {
             throw new BusinessException(e.getMessage(), e);
@@ -164,7 +164,7 @@ public class RestaurantService {
 
     private void validateCity(Long cityId, Restaurant restaurant) {
         try {
-            City city = cityService.verifyIfExists(cityId);
+            var city = cityService.verifyIfExists(cityId);
             restaurant.getAddress().setCity(city);
         } catch (CityNotFoundException e) {
             throw new BusinessException(e.getMessage(), e);
