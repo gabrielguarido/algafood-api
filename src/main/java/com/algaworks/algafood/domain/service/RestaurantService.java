@@ -1,11 +1,15 @@
 package com.algaworks.algafood.domain.service;
 
 import com.algaworks.algafood.api.model.request.RestaurantRequest;
+import com.algaworks.algafood.api.model.response.PaymentMethodResponse;
 import com.algaworks.algafood.api.model.response.RestaurantResponse;
+import com.algaworks.algafood.api.transformer.PaymentMethodTransformer;
 import com.algaworks.algafood.api.transformer.RestaurantTransformer;
-import com.algaworks.algafood.domain.exception.*;
-import com.algaworks.algafood.domain.model.Category;
-import com.algaworks.algafood.domain.model.City;
+import com.algaworks.algafood.domain.exception.BusinessException;
+import com.algaworks.algafood.domain.exception.CategoryNotFoundException;
+import com.algaworks.algafood.domain.exception.CityNotFoundException;
+import com.algaworks.algafood.domain.exception.ResourceInUseException;
+import com.algaworks.algafood.domain.exception.RestaurantNotFoundException;
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.repository.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +35,21 @@ public class RestaurantService {
 
     private final CityService cityService;
 
+    private final PaymentMethodService paymentMethodService;
+
     private final RestaurantTransformer restaurantTransformer;
 
+    private final PaymentMethodTransformer paymentMethodTransformer;
+
     @Autowired
-    public RestaurantService(RestaurantRepository restaurantRepository, CategoryService categoryService, CityService cityService, RestaurantTransformer restaurantTransformer) {
+    public RestaurantService(RestaurantRepository restaurantRepository, CategoryService categoryService,
+                             CityService cityService, PaymentMethodTransformer paymentMethodTransformer,
+                             PaymentMethodService paymentMethodService, RestaurantTransformer restaurantTransformer) {
         this.restaurantRepository = restaurantRepository;
         this.categoryService = categoryService;
         this.cityService = cityService;
+        this.paymentMethodTransformer = paymentMethodTransformer;
+        this.paymentMethodService = paymentMethodService;
         this.restaurantTransformer = restaurantTransformer;
     }
 
@@ -49,8 +61,16 @@ public class RestaurantService {
         return restaurantTransformer.toResponse(verifyIfExists(id));
     }
 
+    public List<PaymentMethodResponse> listPaymentMethods(Long restaurantId) {
+        var restaurant = verifyIfExists(restaurantId);
+
+        return paymentMethodTransformer.toResponse(restaurant.getPaymentMethods());
+    }
+
     public List<RestaurantResponse> listByDeliveryFee(BigDecimal initialDeliveryFee, BigDecimal finalDeliveryFee) {
-        return restaurantTransformer.toResponse(restaurantRepository.queryByDeliveryFeeBetween(initialDeliveryFee, finalDeliveryFee));
+        return restaurantTransformer.toResponse(
+                restaurantRepository.queryByDeliveryFeeBetween(initialDeliveryFee, finalDeliveryFee)
+        );
     }
 
     public List<RestaurantResponse> listByName(String name) {
@@ -147,6 +167,22 @@ public class RestaurantService {
         }
 
         restaurant.deactivate();
+    }
+
+    @Transactional
+    public void addPaymentMethod(Long restaurantId, Long paymentMethodId) {
+        var restaurant = verifyIfExists(restaurantId);
+        var paymentMethod = paymentMethodService.verifyIfExists(paymentMethodId);
+
+        restaurant.addPaymentMethod(paymentMethod);
+    }
+
+    @Transactional
+    public void removePaymentMethod(Long restaurantId, Long paymentMethodId) {
+        var restaurant = verifyIfExists(restaurantId);
+        var paymentMethod = paymentMethodService.verifyIfExists(paymentMethodId);
+
+        restaurant.removePaymentMethod(paymentMethod);
     }
 
     private Restaurant verifyIfExists(Long id) {

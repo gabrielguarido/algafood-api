@@ -57,7 +57,7 @@ public class PaymentMethodService {
         }
     }
 
-    private PaymentMethod verifyIfExists(Long id) {
+    public PaymentMethod verifyIfExists(Long id) {
         return paymentMethodRepository.findById(id).orElseThrow(() -> new PaymentMethodNotFoundException(id));
     }
 

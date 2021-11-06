@@ -76,4 +76,12 @@ public class Restaurant {
     public void deactivate() {
         setActive(false);
     }
+
+    public boolean addPaymentMethod(PaymentMethod paymentMethod) {
+        return getPaymentMethods().add(paymentMethod);
+    }
+
+    public boolean removePaymentMethod(PaymentMethod paymentMethod) {
+        return getPaymentMethods().remove(paymentMethod);
+    }
 }
