@@ -108,6 +108,20 @@ public class RestaurantController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/{id}/open")
+    public ResponseEntity<Void> open(@PathVariable Long id) {
+        restaurantService.open(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/close")
+    public ResponseEntity<Void> close(@PathVariable Long id) {
+        restaurantService.close(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         restaurantService.delete(id);

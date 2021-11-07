@@ -170,6 +170,20 @@ public class RestaurantService {
     }
 
     @Transactional
+    public void open(Long id) {
+        var restaurant = verifyIfExists(id);
+
+        restaurant.open();
+    }
+
+    @Transactional
+    public void close(Long id) {
+        var restaurant = verifyIfExists(id);
+
+        restaurant.close();
+    }
+
+    @Transactional
     public void addPaymentMethod(Long restaurantId, Long paymentMethodId) {
         var restaurant = verifyIfExists(restaurantId);
         var paymentMethod = paymentMethodService.verifyIfExists(paymentMethodId);
