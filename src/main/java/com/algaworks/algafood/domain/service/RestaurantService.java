@@ -185,7 +185,7 @@ public class RestaurantService {
         restaurant.removePaymentMethod(paymentMethod);
     }
 
-    private Restaurant verifyIfExists(Long id) {
+    public Restaurant verifyIfExists(Long id) {
         return restaurantRepository.findById(id).orElseThrow(() -> new RestaurantNotFoundException(id));
     }
 
