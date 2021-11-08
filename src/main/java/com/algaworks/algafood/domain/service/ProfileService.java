@@ -1,10 +1,13 @@
 package com.algaworks.algafood.domain.service;
 
 import com.algaworks.algafood.api.model.request.ProfileRequest;
+import com.algaworks.algafood.api.model.response.PermissionResponse;
 import com.algaworks.algafood.api.model.response.ProfileResponse;
+import com.algaworks.algafood.api.transformer.PermissionTransformer;
 import com.algaworks.algafood.api.transformer.ProfileTransformer;
 import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.exception.ProfileNotFoundException;
+import com.algaworks.algafood.domain.model.Permission;
 import com.algaworks.algafood.domain.model.Profile;
 import com.algaworks.algafood.domain.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +27,17 @@ public class ProfileService {
 
     private final ProfileTransformer profileTransformer;
 
+    private final PermissionService permissionService;
+
+    private final PermissionTransformer permissionTransformer;
+
     @Autowired
-    public ProfileService(ProfileRepository profileRepository, ProfileTransformer profileTransformer) {
+    public ProfileService(ProfileRepository profileRepository, ProfileTransformer profileTransformer,
+                          PermissionService permissionService, PermissionTransformer permissionTransformer) {
         this.profileRepository = profileRepository;
         this.profileTransformer = profileTransformer;
+        this.permissionService = permissionService;
+        this.permissionTransformer = permissionTransformer;
     }
 
     public List<ProfileResponse> list() {
@@ -70,6 +80,30 @@ public class ProfileService {
         } catch (EmptyResultDataAccessException e) {
             throw new ProfileNotFoundException(id);
         }
+    }
+
+    public List<PermissionResponse> listPermissions(Long profileId) {
+        var profile = verifyIfExists(profileId);
+
+        return permissionTransformer.toResponse(profile.getPermissions());
+    }
+
+    @Transactional
+    public void addPermission(Long profileId, Long permissionId) {
+        var profile = verifyIfExists(profileId);
+
+        var permission = permissionService.verifyIfExists(permissionId);
+
+        profile.addPermission(permission);
+    }
+
+    @Transactional
+    public void removePermission(Long profileId, Long permissionId) {
+        var profile = verifyIfExists(profileId);
+
+        var permission = permissionService.verifyIfExists(permissionId);
+
+        profile.removePermission(permission);
     }
 
     public Profile verifyIfExists(Long id) {
