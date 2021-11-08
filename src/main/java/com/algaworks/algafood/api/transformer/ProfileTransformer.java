@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -25,7 +26,7 @@ public class ProfileTransformer {
         return mapper.map(profile, ProfileResponse.class);
     }
 
-    public List<ProfileResponse> toResponse(List<Profile> profileList) {
+    public List<ProfileResponse> toResponse(Collection<Profile> profileList) {
         return profileList.stream()
                 .map(this::toResponse)
                 .collect(toList());

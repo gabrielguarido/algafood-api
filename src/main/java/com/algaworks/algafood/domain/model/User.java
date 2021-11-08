@@ -5,10 +5,17 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -34,10 +41,18 @@ public class User {
     @JoinTable(name = "user_profile",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "profile_id"))
-    private List<Profile> profiles = new ArrayList<>();
+    private Set<Profile> profiles = new HashSet<>();
 
     @JsonIgnore
     @CreationTimestamp
     @Column(nullable = false)
     private OffsetDateTime created;
+
+    public void addProfile(Profile profile) {
+        getProfiles().add(profile);
+    }
+
+    public void removeProfile(Profile profile) {
+        getProfiles().remove(profile);
+    }
 }

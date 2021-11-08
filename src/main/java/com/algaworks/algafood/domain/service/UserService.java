@@ -3,7 +3,9 @@ package com.algaworks.algafood.domain.service;
 import com.algaworks.algafood.api.model.request.PasswordRequest;
 import com.algaworks.algafood.api.model.request.UserRequest;
 import com.algaworks.algafood.api.model.request.UserWithPasswordRequest;
+import com.algaworks.algafood.api.model.response.ProfileResponse;
 import com.algaworks.algafood.api.model.response.UserResponse;
+import com.algaworks.algafood.api.transformer.ProfileTransformer;
 import com.algaworks.algafood.api.transformer.UserTransformer;
 import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.exception.UserNotFoundException;
@@ -27,10 +29,17 @@ public class UserService {
 
     private final UserTransformer userTransformer;
 
+    private final ProfileService profileService;
+
+    private final ProfileTransformer profileTransformer;
+
     @Autowired
-    public UserService(UserRepository userRepository, UserTransformer userTransformer) {
+    public UserService(UserRepository userRepository, UserTransformer userTransformer, ProfileService profileService,
+                       ProfileTransformer profileTransformer) {
         this.userRepository = userRepository;
         this.userTransformer = userTransformer;
+        this.profileService = profileService;
+        this.profileTransformer = profileTransformer;
     }
 
     public List<UserResponse> list() {
@@ -72,6 +81,30 @@ public class UserService {
         validatePassword(existingUser, passwordRequest);
 
         existingUser.setPassword(passwordRequest.getNewPassword());
+    }
+
+    public List<ProfileResponse> listProfiles(Long userId) {
+        var user = verifyIfExists(userId);
+
+        return profileTransformer.toResponse(user.getProfiles());
+    }
+
+    @Transactional
+    public void addProfile(Long userId, Long profileId) {
+        var user = verifyIfExists(userId);
+
+        var profile = profileService.verifyIfExists(profileId);
+
+        user.addProfile(profile);
+    }
+
+    @Transactional
+    public void removeProfile(Long userId, Long profileId) {
+        var user = verifyIfExists(userId);
+
+        var profile = profileService.verifyIfExists(profileId);
+
+        user.removeProfile(profile);
     }
 
     private User verifyIfExists(Long id) {
