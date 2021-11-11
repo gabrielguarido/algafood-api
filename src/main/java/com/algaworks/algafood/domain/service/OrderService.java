@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.service;
 
+import com.algaworks.algafood.api.model.response.OrderModelResponse;
 import com.algaworks.algafood.api.model.response.OrderResponse;
 import com.algaworks.algafood.api.transformer.OrderTransformer;
 import com.algaworks.algafood.domain.exception.OrderNotFoundException;
@@ -23,8 +24,8 @@ public class OrderService {
         this.orderTransformer = orderTransformer;
     }
 
-    public List<OrderResponse> list() {
-        return orderTransformer.toResponse(orderRepository.findAll());
+    public List<OrderModelResponse> list() {
+        return orderTransformer.toModelResponse(orderRepository.findAll());
     }
 
     public OrderResponse find(Long id) {
