@@ -9,7 +9,7 @@ create table `order`
     user_client_id     bigint         not null,
     payment_method_id  bigint         not null,
 
-    address_city       bigint(20)     not null,
+    address_city_id    bigint(20)     not null,
     address_zip_code   varchar(9)     not null,
     address            varchar(100)   not null,
     address_number     varchar(20)    not null,
@@ -18,9 +18,9 @@ create table `order`
 
     status             varchar(10)    not null,
     created            datetime       not null,
-    confirmation_date  datetime       null,
-    cancellation_date  datetime       null,
-    delivery_date      datetime       null,
+    confirmed          datetime       null,
+    cancelled          datetime       null,
+    delivered          datetime       null,
 
     primary key (id),
 

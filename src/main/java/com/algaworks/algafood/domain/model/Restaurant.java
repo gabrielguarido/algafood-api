@@ -110,4 +110,8 @@ public class Restaurant {
     public void removeResponsibleUser(User responsibleUser) {
         getResponsibleUsers().remove(responsibleUser);
     }
+
+    public boolean acceptsPaymentMethod(PaymentMethod paymentMethod) {
+        return getPaymentMethods().contains(paymentMethod);
+    }
 }
