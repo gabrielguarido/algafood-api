@@ -107,7 +107,7 @@ public class UserService {
         user.removeProfile(profile);
     }
 
-    private User verifyIfExists(Long id) {
+    public User verifyIfExists(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 

@@ -13,6 +13,7 @@ DELETE FROM restaurant_payment_method;
 DELETE FROM profile_permission;
 DELETE FROM user;
 DELETE FROM user_profile;
+DELETE FROM restaurant_responsible_user;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -29,6 +30,7 @@ ALTER TABLE restaurant_payment_method AUTO_INCREMENT = 1;
 ALTER TABLE profile_permission AUTO_INCREMENT = 1;
 ALTER TABLE user AUTO_INCREMENT = 1;
 ALTER TABLE user_profile AUTO_INCREMENT = 1;
+ALTER TABLE restaurant_responsible_user AUTO_INCREMENT = 1;
 
 -- POPULATE STATE TABLE
 INSERT IGNORE INTO algafood.state (state.id, state.name) VALUES (1, 'São Paulo');
@@ -74,3 +76,6 @@ INSERT IGNORE INTO algafood.user (user.id, user.created, user.email, user.name, 
 
 -- POPULATE USER_PROFILE TABLE
 INSERT IGNORE INTO algafood.user_profile (user_profile.user_id, user_profile.profile_id) VALUES (1, 1), (1, 2), (2, 1), (2, 2);
+
+-- POPULATE RESTAURANT_RESPONSIBLE_USER TABLE
+INSERT IGNORE INTO algafood.restaurant_responsible_user (restaurant_id, user_id) VALUES (1, 1), (2, 2);

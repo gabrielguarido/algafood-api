@@ -3,8 +3,10 @@ package com.algaworks.algafood.domain.service;
 import com.algaworks.algafood.api.model.request.RestaurantRequest;
 import com.algaworks.algafood.api.model.response.PaymentMethodResponse;
 import com.algaworks.algafood.api.model.response.RestaurantResponse;
+import com.algaworks.algafood.api.model.response.UserResponse;
 import com.algaworks.algafood.api.transformer.PaymentMethodTransformer;
 import com.algaworks.algafood.api.transformer.RestaurantTransformer;
+import com.algaworks.algafood.api.transformer.UserTransformer;
 import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.exception.CategoryNotFoundException;
 import com.algaworks.algafood.domain.exception.CityNotFoundException;
@@ -41,16 +43,23 @@ public class RestaurantService {
 
     private final PaymentMethodTransformer paymentMethodTransformer;
 
+    private final UserService userService;
+
+    private final UserTransformer userTransformer;
+
     @Autowired
     public RestaurantService(RestaurantRepository restaurantRepository, CategoryService categoryService,
                              CityService cityService, PaymentMethodTransformer paymentMethodTransformer,
-                             PaymentMethodService paymentMethodService, RestaurantTransformer restaurantTransformer) {
+                             PaymentMethodService paymentMethodService, RestaurantTransformer restaurantTransformer,
+                             UserService userService, UserTransformer userTransformer) {
         this.restaurantRepository = restaurantRepository;
         this.categoryService = categoryService;
         this.cityService = cityService;
         this.paymentMethodTransformer = paymentMethodTransformer;
         this.paymentMethodService = paymentMethodService;
         this.restaurantTransformer = restaurantTransformer;
+        this.userService = userService;
+        this.userTransformer = userTransformer;
     }
 
     public List<RestaurantResponse> list() {
@@ -197,6 +206,28 @@ public class RestaurantService {
         var paymentMethod = paymentMethodService.verifyIfExists(paymentMethodId);
 
         restaurant.removePaymentMethod(paymentMethod);
+    }
+
+    @Transactional
+    public void addResponsibleUser(Long restaurantId, Long userId) {
+        var restaurant = verifyIfExists(restaurantId);
+        var responsibleUser = userService.verifyIfExists(userId);
+
+        restaurant.addResponsibleUser(responsibleUser);
+    }
+
+    @Transactional
+    public void removeResponsibleUser(Long restaurantId, Long userId) {
+        var restaurant = verifyIfExists(restaurantId);
+        var responsibleUser = userService.verifyIfExists(userId);
+
+        restaurant.removeResponsibleUser(responsibleUser);
+    }
+
+    public List<UserResponse> listResponsibleUsers(Long restaurantId) {
+        var restaurant = verifyIfExists(restaurantId);
+
+        return userTransformer.toResponse(restaurant.getResponsibleUsers());
     }
 
     public Restaurant verifyIfExists(Long id) {
