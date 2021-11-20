@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.model;
 
+import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.model.enumerator.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -24,6 +25,11 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.algaworks.algafood.domain.model.enumerator.OrderStatus.CANCELED;
+import static com.algaworks.algafood.domain.model.enumerator.OrderStatus.CONFIRMED;
+import static com.algaworks.algafood.domain.model.enumerator.OrderStatus.CREATED;
+import static com.algaworks.algafood.domain.model.enumerator.OrderStatus.DELIVERED;
+
 @Data
 @Entity
 @Table(name = "[order]")
@@ -43,7 +49,7 @@ public class Order {
     private Address deliveryAddress;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus status = OrderStatus.CREATED;
+    private OrderStatus status = CREATED;
 
     @CreationTimestamp
     private OffsetDateTime created;
@@ -83,5 +89,29 @@ public class Order {
 
     public void linkOrderToItems() {
         getItems().forEach(item -> item.setOrder(this));
+    }
+
+    public void confirm() {
+        setStatus(CONFIRMED);
+        setConfirmed(OffsetDateTime.now());
+    }
+
+    public void deliver() {
+        setStatus(DELIVERED);
+        setDelivered(OffsetDateTime.now());
+    }
+
+    public void cancel() {
+        setStatus(CANCELED);
+        setCancelled(OffsetDateTime.now());
+    }
+
+    private void setStatus(OrderStatus targetStatus) {
+        if (!getStatus().canUpdateTo(targetStatus)) {
+            throw new BusinessException(
+                    String.format("Failed to update the order status from %s to %s", getStatus(), targetStatus)
+            );
+        }
+        this.status = targetStatus;
     }
 }
