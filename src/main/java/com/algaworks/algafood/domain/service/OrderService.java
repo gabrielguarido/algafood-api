@@ -9,17 +9,24 @@ import com.algaworks.algafood.domain.exception.OrderNotFoundException;
 import com.algaworks.algafood.domain.exception.ResourceNotFoundException;
 import com.algaworks.algafood.domain.model.Order;
 import com.algaworks.algafood.domain.model.User;
+import com.algaworks.algafood.domain.model.enumerator.OrderStatus;
 import com.algaworks.algafood.domain.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.List;
+
+import static com.algaworks.algafood.domain.model.enumerator.OrderStatus.CONFIRMED;
+import static com.algaworks.algafood.domain.model.enumerator.OrderStatus.CREATED;
+import static com.algaworks.algafood.domain.model.enumerator.OrderStatus.DELIVERED;
 
 @Service
 public class OrderService {
 
     private static final String PAYMENT_METHOD_NOT_ACCEPTED_EXCEPTION_MESSAGE = "The restaurant does not accept the payment method '%s'";
+    private static final String INVALID_ORDER_STATUS_EXCEPTION_MESSAGE = "Failed to update the order status from %s to %s";
 
     private final OrderRepository orderRepository;
 
@@ -66,6 +73,44 @@ public class OrderService {
         calculateTotalValue(order);
 
         return orderTransformer.toResponse(orderRepository.save(order));
+    }
+
+    @Transactional
+    public void updateOrderStatus(Long orderId, OrderStatus targetStatus) {
+        var order = verifyIfExists(orderId);
+        var currentStatus = order.getStatus();
+
+        switch (targetStatus) {
+            case CONFIRMED:
+                if (!currentStatus.equals(CREATED)) {
+                    throw new BusinessException(
+                            String.format(INVALID_ORDER_STATUS_EXCEPTION_MESSAGE, currentStatus, targetStatus)
+                    );
+                }
+                order.setStatus(targetStatus);
+                order.setConfirmed(OffsetDateTime.now());
+                break;
+
+            case DELIVERED:
+                if (!currentStatus.equals(CONFIRMED)) {
+                    throw new BusinessException(
+                            String.format(INVALID_ORDER_STATUS_EXCEPTION_MESSAGE, currentStatus, targetStatus)
+                    );
+                }
+                order.setStatus(targetStatus);
+                order.setDelivered(OffsetDateTime.now());
+                break;
+
+            case CANCELED:
+                if (!currentStatus.equals(CREATED)) {
+                    throw new BusinessException(
+                            String.format(INVALID_ORDER_STATUS_EXCEPTION_MESSAGE, currentStatus, targetStatus)
+                    );
+                }
+                order.setStatus(targetStatus);
+                order.setCancelled(OffsetDateTime.now());
+                break;
+        }
     }
 
     private void validateOrder(Order order) {
