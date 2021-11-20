@@ -19,11 +19,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static com.algaworks.algafood.domain.model.enumerator.OrderStatus.CANCELED;
 import static com.algaworks.algafood.domain.model.enumerator.OrderStatus.CONFIRMED;
@@ -39,6 +41,8 @@ public class Order {
     @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String externalKey;
 
     private BigDecimal subtotal;
     private BigDecimal deliveryFee;
@@ -113,5 +117,10 @@ public class Order {
             );
         }
         this.status = targetStatus;
+    }
+
+    @PrePersist
+    private void generateExternalKey() {
+        setExternalKey(UUID.randomUUID().toString());
     }
 }

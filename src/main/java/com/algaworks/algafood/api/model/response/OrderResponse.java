@@ -5,11 +5,12 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 public class OrderResponse {
 
-    private Long id;
+    private String externalKey;
     private BigDecimal subtotal;
     private BigDecimal deliveryFee;
     private BigDecimal totalPrice;

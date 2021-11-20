@@ -159,23 +159,34 @@ VALUES (1, 1),
        (2, 2);
 
 -- POPULATE ORDER TABLE
-INSERT IGNORE INTO algafood.`order` (`order`.id, subtotal, delivery_fee, total_price, restaurant_id, user_client_id,
-                                     payment_method_id, address_city_id, address_zip_code, address, address_number,
-                                     address_complement, address_province, status, created, confirmed,
-                                     cancelled, delivered)
-VALUES (1, 48.90, 7.00, 55.90, 1, 1, 1, 1, '03112-090', 'Rua Marina Crespi', '274', 'Apartamento 12 A', 'Mooca - SP',
-        'CREATED', utc_timestamp, utc_timestamp, null, null);
-INSERT IGNORE INTO algafood.`order` (`order`.id, subtotal, delivery_fee, total_price, restaurant_id, user_client_id,
-                                     payment_method_id, address_city_id, address_zip_code, address, address_number,
-                                     address_complement, address_province, status, created, confirmed,
-                                     cancelled, delivered)
-VALUES (2, 33.50, 0.00, 33.50, 2, 2, 2, 1, '03112-090', 'Rua Marina Crespi', '274', 'Apartamento 12 A', 'Mooca - SP',
-        'DELIVERED', utc_timestamp, utc_timestamp, null, utc_timestamp);
+INSERT IGNORE INTO algafood.`order` (`order`.id, `order`.external_key, `order`.subtotal, `order`.delivery_fee,
+                                     `order`.total_price,
+                                     `order`.restaurant_id, `order`.user_client_id,
+                                     `order`.payment_method_id, `order`.address_city_id, `order`.address_zip_code,
+                                     `order`.address, `order`.address_number,
+                                     `order`.address_complement, `order`.address_province, `order`.status,
+                                     `order`.created, `order`.confirmed,
+                                     `order`.cancelled, `order`.delivered)
+VALUES (1, '4e7c583e-4a45-11ec-85ee-fc34977b31ad', 48.90, 7.00, 55.90, 1, 1, 1, 1, '03112-090', 'Rua Marina Crespi',
+        '274', 'Apartamento 12 A', 'Mooca - SP', 'CREATED', utc_timestamp, utc_timestamp, null, null);
+INSERT IGNORE INTO algafood.`order` (`order`.id, `order`.external_key, `order`.subtotal, `order`.delivery_fee,
+                                     `order`.total_price,
+                                     `order`.restaurant_id, `order`.user_client_id,
+                                     `order`.payment_method_id, `order`.address_city_id, `order`.address_zip_code,
+                                     `order`.address, `order`.address_number,
+                                     `order`.address_complement, `order`.address_province, `order`.status,
+                                     `order`.created, `order`.confirmed,
+                                     `order`.cancelled, `order`.delivered)
+VALUES (2, '450b0c9a-4a45-11ec-85ee-fc34977b31ad', 33.50, 0.00, 33.50, 2, 2, 2, 1, '03112-090', 'Rua Marina Crespi',
+        '274', 'Apartamento 12 A', 'Mooca - SP', 'DELIVERED', utc_timestamp, utc_timestamp, null, utc_timestamp);
 
 -- POPULATE ORDER_ITEM TABLE
-INSERT IGNORE INTO algafood.order_item (id, amount, unit_price, total_price, observation, order_id, product_id)
+INSERT IGNORE INTO algafood.order_item (order_item.id, order_item.amount, order_item.unit_price, order_item.total_price,
+                                        order_item.observation, order_item.order_id, order_item.product_id)
 VALUES (1, 1, 40.00, 40.00, 'Medium rare steak', 1, 2);
-INSERT IGNORE INTO algafood.order_item (id, amount, unit_price, total_price, observation, order_id, product_id)
+INSERT IGNORE INTO algafood.order_item (order_item.id, order_item.amount, order_item.unit_price, order_item.total_price,
+                                        order_item.observation, order_item.order_id, order_item.product_id)
 VALUES (2, 1, 8.90, 8.90, null, 1, 3);
-INSERT IGNORE INTO algafood.order_item (id, amount, unit_price, total_price, observation, order_id, product_id)
+INSERT IGNORE INTO algafood.order_item (order_item.id, order_item.amount, order_item.unit_price, order_item.total_price,
+                                        order_item.observation, order_item.order_id, order_item.product_id)
 VALUES (3, 1, 33.50, 33.50, 'Medium rare steak', 2, 1);

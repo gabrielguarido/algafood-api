@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class OrderService {
@@ -53,8 +54,8 @@ public class OrderService {
         return orderTransformer.toModelResponse(orderRepository.findAll());
     }
 
-    public OrderResponse find(Long id) {
-        return orderTransformer.toResponse(verifyIfExists(id));
+    public OrderResponse find(String externalKey) {
+        return orderTransformer.toResponse(verifyIfExists(externalKey));
     }
 
     @Transactional
@@ -70,8 +71,8 @@ public class OrderService {
     }
 
     @Transactional
-    public void updateOrderStatus(Long orderId, OrderStatus targetStatus) {
-        var order = verifyIfExists(orderId);
+    public void updateOrderStatus(String externalKey, OrderStatus targetStatus) {
+        var order = verifyIfExists(externalKey);
 
         switch (targetStatus) {
             case CONFIRMED:
@@ -131,7 +132,7 @@ public class OrderService {
         order.getClient().setId(1L);
     }
 
-    private Order verifyIfExists(Long id) {
-        return orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
+    private Order verifyIfExists(String externalKey) {
+        return orderRepository.findByExternalKey(externalKey).orElseThrow(() -> new OrderNotFoundException(externalKey));
     }
 }

@@ -38,9 +38,9 @@ public class OrderController {
         return ResponseEntity.ok(orderService.list());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> find(@PathVariable Long id) {
-        return ResponseEntity.ok(orderService.find(id));
+    @GetMapping("/{externalKey}")
+    public ResponseEntity<OrderResponse> find(@PathVariable String externalKey) {
+        return ResponseEntity.ok(orderService.find(externalKey));
     }
 
     @PostMapping
@@ -48,23 +48,23 @@ public class OrderController {
         return ResponseEntity.ok(orderService.issueOrder(orderRequest));
     }
 
-    @PutMapping("/{id}/confirm")
-    public ResponseEntity<Void> confirmOrder(@PathVariable Long id) {
-        orderService.updateOrderStatus(id, CONFIRMED);
+    @PutMapping("/{externalKey}/confirm")
+    public ResponseEntity<Void> confirmOrder(@PathVariable String externalKey) {
+        orderService.updateOrderStatus(externalKey, CONFIRMED);
 
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/deliver")
-    public ResponseEntity<Void> deliverOrder(@PathVariable Long id) {
-        orderService.updateOrderStatus(id, DELIVERED);
+    @PutMapping("/{externalKey}/deliver")
+    public ResponseEntity<Void> deliverOrder(@PathVariable String externalKey) {
+        orderService.updateOrderStatus(externalKey, DELIVERED);
 
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/cancel")
-    public ResponseEntity<Void> cancelOrder(@PathVariable Long id) {
-        orderService.updateOrderStatus(id, CANCELED);
+    @PutMapping("/{externalKey}/cancel")
+    public ResponseEntity<Void> cancelOrder(@PathVariable String externalKey) {
+        orderService.updateOrderStatus(externalKey, CANCELED);
 
         return ResponseEntity.noContent().build();
     }
