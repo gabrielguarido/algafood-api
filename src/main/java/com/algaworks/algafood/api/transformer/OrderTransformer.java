@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.transformer;
 
+import com.algaworks.algafood.api.model.request.OrderRequest;
 import com.algaworks.algafood.api.model.response.OrderModelResponse;
 import com.algaworks.algafood.api.model.response.OrderResponse;
 import com.algaworks.algafood.domain.model.Order;
@@ -39,5 +40,13 @@ public class OrderTransformer {
         return orderList.stream()
                 .map(this::toModelResponse)
                 .collect(toList());
+    }
+
+    public Order toEntity(OrderRequest orderRequest) {
+        return mapper.map(orderRequest, Order.class);
+    }
+
+    public void copyPropertiesToEntity(OrderRequest orderRequest, Order order) {
+        mapper.map(orderRequest, order);
     }
 }

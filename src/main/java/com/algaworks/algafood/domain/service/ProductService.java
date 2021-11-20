@@ -62,7 +62,7 @@ public class ProductService {
         return productTransformer.toResponse(productRepository.save(existingProduct));
     }
 
-    private Product verifyIfExists(Long restaurantId, Long productId) {
+    public Product verifyIfExists(Long restaurantId, Long productId) {
         return productRepository.findById(restaurantId, productId)
                 .orElseThrow(() -> new ProductNotFoundException(productId, restaurantId));
     }

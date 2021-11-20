@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -63,13 +64,17 @@ public class Order {
     @JoinColumn(name = "user_client_id", nullable = false)
     private User client;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> items = new ArrayList<>();
 
     public void calculateTotalValue() {
+        getItems().forEach(OrderItem::calculateTotalPrice);
+
         this.subtotal = getItems().stream()
                 .map(OrderItem::getTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        this.totalPrice = this.subtotal.add(this.deliveryFee);
     }
 
     public void defineDeliveryFee() {
