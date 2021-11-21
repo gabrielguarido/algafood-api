@@ -1,10 +1,15 @@
 package com.algaworks.algafood.domain.service;
 
-import com.algaworks.algafood.api.model.RestaurantRequest;
-import com.algaworks.algafood.api.model.RestaurantResponse;
+import com.algaworks.algafood.api.model.request.RestaurantRequest;
+import com.algaworks.algafood.api.model.response.PaymentMethodResponse;
+import com.algaworks.algafood.api.model.response.RestaurantResponse;
+import com.algaworks.algafood.api.model.response.UserResponse;
+import com.algaworks.algafood.api.transformer.PaymentMethodTransformer;
 import com.algaworks.algafood.api.transformer.RestaurantTransformer;
+import com.algaworks.algafood.api.transformer.UserTransformer;
 import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.exception.CategoryNotFoundException;
+import com.algaworks.algafood.domain.exception.CityNotFoundException;
 import com.algaworks.algafood.domain.exception.ResourceInUseException;
 import com.algaworks.algafood.domain.exception.RestaurantNotFoundException;
 import com.algaworks.algafood.domain.model.Restaurant;
@@ -30,13 +35,31 @@ public class RestaurantService {
 
     private final CategoryService categoryService;
 
+    private final CityService cityService;
+
+    private final PaymentMethodService paymentMethodService;
+
     private final RestaurantTransformer restaurantTransformer;
 
+    private final PaymentMethodTransformer paymentMethodTransformer;
+
+    private final UserService userService;
+
+    private final UserTransformer userTransformer;
+
     @Autowired
-    public RestaurantService(RestaurantRepository restaurantRepository, CategoryService categoryService, RestaurantTransformer restaurantTransformer) {
+    public RestaurantService(RestaurantRepository restaurantRepository, CategoryService categoryService,
+                             CityService cityService, PaymentMethodTransformer paymentMethodTransformer,
+                             PaymentMethodService paymentMethodService, RestaurantTransformer restaurantTransformer,
+                             UserService userService, UserTransformer userTransformer) {
         this.restaurantRepository = restaurantRepository;
         this.categoryService = categoryService;
+        this.cityService = cityService;
+        this.paymentMethodTransformer = paymentMethodTransformer;
+        this.paymentMethodService = paymentMethodService;
         this.restaurantTransformer = restaurantTransformer;
+        this.userService = userService;
+        this.userTransformer = userTransformer;
     }
 
     public List<RestaurantResponse> list() {
@@ -47,8 +70,16 @@ public class RestaurantService {
         return restaurantTransformer.toResponse(verifyIfExists(id));
     }
 
+    public List<PaymentMethodResponse> listPaymentMethods(Long restaurantId) {
+        var restaurant = verifyIfExists(restaurantId);
+
+        return paymentMethodTransformer.toResponse(restaurant.getPaymentMethods());
+    }
+
     public List<RestaurantResponse> listByDeliveryFee(BigDecimal initialDeliveryFee, BigDecimal finalDeliveryFee) {
-        return restaurantTransformer.toResponse(restaurantRepository.queryByDeliveryFeeBetween(initialDeliveryFee, finalDeliveryFee));
+        return restaurantTransformer.toResponse(
+                restaurantRepository.queryByDeliveryFeeBetween(initialDeliveryFee, finalDeliveryFee)
+        );
     }
 
     public List<RestaurantResponse> listByName(String name) {
@@ -89,7 +120,8 @@ public class RestaurantService {
     public RestaurantResponse save(RestaurantRequest restaurantRequest) {
         var restaurant = restaurantTransformer.toEntity(restaurantRequest);
 
-        validateCategory(restaurant.getCategory().getId());
+        validateCategory(restaurant.getCategory().getId(), restaurant);
+        validateCity(restaurant.getAddress().getCity().getId(), restaurant);
 
         return restaurantTransformer.toResponse(restaurantRepository.save(restaurant));
     }
@@ -101,7 +133,8 @@ public class RestaurantService {
 
             restaurantTransformer.copyPropertiesToEntity(restaurantRequest, existingRestaurant);
 
-            validateCategory(existingRestaurant.getCategory().getId());
+            validateCategory(existingRestaurant.getCategory().getId(), existingRestaurant);
+            validateCity(existingRestaurant.getAddress().getCity().getId(), existingRestaurant);
 
             return restaurantTransformer.toResponse(restaurantRepository.save(existingRestaurant));
         } catch (RestaurantNotFoundException e) {
@@ -145,14 +178,76 @@ public class RestaurantService {
         restaurant.deactivate();
     }
 
-    private Restaurant verifyIfExists(Long id) {
+    @Transactional
+    public void open(Long id) {
+        var restaurant = verifyIfExists(id);
+
+        restaurant.open();
+    }
+
+    @Transactional
+    public void close(Long id) {
+        var restaurant = verifyIfExists(id);
+
+        restaurant.close();
+    }
+
+    @Transactional
+    public void addPaymentMethod(Long restaurantId, Long paymentMethodId) {
+        var restaurant = verifyIfExists(restaurantId);
+        var paymentMethod = paymentMethodService.verifyIfExists(paymentMethodId);
+
+        restaurant.addPaymentMethod(paymentMethod);
+    }
+
+    @Transactional
+    public void removePaymentMethod(Long restaurantId, Long paymentMethodId) {
+        var restaurant = verifyIfExists(restaurantId);
+        var paymentMethod = paymentMethodService.verifyIfExists(paymentMethodId);
+
+        restaurant.removePaymentMethod(paymentMethod);
+    }
+
+    @Transactional
+    public void addResponsibleUser(Long restaurantId, Long userId) {
+        var restaurant = verifyIfExists(restaurantId);
+        var responsibleUser = userService.verifyIfExists(userId);
+
+        restaurant.addResponsibleUser(responsibleUser);
+    }
+
+    @Transactional
+    public void removeResponsibleUser(Long restaurantId, Long userId) {
+        var restaurant = verifyIfExists(restaurantId);
+        var responsibleUser = userService.verifyIfExists(userId);
+
+        restaurant.removeResponsibleUser(responsibleUser);
+    }
+
+    public List<UserResponse> listResponsibleUsers(Long restaurantId) {
+        var restaurant = verifyIfExists(restaurantId);
+
+        return userTransformer.toResponse(restaurant.getResponsibleUsers());
+    }
+
+    public Restaurant verifyIfExists(Long id) {
         return restaurantRepository.findById(id).orElseThrow(() -> new RestaurantNotFoundException(id));
     }
 
-    private void validateCategory(Long categoryId) {
+    private void validateCategory(Long categoryId, Restaurant restaurant) {
         try {
-            categoryService.find(categoryId);
+            var category = categoryService.verifyIfExists(categoryId);
+            restaurant.setCategory(category);
         } catch (CategoryNotFoundException e) {
+            throw new BusinessException(e.getMessage(), e);
+        }
+    }
+
+    private void validateCity(Long cityId, Restaurant restaurant) {
+        try {
+            var city = cityService.verifyIfExists(cityId);
+            restaurant.getAddress().setCity(city);
+        } catch (CityNotFoundException e) {
             throw new BusinessException(e.getMessage(), e);
         }
     }

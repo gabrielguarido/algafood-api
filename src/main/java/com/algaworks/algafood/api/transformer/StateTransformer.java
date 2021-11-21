@@ -1,7 +1,7 @@
 package com.algaworks.algafood.api.transformer;
 
-import com.algaworks.algafood.api.model.StateRequest;
-import com.algaworks.algafood.api.model.StateResponse;
+import com.algaworks.algafood.api.model.request.StateRequest;
+import com.algaworks.algafood.api.model.response.StateResponse;
 import com.algaworks.algafood.domain.model.State;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

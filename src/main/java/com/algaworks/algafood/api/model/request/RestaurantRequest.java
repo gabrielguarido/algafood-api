@@ -1,4 +1,4 @@
-package com.algaworks.algafood.api.model;
+package com.algaworks.algafood.api.model.request;
 
 import lombok.Data;
 
@@ -21,4 +21,8 @@ public class RestaurantRequest {
     @Valid
     @NotNull
     private CategoryIdRequest category;
+
+    @Valid
+    @NotNull
+    private AddressRequest address;
 }

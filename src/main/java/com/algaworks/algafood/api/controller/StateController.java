@@ -1,7 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
-import com.algaworks.algafood.api.model.StateRequest;
-import com.algaworks.algafood.api.model.StateResponse;
+import com.algaworks.algafood.api.model.request.StateRequest;
+import com.algaworks.algafood.api.model.response.StateResponse;
 import com.algaworks.algafood.domain.service.StateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

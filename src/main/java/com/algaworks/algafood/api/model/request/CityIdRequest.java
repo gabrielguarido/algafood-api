@@ -1,11 +1,11 @@
-package com.algaworks.algafood.api.model;
+package com.algaworks.algafood.api.model.request;
 
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 
 @Data
-public class CategoryIdRequest {
+public class CityIdRequest {
 
     @NotNull
     private Long id;

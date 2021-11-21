@@ -1,7 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
-import com.algaworks.algafood.api.model.RestaurantRequest;
-import com.algaworks.algafood.api.model.RestaurantResponse;
+import com.algaworks.algafood.api.model.request.RestaurantRequest;
+import com.algaworks.algafood.api.model.response.RestaurantResponse;
 import com.algaworks.algafood.domain.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -104,6 +104,20 @@ public class RestaurantController {
     @DeleteMapping("/{id}/deactivate")
     public ResponseEntity<Void> deactivate(@PathVariable Long id) {
         restaurantService.deactivate(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/open")
+    public ResponseEntity<Void> open(@PathVariable Long id) {
+        restaurantService.open(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/close")
+    public ResponseEntity<Void> close(@PathVariable Long id) {
+        restaurantService.close(id);
 
         return ResponseEntity.noContent().build();
     }

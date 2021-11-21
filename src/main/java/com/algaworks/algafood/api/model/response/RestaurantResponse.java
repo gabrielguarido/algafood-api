@@ -1,4 +1,4 @@
-package com.algaworks.algafood.api.model;
+package com.algaworks.algafood.api.model.response;
 
 import lombok.Data;
 
@@ -12,4 +12,6 @@ public class RestaurantResponse {
     private BigDecimal deliveryFee;
     private CategoryResponse category;
     private Boolean active;
+    private Boolean open;
+    private AddressResponse address;
 }

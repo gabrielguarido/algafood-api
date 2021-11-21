@@ -32,4 +32,11 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(nullable = false)
     private Product product;
+
+    public void calculateTotalPrice() {
+        var unitPrice = this.getUnitPrice() == null ? BigDecimal.ZERO : this.getUnitPrice();
+        var amount = this.getAmount() == null ? 0 : this.getAmount();
+
+        this.setTotalPrice(unitPrice.multiply(new BigDecimal(amount)));
+    }
 }

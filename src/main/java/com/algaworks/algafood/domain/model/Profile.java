@@ -12,8 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -33,5 +33,13 @@ public class Profile {
     @JoinTable(name = "profile_permission",
             joinColumns = @JoinColumn(name = "profile_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id"))
-    private List<Permission> permissions = new ArrayList<>();
+    private Set<Permission> permissions = new HashSet<>();
+
+    public void addPermission(Permission permission) {
+        getPermissions().add(permission);
+    }
+
+    public void removePermission(Permission permission) {
+        getPermissions().remove(permission);
+    }
 }
