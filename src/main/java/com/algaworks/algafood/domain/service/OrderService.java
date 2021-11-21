@@ -54,7 +54,7 @@ public class OrderService {
         return orderTransformer.toModelResponse(orderRepository.findAll());
     }
 
-    public OrderResponse find(String externalKey) {
+    public OrderResponse find(UUID externalKey) {
         return orderTransformer.toResponse(verifyIfExists(externalKey));
     }
 
@@ -71,7 +71,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void updateOrderStatus(String externalKey, OrderStatus targetStatus) {
+    public void updateOrderStatus(UUID externalKey, OrderStatus targetStatus) {
         var order = verifyIfExists(externalKey);
 
         switch (targetStatus) {
@@ -132,7 +132,7 @@ public class OrderService {
         order.getClient().setId(1L);
     }
 
-    private Order verifyIfExists(String externalKey) {
-        return orderRepository.findByExternalKey(externalKey).orElseThrow(() -> new OrderNotFoundException(externalKey));
+    private Order verifyIfExists(UUID externalKey) {
+        return orderRepository.findByExternalKey(externalKey.toString()).orElseThrow(() -> new OrderNotFoundException(externalKey));
     }
 }
