@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -29,8 +30,9 @@ public class RestaurantProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> list(@PathVariable Long restaurantId) {
-        return ResponseEntity.ok(productService.list(restaurantId));
+    public ResponseEntity<List<ProductResponse>> list(@PathVariable Long restaurantId,
+                                                      @RequestParam(required = false) boolean includeInactive) {
+        return ResponseEntity.ok(productService.list(restaurantId, includeInactive));
     }
 
     @GetMapping("/{productId}")
@@ -39,12 +41,14 @@ public class RestaurantProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponse> save(@PathVariable Long restaurantId, @RequestBody @Valid ProductRequest productRequest) {
+    public ResponseEntity<ProductResponse> save(@PathVariable Long restaurantId,
+                                                @RequestBody @Valid ProductRequest productRequest) {
         return ResponseEntity.ok(productService.save(restaurantId, productRequest));
     }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<ProductResponse> update(@PathVariable Long restaurantId, @PathVariable Long productId, @RequestBody @Valid ProductRequest productRequest) {
+    public ResponseEntity<ProductResponse> update(@PathVariable Long restaurantId, @PathVariable Long productId,
+                                                  @RequestBody @Valid ProductRequest productRequest) {
         return ResponseEntity.ok(productService.update(restaurantId, productId, productRequest));
     }
 }
