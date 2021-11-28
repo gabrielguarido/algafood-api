@@ -11,6 +11,8 @@ import com.algaworks.algafood.domain.model.Order;
 import com.algaworks.algafood.domain.model.User;
 import com.algaworks.algafood.domain.model.enumerator.OrderStatus;
 import com.algaworks.algafood.domain.repository.OrderRepository;
+import com.algaworks.algafood.domain.repository.filter.OrderFilter;
+import com.algaworks.algafood.infrastructure.repository.spec.OrderSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,8 +52,8 @@ public class OrderService {
         this.userService = userService;
     }
 
-    public List<OrderModelResponse> list() {
-        return orderTransformer.toModelResponse(orderRepository.findAll());
+    public List<OrderModelResponse> list(OrderFilter filter) {
+        return orderTransformer.toModelResponse(orderRepository.findAll(OrderSpecs.withFilter(filter)));
     }
 
     public OrderResponse find(UUID externalKey) {

@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.controller;
 import com.algaworks.algafood.api.model.request.OrderRequest;
 import com.algaworks.algafood.api.model.response.OrderModelResponse;
 import com.algaworks.algafood.api.model.response.OrderResponse;
+import com.algaworks.algafood.domain.repository.filter.OrderFilter;
 import com.algaworks.algafood.domain.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -35,8 +36,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderModelResponse>> list() {
-        return ResponseEntity.ok(orderService.list());
+    public ResponseEntity<List<OrderModelResponse>> search(OrderFilter filter) {
+        return ResponseEntity.ok(orderService.list(filter));
     }
 
     @GetMapping("/{externalKey}")
