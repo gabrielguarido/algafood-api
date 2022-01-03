@@ -11,6 +11,9 @@ import com.algaworks.algafood.domain.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,8 +37,12 @@ public class CategoryService {
         this.categoryTransformer = categoryTransformer;
     }
 
-    public List<CategoryResponse> list() {
-        return categoryTransformer.toResponse(categoryRepository.findAll());
+    public Page<CategoryResponse> list(Pageable pageable) {
+        Page<Category> page = categoryRepository.findAll(pageable);
+
+        List<CategoryResponse> response = categoryTransformer.toResponse(page.getContent());
+
+        return new PageImpl<>(response, pageable, page.getTotalElements());
     }
 
     public CategoryResponse find(Long id) {

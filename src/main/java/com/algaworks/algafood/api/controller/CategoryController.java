@@ -4,6 +4,8 @@ import com.algaworks.algafood.api.model.request.CategoryRequest;
 import com.algaworks.algafood.api.model.response.CategoryResponse;
 import com.algaworks.algafood.domain.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "category", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -33,8 +34,8 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> list() {
-        return ResponseEntity.ok(categoryService.list());
+    public ResponseEntity<Page<CategoryResponse>> list(Pageable pageable) {
+        return ResponseEntity.ok(categoryService.list(pageable));
     }
 
     @GetMapping("/{id}")
