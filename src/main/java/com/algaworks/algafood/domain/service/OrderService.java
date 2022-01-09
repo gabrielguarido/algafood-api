@@ -14,6 +14,9 @@ import com.algaworks.algafood.domain.repository.OrderRepository;
 import com.algaworks.algafood.domain.repository.filter.OrderFilter;
 import com.algaworks.algafood.infrastructure.repository.spec.OrderSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,8 +55,12 @@ public class OrderService {
         this.userService = userService;
     }
 
-    public List<OrderModelResponse> list(OrderFilter filter) {
-        return orderTransformer.toModelResponse(orderRepository.findAll(OrderSpecs.withFilter(filter)));
+    public Page<OrderModelResponse> list(OrderFilter filter, Pageable pageable) {
+        Page<Order> page = orderRepository.findAll(OrderSpecs.withFilter(filter), pageable);
+
+        List<OrderModelResponse> response = orderTransformer.toModelResponse(page.getContent());
+
+        return new PageImpl<>(response, pageable, page.getTotalElements());
     }
 
     public OrderResponse find(UUID externalKey) {

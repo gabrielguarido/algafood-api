@@ -14,8 +14,10 @@ public class OrderSpecs {
 
     public static Specification<Order> withFilter(OrderFilter filter) {
         return (root, query, builder) -> {
-            root.fetch("restaurant").fetch("category");
-            root.fetch("client");
+            if (Order.class.equals(query.getResultType())) {
+                root.fetch("restaurant").fetch("category");
+                root.fetch("client");
+            }
 
             var predicates = new ArrayList<Predicate>();
 

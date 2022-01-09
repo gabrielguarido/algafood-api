@@ -6,6 +6,8 @@ import com.algaworks.algafood.api.model.response.OrderResponse;
 import com.algaworks.algafood.domain.repository.filter.OrderFilter;
 import com.algaworks.algafood.domain.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,8 +38,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderModelResponse>> search(OrderFilter filter) {
-        return ResponseEntity.ok(orderService.list(filter));
+    public ResponseEntity<Page<OrderModelResponse>> search(OrderFilter filter, Pageable pageable) {
+        return ResponseEntity.ok(orderService.list(filter, pageable));
     }
 
     @GetMapping("/{externalKey}")
