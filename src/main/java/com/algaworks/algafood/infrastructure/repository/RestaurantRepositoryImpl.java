@@ -2,7 +2,7 @@ package com.algaworks.algafood.infrastructure.repository;
 
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.repository.RestaurantRepository;
-import com.algaworks.algafood.domain.repository.query.RestaurantRepositoryQueries;
+import com.algaworks.algafood.domain.repository.query.RestaurantRepositoryQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
@@ -19,7 +19,7 @@ import static com.algaworks.algafood.infrastructure.repository.spec.RestaurantSp
 import static com.algaworks.algafood.infrastructure.repository.spec.RestaurantSpecs.withNameLike;
 
 @Repository
-public class RestaurantRepositoryImpl implements RestaurantRepositoryQueries {
+public class RestaurantRepositoryImpl implements RestaurantRepositoryQuery {
 
     @PersistenceContext
     private EntityManager manager;

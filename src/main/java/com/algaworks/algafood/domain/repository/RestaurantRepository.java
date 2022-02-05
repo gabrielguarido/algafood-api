@@ -1,7 +1,7 @@
 package com.algaworks.algafood.domain.repository;
 
 import com.algaworks.algafood.domain.model.Restaurant;
-import com.algaworks.algafood.domain.repository.query.RestaurantRepositoryQueries;
+import com.algaworks.algafood.domain.repository.query.RestaurantRepositoryQuery;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface RestaurantRepository extends CustomJpaRepository<Restaurant, Long>,
-        RestaurantRepositoryQueries, JpaSpecificationExecutor<Restaurant> {
+        RestaurantRepositoryQuery, JpaSpecificationExecutor<Restaurant> {
 
     @Query("from Restaurant r join fetch r.category left join fetch r.paymentMethods")
     List<Restaurant> findAll();

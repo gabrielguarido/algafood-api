@@ -168,7 +168,7 @@ INSERT IGNORE INTO algafood.`order` (`order`.id, `order`.external_key, `order`.s
                                      `order`.created, `order`.confirmed,
                                      `order`.cancelled, `order`.delivered)
 VALUES (1, '4e7c583e-4a45-11ec-85ee-fc34977b31ad', 48.90, 7.00, 55.90, 1, 1, 1, 1, '03112-090', 'Rua Marina Crespi',
-        '274', 'Apartamento 12 A', 'Mooca - SP', 'CREATED', utc_timestamp, utc_timestamp, null, null);
+        '274', 'Apartamento 12 A', 'Mooca - SP', 'CONFIRMED', utc_timestamp, utc_timestamp, null, null);
 INSERT IGNORE INTO algafood.`order` (`order`.id, `order`.external_key, `order`.subtotal, `order`.delivery_fee,
                                      `order`.total_price,
                                      `order`.restaurant_id, `order`.user_client_id,
