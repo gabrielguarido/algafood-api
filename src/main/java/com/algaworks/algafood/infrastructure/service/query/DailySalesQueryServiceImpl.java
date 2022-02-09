@@ -1,10 +1,10 @@
-package com.algaworks.algafood.infrastructure.service;
+package com.algaworks.algafood.infrastructure.service.query;
 
 import com.algaworks.algafood.domain.model.Order;
 import com.algaworks.algafood.domain.model.dashboard.DailySales;
 import com.algaworks.algafood.domain.model.enumerator.OrderStatus;
 import com.algaworks.algafood.domain.repository.filter.DailySalesFilter;
-import com.algaworks.algafood.domain.repository.query.DailySalesServiceQuery;
+import com.algaworks.algafood.domain.service.query.DailySalesQueryService;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public class DailySalesServiceImpl implements DailySalesServiceQuery {
+public class DailySalesQueryServiceImpl implements DailySalesQueryService {
 
     @PersistenceContext
     private EntityManager manager;
