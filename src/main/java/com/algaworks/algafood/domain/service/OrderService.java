@@ -11,7 +11,12 @@ import com.algaworks.algafood.domain.model.Order;
 import com.algaworks.algafood.domain.model.User;
 import com.algaworks.algafood.domain.model.enumerator.OrderStatus;
 import com.algaworks.algafood.domain.repository.OrderRepository;
+import com.algaworks.algafood.domain.repository.filter.OrderFilter;
+import com.algaworks.algafood.infrastructure.repository.spec.OrderSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,11 +55,15 @@ public class OrderService {
         this.userService = userService;
     }
 
-    public List<OrderModelResponse> list() {
-        return orderTransformer.toModelResponse(orderRepository.findAll());
+    public Page<OrderModelResponse> list(OrderFilter filter, Pageable pageable) {
+        Page<Order> page = orderRepository.findAll(OrderSpecs.withFilter(filter), pageable);
+
+        List<OrderModelResponse> response = orderTransformer.toModelResponse(page.getContent());
+
+        return new PageImpl<>(response, pageable, page.getTotalElements());
     }
 
-    public OrderResponse find(String externalKey) {
+    public OrderResponse find(UUID externalKey) {
         return orderTransformer.toResponse(verifyIfExists(externalKey));
     }
 
@@ -71,7 +80,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void updateOrderStatus(String externalKey, OrderStatus targetStatus) {
+    public void updateOrderStatus(UUID externalKey, OrderStatus targetStatus) {
         var order = verifyIfExists(externalKey);
 
         switch (targetStatus) {
@@ -132,7 +141,7 @@ public class OrderService {
         order.getClient().setId(1L);
     }
 
-    private Order verifyIfExists(String externalKey) {
-        return orderRepository.findByExternalKey(externalKey).orElseThrow(() -> new OrderNotFoundException(externalKey));
+    private Order verifyIfExists(UUID externalKey) {
+        return orderRepository.findByExternalKey(externalKey.toString()).orElseThrow(() -> new OrderNotFoundException(externalKey));
     }
 }

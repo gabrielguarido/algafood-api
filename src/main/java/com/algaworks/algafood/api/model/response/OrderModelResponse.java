@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 public class OrderModelResponse {
 
-    private String externalKey;
+    private UUID externalKey;
     private BigDecimal subtotal;
     private BigDecimal deliveryFee;
     private BigDecimal totalPrice;

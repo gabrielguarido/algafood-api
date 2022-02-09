@@ -12,6 +12,6 @@ public class OrderNotFoundException extends ResourceNotFoundException {
     }
 
     public OrderNotFoundException(UUID externalKey) {
-        this(String.format(MESSAGE, externalKey));
+        this(String.format(MESSAGE, externalKey.toString()));
     }
 }

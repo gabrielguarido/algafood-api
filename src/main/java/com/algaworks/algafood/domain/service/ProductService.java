@@ -29,10 +29,12 @@ public class ProductService {
         this.restaurantService = restaurantService;
     }
 
-    public List<ProductResponse> list(Long restaurantId) {
+    public List<ProductResponse> list(Long restaurantId, boolean includeInactive) {
         var restaurant = restaurantService.verifyIfExists(restaurantId);
 
-        var allProducts = productRepository.findByRestaurant(restaurant);
+        var allProducts = includeInactive
+                ? productRepository.findAllByRestaurant(restaurant)
+                : productRepository.findAllActiveByRestaurant(restaurant);
 
         return productTransformer.toResponse(allProducts);
     }
