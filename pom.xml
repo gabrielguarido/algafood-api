@@ -15,9 +15,10 @@
     <description>Food Delivery API - Spring REST Specialist Training</description>
     <properties>
         <java.version>11</java.version>
-        <junit.version>5.8.1</junit.version>
+        <junit.version>5.8.2</junit.version>
         <failsafe.version>3.0.0-M5</failsafe.version>
-        <modelmapper.version>2.4.4</modelmapper.version>
+        <modelmapper.version>2.4.5</modelmapper.version>
+        <jasper.version>6.18.1</jasper.version>
     </properties>
     <dependencies>
         <dependency>
@@ -102,6 +103,18 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>${jasper.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-functions</artifactId>
+            <version>${jasper.version}</version>
         </dependency>
     </dependencies>
 
