@@ -1,10 +1,10 @@
 package com.algaworks.algafood.domain.service;
 
-import com.algaworks.algafood.api.model.request.ProductRequest;
 import com.algaworks.algafood.api.model.request.ProductPictureRequest;
+import com.algaworks.algafood.api.model.request.ProductRequest;
 import com.algaworks.algafood.api.model.response.ProductResponse;
+import com.algaworks.algafood.api.transformer.ProductPictureTransformer;
 import com.algaworks.algafood.api.transformer.ProductTransformer;
-import com.algaworks.algafood.domain.exception.FileUploadException;
 import com.algaworks.algafood.domain.exception.ProductNotFoundException;
 import com.algaworks.algafood.domain.model.Product;
 import com.algaworks.algafood.domain.repository.ProductRepository;
@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.Path;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class ProductService {
@@ -23,13 +21,16 @@ public class ProductService {
 
     private final ProductTransformer productTransformer;
 
+    private final ProductPictureTransformer productPictureTransformer;
+
     private final RestaurantService restaurantService;
 
     @Autowired
     public ProductService(ProductRepository productRepository, ProductTransformer productTransformer,
-                          RestaurantService restaurantService) {
+                          RestaurantService restaurantService, ProductPictureTransformer productPictureTransformer) {
         this.productRepository = productRepository;
         this.productTransformer = productTransformer;
+        this.productPictureTransformer = productPictureTransformer;
         this.restaurantService = restaurantService;
     }
 
@@ -68,18 +69,13 @@ public class ProductService {
         return productTransformer.toResponse(productRepository.save(existingProduct));
     }
 
+    @Transactional
     public void updatePicture(Long restaurantId, Long productId, ProductPictureRequest request) {
         verifyIfExists(restaurantId, productId);
 
-        var fileName = UUID.randomUUID() + "_" + request.getFile().getOriginalFilename();
+        var picture = productPictureTransformer.toEntity(request, productId);
 
-        var filePath = Path.of("C:\\Users\\Gabriel\\Downloads", fileName);
-
-        try {
-            request.getFile().transferTo(filePath);
-        } catch (Exception e) {
-            throw new FileUploadException(fileName, productId, restaurantId);
-        }
+        productRepository.save(picture);
     }
 
     public Product verifyIfExists(Long restaurantId, Long productId) {
