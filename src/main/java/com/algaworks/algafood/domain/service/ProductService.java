@@ -1,16 +1,21 @@
 package com.algaworks.algafood.domain.service;
 
 import com.algaworks.algafood.api.model.request.ProductRequest;
+import com.algaworks.algafood.api.model.request.ProdutcPictureRequest;
 import com.algaworks.algafood.api.model.response.ProductResponse;
 import com.algaworks.algafood.api.transformer.ProductTransformer;
+import com.algaworks.algafood.domain.exception.FileUploadException;
 import com.algaworks.algafood.domain.exception.ProductNotFoundException;
 import com.algaworks.algafood.domain.model.Product;
 import com.algaworks.algafood.domain.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProductService {
@@ -62,6 +67,20 @@ public class ProductService {
         productTransformer.copyPropertiesToEntity(productRequest, existingProduct);
 
         return productTransformer.toResponse(productRepository.save(existingProduct));
+    }
+
+    public void updatePicture(Long restaurantId, Long productId, ProdutcPictureRequest request) {
+        verifyIfExists(restaurantId, productId);
+
+        var fileName = UUID.randomUUID() + "_" + request.getFile().getOriginalFilename();
+
+        var filePath = Path.of("C:\\Users\\Gabriel\\Downloads", fileName);
+
+        try {
+            request.getFile().transferTo(filePath);
+        } catch (Exception e) {
+            throw new FileUploadException(fileName, productId, restaurantId);
+        }
     }
 
     public Product verifyIfExists(Long restaurantId, Long productId) {
