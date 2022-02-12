@@ -1,7 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
 import com.algaworks.algafood.api.model.request.ProductRequest;
-import com.algaworks.algafood.api.model.request.ProdutcPictureRequest;
+import com.algaworks.algafood.api.model.request.ProductPictureRequest;
 import com.algaworks.algafood.api.model.response.ProductResponse;
 import com.algaworks.algafood.api.transformer.ProductTransformer;
 import com.algaworks.algafood.domain.exception.FileUploadException;
@@ -11,7 +11,6 @@ import com.algaworks.algafood.domain.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -69,7 +68,7 @@ public class ProductService {
         return productTransformer.toResponse(productRepository.save(existingProduct));
     }
 
-    public void updatePicture(Long restaurantId, Long productId, ProdutcPictureRequest request) {
+    public void updatePicture(Long restaurantId, Long productId, ProductPictureRequest request) {
         verifyIfExists(restaurantId, productId);
 
         var fileName = UUID.randomUUID() + "_" + request.getFile().getOriginalFilename();

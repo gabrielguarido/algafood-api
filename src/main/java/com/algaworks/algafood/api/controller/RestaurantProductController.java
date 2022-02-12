@@ -1,9 +1,8 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.model.request.ProductRequest;
-import com.algaworks.algafood.api.model.request.ProdutcPictureRequest;
+import com.algaworks.algafood.api.model.request.ProductPictureRequest;
 import com.algaworks.algafood.api.model.response.ProductResponse;
-import com.algaworks.algafood.core.validation.FileSize;
 import com.algaworks.algafood.domain.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -57,7 +55,7 @@ public class RestaurantProductController {
 
     @PutMapping(value = "/{productId}/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updatePicture(@PathVariable Long restaurantId, @PathVariable Long productId,
-                                              @Valid ProdutcPictureRequest request) {
+                                              @Valid ProductPictureRequest request) {
         productService.updatePicture(restaurantId, productId, request);
 
         return ResponseEntity.ok().build();
