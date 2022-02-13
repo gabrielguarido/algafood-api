@@ -9,10 +9,12 @@ import com.algaworks.algafood.domain.exception.ProductNotFoundException;
 import com.algaworks.algafood.domain.model.Product;
 import com.algaworks.algafood.domain.model.ProductPicture;
 import com.algaworks.algafood.domain.repository.ProductRepository;
+import com.algaworks.algafood.domain.service.storage.PictureStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,13 +29,17 @@ public class ProductService {
 
     private final RestaurantService restaurantService;
 
+    private final PictureStorageService pictureStorageService;
+
     @Autowired
     public ProductService(ProductRepository productRepository, ProductTransformer productTransformer,
-                          RestaurantService restaurantService, ProductPictureTransformer productPictureTransformer) {
+                          RestaurantService restaurantService, ProductPictureTransformer productPictureTransformer,
+                          PictureStorageService pictureStorageService) {
         this.productRepository = productRepository;
         this.productTransformer = productTransformer;
         this.productPictureTransformer = productPictureTransformer;
         this.restaurantService = restaurantService;
+        this.pictureStorageService = pictureStorageService;
     }
 
     public List<ProductResponse> list(Long restaurantId, boolean includeInactive) {
@@ -72,17 +78,37 @@ public class ProductService {
     }
 
     @Transactional
-    public void updatePicture(Long restaurantId, Long productId, ProductPictureRequest request) {
-        var product = verifyIfExists(restaurantId, productId);
+    public void updatePicture(Long restaurantId, Long productId, ProductPictureRequest request) throws IOException {
+        var existingPicture = productRepository.findPictureById(restaurantId, productId);
 
-        Optional<ProductPicture> existingPicture = productRepository.findPictureById(restaurantId, productId);
+        var fileName = pictureStorageService.generateFileName(request.getFile().getOriginalFilename());
 
+        persistPicture(existingPicture, request, fileName, restaurantId, productId);
+
+        storePicture(existingPicture, request, fileName);
+    }
+
+    private void persistPicture(Optional<ProductPicture> existingPicture, ProductPictureRequest request, String fileName,
+                                Long restaurantId, Long productId) {
         existingPicture.ifPresent(productRepository::delete);
 
-        var picture = productPictureTransformer.toEntity(request, productId);
-        picture.setProduct(product);
+        var product = verifyIfExists(restaurantId, productId);
 
-        productRepository.save(picture);
+        var newPicture = productPictureTransformer.toEntity(request, product, fileName);
+
+        productRepository.save(newPicture);
+        productRepository.flush();
+    }
+
+    private void storePicture(Optional<ProductPicture> existingPicture, ProductPictureRequest request, String fileName) throws IOException {
+        existingPicture.ifPresent(picture -> pictureStorageService.remove(picture.getFileName()));
+
+        var picture = PictureStorageService.Picture.builder()
+                .fileName(fileName)
+                .inputStream(request.getFile().getInputStream())
+                .build();
+
+        pictureStorageService.store(picture);
     }
 
     public Product verifyIfExists(Long restaurantId, Long productId) {
