@@ -7,12 +7,14 @@ import com.algaworks.algafood.api.transformer.ProductPictureTransformer;
 import com.algaworks.algafood.api.transformer.ProductTransformer;
 import com.algaworks.algafood.domain.exception.ProductNotFoundException;
 import com.algaworks.algafood.domain.model.Product;
+import com.algaworks.algafood.domain.model.ProductPicture;
 import com.algaworks.algafood.domain.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -71,9 +73,14 @@ public class ProductService {
 
     @Transactional
     public void updatePicture(Long restaurantId, Long productId, ProductPictureRequest request) {
-        verifyIfExists(restaurantId, productId);
+        var product = verifyIfExists(restaurantId, productId);
+
+        Optional<ProductPicture> existingPicture = productRepository.findPictureById(restaurantId, productId);
+
+        existingPicture.ifPresent(productRepository::delete);
 
         var picture = productPictureTransformer.toEntity(request, productId);
+        picture.setProduct(product);
 
         productRepository.save(picture);
     }

@@ -5,4 +5,6 @@ import com.algaworks.algafood.domain.model.ProductPicture;
 public interface ProductQueryRepository {
 
     ProductPicture save(ProductPicture picture);
+
+    void delete(ProductPicture picture);
 }
