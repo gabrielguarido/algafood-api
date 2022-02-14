@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.model.request.ProductPictureRequest;
 import com.algaworks.algafood.api.model.request.ProductRequest;
+import com.algaworks.algafood.api.model.response.ProductPictureResponse;
 import com.algaworks.algafood.api.model.response.ProductResponse;
 import com.algaworks.algafood.domain.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,12 +68,12 @@ public class RestaurantProductController {
 
     @GetMapping(value = "/{productId}/picture", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<InputStreamResource> retrievePicture(@PathVariable Long restaurantId, @PathVariable Long productId) {
-        InputStream inputStream = productService.retrievePicture(restaurantId, productId);
+        ProductPictureResponse response = productService.retrievePicture(restaurantId, productId);
 
         return ResponseEntity
                 .ok()
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(new InputStreamResource(inputStream));
+                .contentType(response.getMediaType())
+                .body(new InputStreamResource(response.getInputStream()));
     }
 
     @DeleteMapping("/{productId}/picture")

@@ -2,6 +2,7 @@ package com.algaworks.algafood.domain.service;
 
 import com.algaworks.algafood.api.model.request.ProductPictureRequest;
 import com.algaworks.algafood.api.model.request.ProductRequest;
+import com.algaworks.algafood.api.model.response.ProductPictureResponse;
 import com.algaworks.algafood.api.model.response.ProductResponse;
 import com.algaworks.algafood.api.transformer.ProductPictureTransformer;
 import com.algaworks.algafood.api.transformer.ProductTransformer;
@@ -12,6 +13,7 @@ import com.algaworks.algafood.domain.model.ProductPicture;
 import com.algaworks.algafood.domain.repository.ProductRepository;
 import com.algaworks.algafood.domain.service.storage.PictureStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -113,14 +115,17 @@ public class ProductService {
         pictureStorageService.store(picture);
     }
 
-    public InputStream retrievePicture(Long restaurantId, Long productId) {
+    public ProductPictureResponse retrievePicture(Long restaurantId, Long productId) {
         var productPicture = productRepository.findPictureById(restaurantId, productId);
 
         if (productPicture.isEmpty()) {
             throw new ProductPictureNotFoundException(productId);
         }
 
-        return pictureStorageService.retrieve(productPicture.get().getFileName());
+        MediaType mediaType = MediaType.parseMediaType(productPicture.get().getContentType());
+        InputStream inputStream = pictureStorageService.retrieve(productPicture.get().getFileName());
+
+        return productPictureTransformer.toResponse(mediaType, inputStream);
     }
 
     public void deletePicture(Long restaurantId, Long productId) {
