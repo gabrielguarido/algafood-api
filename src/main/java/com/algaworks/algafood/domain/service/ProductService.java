@@ -6,6 +6,7 @@ import com.algaworks.algafood.api.model.response.ProductResponse;
 import com.algaworks.algafood.api.transformer.ProductPictureTransformer;
 import com.algaworks.algafood.api.transformer.ProductTransformer;
 import com.algaworks.algafood.domain.exception.ProductNotFoundException;
+import com.algaworks.algafood.domain.exception.ProductPictureNotFoundException;
 import com.algaworks.algafood.domain.model.Product;
 import com.algaworks.algafood.domain.model.ProductPicture;
 import com.algaworks.algafood.domain.repository.ProductRepository;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,6 +111,29 @@ public class ProductService {
                 .build();
 
         pictureStorageService.store(picture);
+    }
+
+    public InputStream retrievePicture(Long restaurantId, Long productId) {
+        var productPicture = productRepository.findPictureById(restaurantId, productId);
+
+        if (productPicture.isEmpty()) {
+            throw new ProductPictureNotFoundException(productId);
+        }
+
+        return pictureStorageService.retrieve(productPicture.get().getFileName());
+    }
+
+    public void deletePicture(Long restaurantId, Long productId) {
+        verifyIfExists(restaurantId, productId);
+
+        var existingPicture = productRepository.findPictureById(restaurantId, productId);
+
+        if (existingPicture.isPresent()) {
+            productRepository.delete(existingPicture.get());
+            productRepository.flush();
+
+            pictureStorageService.remove(existingPicture.get().getFileName());
+        }
     }
 
     public Product verifyIfExists(Long restaurantId, Long productId) {

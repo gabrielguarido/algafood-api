@@ -1,12 +1,14 @@
 package com.algaworks.algafood.api.controller;
 
-import com.algaworks.algafood.api.model.request.ProductRequest;
 import com.algaworks.algafood.api.model.request.ProductPictureRequest;
+import com.algaworks.algafood.api.model.request.ProductRequest;
 import com.algaworks.algafood.api.model.response.ProductResponse;
 import com.algaworks.algafood.domain.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -60,5 +63,22 @@ public class RestaurantProductController {
         productService.updatePicture(restaurantId, productId, request);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value = "/{productId}/picture", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<InputStreamResource> retrievePicture(@PathVariable Long restaurantId, @PathVariable Long productId) {
+        InputStream inputStream = productService.retrievePicture(restaurantId, productId);
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(new InputStreamResource(inputStream));
+    }
+
+    @DeleteMapping("/{productId}/picture")
+    public ResponseEntity<Void> deletePicture(@PathVariable Long restaurantId, @PathVariable Long productId) {
+        productService.deletePicture(restaurantId, productId);
+
+        return ResponseEntity.noContent().build();
     }
 }
