@@ -10,11 +10,12 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Locale;
 
-@Repository
+@Service
 public class DailySalesReportServiceImpl implements DailySalesReportService {
 
     private static final String RESOURCE_FILE_PATH = "/reports/daily-sales.jasper";
