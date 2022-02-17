@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,6 +108,7 @@ public class ProductService {
 
         var picture = PictureStorageService.Picture.builder()
                 .fileName(fileName)
+                .contentType(request.getFile().getContentType())
                 .inputStream(request.getFile().getInputStream())
                 .build();
 
@@ -123,9 +123,10 @@ public class ProductService {
         }
 
         MediaType mediaType = MediaType.parseMediaType(productPicture.get().getContentType());
-        InputStream inputStream = pictureStorageService.retrieve(productPicture.get().getFileName());
 
-        return productPictureTransformer.toResponse(mediaType, inputStream);
+        PictureStorageService.PictureResponse pictureResponse = pictureStorageService.retrieve(productPicture.get().getFileName());
+
+        return productPictureTransformer.toResponse(mediaType, pictureResponse.getInputStream(), pictureResponse.getUrl());
     }
 
     public void deletePicture(Long restaurantId, Long productId) {

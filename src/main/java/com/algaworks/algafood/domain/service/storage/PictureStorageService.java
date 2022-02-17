@@ -12,7 +12,7 @@ public interface PictureStorageService {
 
     void remove(String fileName);
 
-    InputStream retrieve(String fileName);
+    PictureResponse retrieve(String fileName);
 
     default String generateFileName(String originalFilename) {
         return UUID.randomUUID() + "_" + originalFilename;
@@ -23,6 +23,15 @@ public interface PictureStorageService {
     class Picture {
 
         private String fileName;
+        private String contentType;
+        private InputStream inputStream;
+    }
+
+    @Getter
+    @Builder
+    class PictureResponse {
+
+        private String url;
         private InputStream inputStream;
     }
 }

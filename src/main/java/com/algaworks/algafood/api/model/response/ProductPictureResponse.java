@@ -11,5 +11,14 @@ import java.io.InputStream;
 public class ProductPictureResponse {
 
     private InputStream inputStream;
+    private String url;
     private MediaType mediaType;
+
+    public boolean hasUrl() {
+        return this.url != null;
+    }
+
+    public boolean hasInputStream() {
+        return this.inputStream != null;
+    }
 }

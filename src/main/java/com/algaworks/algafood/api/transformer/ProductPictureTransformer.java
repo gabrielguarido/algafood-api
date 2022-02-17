@@ -22,10 +22,11 @@ public class ProductPictureTransformer {
                 .build();
     }
 
-    public ProductPictureResponse toResponse(MediaType mediaType, InputStream inputStream) {
+    public ProductPictureResponse toResponse(MediaType mediaType, InputStream inputStream, String url) {
         return ProductPictureResponse.builder()
                 .mediaType(mediaType)
                 .inputStream(inputStream)
+                .url(url)
                 .build();
     }
 }
