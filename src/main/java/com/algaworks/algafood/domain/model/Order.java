@@ -1,11 +1,13 @@
 package com.algaworks.algafood.domain.model;
 
+import com.algaworks.algafood.domain.event.OrderConfirmedEvent;
 import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.model.enumerator.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
@@ -35,7 +37,8 @@ import static com.algaworks.algafood.domain.model.enumerator.OrderStatus.DELIVER
 @Data
 @Entity
 @Table(name = "[order]")
-public class Order {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+public class Order extends AbstractAggregateRoot<Order> {
 
     @Id
     @EqualsAndHashCode.Include
@@ -98,6 +101,8 @@ public class Order {
     public void confirm() {
         setStatus(CONFIRMED);
         setConfirmed(OffsetDateTime.now());
+
+        registerEvent(new OrderConfirmedEvent(this));
     }
 
     public void deliver() {

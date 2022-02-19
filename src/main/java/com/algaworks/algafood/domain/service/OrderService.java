@@ -6,7 +6,6 @@ import com.algaworks.algafood.api.model.response.OrderResponse;
 import com.algaworks.algafood.api.transformer.OrderTransformer;
 import com.algaworks.algafood.domain.exception.OrderNotFoundException;
 import com.algaworks.algafood.domain.model.Order;
-import com.algaworks.algafood.domain.model.User;
 import com.algaworks.algafood.domain.model.enumerator.OrderStatus;
 import com.algaworks.algafood.domain.repository.OrderRepository;
 import com.algaworks.algafood.domain.repository.filter.OrderFilter;
@@ -34,16 +33,12 @@ public class OrderService {
 
     private final OrderServiceUtil orderServiceUtil;
 
-    private final OrderEmailService orderEmailService;
-
     @Autowired
     public OrderService(OrderRepository orderRepository, OrderTransformer orderTransformer,
-                        OrderValidationUtil orderValidationUtil, OrderEmailService orderEmailService,
-                        OrderServiceUtil orderServiceUtil) {
+                        OrderValidationUtil orderValidationUtil, OrderServiceUtil orderServiceUtil) {
         this.orderRepository = orderRepository;
         this.orderTransformer = orderTransformer;
         this.orderValidationUtil = orderValidationUtil;
-        this.orderEmailService = orderEmailService;
         this.orderServiceUtil = orderServiceUtil;
     }
 
@@ -78,7 +73,7 @@ public class OrderService {
         switch (targetStatus) {
             case CONFIRMED:
                 order.confirm();
-                orderEmailService.sendConfirmationEmail(order);
+                orderRepository.save(order);
                 break;
 
             case DELIVERED:
