@@ -10,6 +10,7 @@ import com.algaworks.algafood.domain.model.User;
 import com.algaworks.algafood.domain.model.enumerator.OrderStatus;
 import com.algaworks.algafood.domain.repository.OrderRepository;
 import com.algaworks.algafood.domain.repository.filter.OrderFilter;
+import com.algaworks.algafood.domain.service.util.OrderServiceUtil;
 import com.algaworks.algafood.domain.service.util.OrderValidationUtil;
 import com.algaworks.algafood.infrastructure.repository.spec.OrderSpecs;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +32,19 @@ public class OrderService {
 
     private final OrderValidationUtil orderValidationUtil;
 
+    private final OrderServiceUtil orderServiceUtil;
+
     private final OrderEmailService orderEmailService;
 
     @Autowired
     public OrderService(OrderRepository orderRepository, OrderTransformer orderTransformer,
-                        OrderValidationUtil orderValidationUtil, OrderEmailService orderEmailService) {
+                        OrderValidationUtil orderValidationUtil, OrderEmailService orderEmailService,
+                        OrderServiceUtil orderServiceUtil) {
         this.orderRepository = orderRepository;
         this.orderTransformer = orderTransformer;
         this.orderValidationUtil = orderValidationUtil;
         this.orderEmailService = orderEmailService;
+        this.orderServiceUtil = orderServiceUtil;
     }
 
     public Page<OrderModelResponse> list(OrderFilter filter, Pageable pageable) {
@@ -58,10 +63,10 @@ public class OrderService {
     public OrderResponse issueOrder(OrderRequest orderRequest) {
         var order = orderTransformer.toEntity(orderRequest);
 
-        getLoggedUser(order);
+        orderServiceUtil.getLoggedUser(order);
         orderValidationUtil.validateOrder(order);
         orderValidationUtil.validateOrderItems(order);
-        calculateTotalValue(order);
+        orderServiceUtil.calculateTotalValue(order);
 
         return orderTransformer.toResponse(orderRepository.save(order));
     }
@@ -84,17 +89,6 @@ public class OrderService {
                 order.cancel();
                 break;
         }
-    }
-
-    private void calculateTotalValue(Order order) {
-        order.setDeliveryFee(order.getRestaurant().getDeliveryFee());
-        order.calculateTotalValue();
-    }
-
-    private void getLoggedUser(Order order) {
-        // TODO: Get authenticated user
-        order.setClient(new User());
-        order.getClient().setId(1L);
     }
 
     private Order verifyIfExists(UUID externalKey) {
