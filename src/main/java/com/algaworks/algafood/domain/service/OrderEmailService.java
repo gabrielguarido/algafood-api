@@ -18,7 +18,8 @@ public class OrderEmailService {
     public void sendConfirmationEmail(Order order) {
         var message = EmailSenderService.Message.builder()
                 .subject(order.getRestaurant().getName() + " - Order confirmed")
-                .body("The order <strong>" + order.getExternalKey() + "<strong> was confirmed")
+                .body("order-confirmed.html")
+                .variable("order", order)
                 .recipient(order.getClient().getEmail())
                 .build();
 
