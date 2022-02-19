@@ -5,6 +5,7 @@ import com.algaworks.algafood.domain.service.OrderEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 public class OrderConfirmedListener {
@@ -16,7 +17,7 @@ public class OrderConfirmedListener {
         this.orderEmailService = orderEmailService;
     }
 
-    @EventListener
+    @TransactionalEventListener
     public void processOrderConfirmation(OrderConfirmedEvent event) {
         orderEmailService.sendConfirmationEmail(event.getOrder());
     }
