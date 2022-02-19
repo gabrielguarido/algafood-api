@@ -38,9 +38,11 @@
                                         <tbody>
                                         <tr>
                                             <td style="width:100%;padding-right:0px;padding-left:0px;padding-top:45px;">
-                                                <div align="center" style="line-height:10px"><a style="outline:none"
+                                                <div align="center" style="line-height:10px"><a href="www.example.com"
+                                                                                                target="_blank"
+                                                                                                style="outline:none"
                                                                                                 tabindex="-1"><img
-                                                        src="img/red_circle.png"
+                                                        src="https://images.fineartamerica.com/images/artworkimages/medium/2/cross-in-circle-in-red-tom-hill-transparent.png"
                                                         style="display: block; height: auto; border: 0; width: 306px; max-width: 100%;"
                                                         width="306" alt="Red Circle"
                                                         title="Red Circle"></a></div>
@@ -180,12 +182,10 @@
                                                         </p>
                                                         <p style="margin: 0; font-size: 14px; text-align: left; mso-line-height-alt: 28.8px;">
                                                                 <span style="font-size:16px;"><span
-                                                                        style="">${order.deliveryAddress.zipCode}, ${order.deliveryAddress.city.name}</span></span>
-                                                        </p>
+                                                                        style="">${order.deliveryAddress.zipCode}, ${order.deliveryAddress.city.name}</span></span></p>
                                                         <p style="margin: 0; font-size: 14px; text-align: left; mso-line-height-alt: 28.8px;">
                                                                 <span style="font-size:16px;"><span
-                                                                        style="">${order.deliveryAddress.province}</span></span>
-                                                        </p></div>
+                                                                        style="">${order.deliveryAddress.province}</span></span></p></div>
                                                 </div>
                                             </td>
                                         </tr>
@@ -220,7 +220,7 @@
                                                 <div style="font-family: sans-serif">
                                                     <div style="font-size: 12px; font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif; mso-line-height-alt: 21.6px; color: #d19fc2; line-height: 1.8;">
                                                         <p style="margin: 0; font-size: 14px; text-align: left; mso-line-height-alt: 46.800000000000004px;">
-                                                            <span style="font-size:26px;"><strong>${order.totalPrice?string.currency}</strong></span>
+                                                            <span style="font-size:26px;"><strong><s>${order.totalPrice?string.currency}</s></strong></span>
                                                         </p></div>
                                                 </div>
                                             </td>
@@ -239,8 +239,7 @@
                                                             <strong><span style="font-size:16px;">Payment Method</span></strong>
                                                         </p>
                                                         <p style="margin: 0; font-size: 14px; text-align: left; mso-line-height-alt: 28.8px;">
-                                                            <span style="font-size:16px;">${order.paymentMethod.method}</span>
-                                                        </p></div>
+                                                            <span style="font-size:16px;">${order.paymentMethod.method}</span></p></div>
                                                 </div>
                                             </td>
                                         </tr>
@@ -375,8 +374,7 @@
                                                 <div style="font-family: sans-serif">
                                                     <div style="font-size: 12px; mso-line-height-alt: 14.399999999999999px; color: #232323; line-height: 1.2; font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;">
                                                         <p style="margin: 0; font-size: 14px;"><span
-                                                                style="font-size:17px;">${item.product.name} x${item.amount}</span>
-                                                        </p></div>
+                                                                style="font-size:17px;">${item.product.name} x${item.amount}</span></p></div>
                                                 </div>
                                             </td>
                                         </tr>
@@ -413,8 +411,7 @@
                                             <td style="padding-bottom:15px;padding-left:30px;padding-right:10px;padding-top:10px;">
                                                 <div style="font-family: sans-serif">
                                                     <div style="font-size: 12px; mso-line-height-alt: 14.399999999999999px; color: #555555; line-height: 1.2; font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;">
-                                                        <p style="margin: 0; font-size: 14px;">
-                                                            ${item.totalPrice?string.currency}</p></div>
+                                                        <p style="margin: 0; font-size: 14px;">${item.totalPrice?string.currency}</p></div>
                                                 </div>
                                             </td>
                                         </tr>
@@ -428,8 +425,7 @@
                 </tr>
                 </tbody>
             </table>
-        </
-        #list>
+        </#list>
         <table class="row row-9" align="center" width="100%" border="0" cellpadding="0" cellspacing="0"
                role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
             <tbody>
@@ -520,8 +516,7 @@
                                         <td style="padding-left:30px;padding-right:10px;padding-top:15px;padding-bottom:5px;">
                                             <div style="font-family: sans-serif">
                                                 <div style="font-size: 12px; mso-line-height-alt: 14.399999999999999px; color: #555555; line-height: 1.2; font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;">
-                                                    <p style="margin: 0; font-size: 14px;">
-                                                        ${order.subtotal?string.currency}</p></div>
+                                                    <p style="margin: 0; font-size: 14px;">${order.subtotal?string.currency}</p></div>
                                             </div>
                                         </td>
                                     </tr>
@@ -582,8 +577,7 @@
                                         <td style="padding-left:30px;padding-right:10px;padding-top:15px;padding-bottom:5px;">
                                             <div style="font-family: sans-serif">
                                                 <div style="font-size: 12px; mso-line-height-alt: 14.399999999999999px; color: #555555; line-height: 1.2; font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;">
-                                                    <p style="margin: 0; font-size: 14px;">
-                                                        ${order.deliveryFee?string.currency}</p></div>
+                                                    <p style="margin: 0; font-size: 14px;">${order.deliveryFee?string.currency}</p></div>
                                             </div>
                                         </td>
                                     </tr>
@@ -706,8 +700,7 @@
                                             <div style="font-family: sans-serif">
                                                 <div style="font-size: 12px; mso-line-height-alt: 14.399999999999999px; color: #d19fc2; line-height: 1.2; font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;">
                                                     <p style="margin: 0; font-size: 14px;"><span
-                                                            style="font-size:18px;">${order.totalPrice?string.currency}</span>
-                                                    </p></div>
+                                                            style="font-size:18px;"><s>${order.totalPrice?string.currency}</s></span></p></div>
                                             </div>
                                         </td>
                                     </tr>
@@ -809,7 +802,7 @@
                                     <tr>
                                         <td style="width:100%;padding-right:0px;padding-left:0px;padding-top:30px;">
                                             <div align="center" style="line-height:10px"><img
-                                                    src="img/Coin.png"
+                                                    src="https://d1oco4z2z1fhwp.cloudfront.net/templates/default/1951/Coin.png"
                                                     style="display: block; height: auto; border: 0; width: 238px; max-width: 100%;"
                                                     width="238" alt="Coins Falling" title="Coins Falling"></div>
                                         </td>
@@ -870,8 +863,9 @@
                                     <tr>
                                         <td style="padding-bottom:15px;padding-left:10px;padding-right:10px;padding-top:20px;width:100%;">
                                             <div align="center" style="line-height:10px"><a
+                                                    href="http://www.example.com" target="_blank"
                                                     style="outline:none" tabindex="-1"><img
-                                                    src="img/App_Store_Badge_US_Black.png"
+                                                    src="https://d1oco4z2z1fhwp.cloudfront.net/templates/default/1951/App_Store_Badge_US_Black.png"
                                                     style="display: block; height: auto; border: 0; width: 150px; max-width: 100%;"
                                                     width="150" alt="App Store Badge" title="App Store Badge"></a>
                                             </div>
@@ -888,8 +882,9 @@
                                     <tr>
                                         <td style="padding-bottom:15px;padding-left:10px;padding-right:10px;padding-top:20px;width:100%;">
                                             <div align="center" style="line-height:10px"><a
+                                                    href="http://www.example.com" target="_blank"
                                                     style="outline:none" tabindex="-1"><img
-                                                    src="img/Google_Play_Badge_US.png"
+                                                    src="https://d1oco4z2z1fhwp.cloudfront.net/templates/default/1951/Google_Play_Badge_US.png"
                                                     style="display: block; height: auto; border: 0; width: 150px; max-width: 100%;"
                                                     width="150" alt="Google Play Badge"
                                                     title="Google Play Badge"></a></div>
@@ -1014,23 +1009,27 @@
                                                    style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
                                                 <tbody>
                                                 <tr>
-                                                    <td style="padding:0 15px 0 0;"><a><img
-                                                            src="img/facebook@2x.png"
+                                                    <td style="padding:0 15px 0 0;"><a
+                                                            href="https://www.facebook.com/" target="_blank"><img
+                                                            src="https://app-rsrc.getbee.io/public/resources/social-networks-icon-sets/t-only-logo-dark-gray/facebook@2x.png"
                                                             width="32" height="32" alt="Facebook" title="Facebook"
                                                             style="display: block; height: auto; border: 0;"></a>
                                                     </td>
-                                                    <td style="padding:0 15px 0 0;"><a><img
-                                                            src="img/twitter@2x.png"
+                                                    <td style="padding:0 15px 0 0;"><a href="https://twitter.com/"
+                                                                                       target="_blank"><img
+                                                            src="https://app-rsrc.getbee.io/public/resources/social-networks-icon-sets/t-only-logo-dark-gray/twitter@2x.png"
                                                             width="32" height="32" alt="Twitter" title="Twitter"
                                                             style="display: block; height: auto; border: 0;"></a>
                                                     </td>
-                                                    <td style="padding:0 15px 0 0;"><a><img
-                                                            src="img/googleplus@2x.png"
+                                                    <td style="padding:0 15px 0 0;"><a
+                                                            href="https://plus.google.com/" target="_blank"><img
+                                                            src="https://app-rsrc.getbee.io/public/resources/social-networks-icon-sets/t-only-logo-dark-gray/googleplus@2x.png"
                                                             width="32" height="32" alt="Google+" title="Google+"
                                                             style="display: block; height: auto; border: 0;"></a>
                                                     </td>
-                                                    <td style="padding:0 15px 0 0;"><a><img
-                                                            src="img/instagram@2x.png"
+                                                    <td style="padding:0 15px 0 0;"><a href="https://instagram.com/"
+                                                                                       target="_blank"><img
+                                                            src="https://app-rsrc.getbee.io/public/resources/social-networks-icon-sets/t-only-logo-dark-gray/instagram@2x.png"
                                                             width="32" height="32" alt="Instagram" title="Instagram"
                                                             style="display: block; height: auto; border: 0;"></a>
                                                     </td>
