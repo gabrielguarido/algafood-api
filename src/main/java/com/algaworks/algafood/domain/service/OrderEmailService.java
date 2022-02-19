@@ -16,9 +16,23 @@ public class OrderEmailService {
     }
 
     public void sendConfirmationEmail(Order order) {
+        var subject = order.getRestaurant().getName() + " - Order confirmed";
+        var template = "order-confirmed.html";
+
+        sendEmail(subject, template, order);
+    }
+
+    public void sendCancellationEmail(Order order) {
+        var subject = order.getRestaurant().getName() + " - Order cancelled";
+        var template = "order-cancelled.html";
+
+        sendEmail(subject, template, order);
+    }
+
+    private void sendEmail(String subject, String template, Order order) {
         var message = EmailSenderService.Message.builder()
-                .subject(order.getRestaurant().getName() + " - Order confirmed")
-                .body("order-confirmed.html")
+                .subject(subject)
+                .body(template)
                 .variable("order", order)
                 .recipient(order.getClient().getEmail())
                 .build();

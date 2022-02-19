@@ -82,6 +82,7 @@ public class OrderService {
 
             case CANCELED:
                 order.cancel();
+                orderRepository.save(order);
                 break;
         }
     }

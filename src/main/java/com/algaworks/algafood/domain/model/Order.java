@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.model;
 
+import com.algaworks.algafood.domain.event.OrderCancelledEvent;
 import com.algaworks.algafood.domain.event.OrderConfirmedEvent;
 import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.model.enumerator.OrderStatus;
@@ -113,6 +114,8 @@ public class Order extends AbstractAggregateRoot<Order> {
     public void cancel() {
         setStatus(CANCELED);
         setCancelled(OffsetDateTime.now());
+
+        registerEvent(new OrderCancelledEvent(this));
     }
 
     private void setStatus(OrderStatus targetStatus) {
