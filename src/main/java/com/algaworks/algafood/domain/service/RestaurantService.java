@@ -8,12 +8,11 @@ import com.algaworks.algafood.api.transformer.PaymentMethodTransformer;
 import com.algaworks.algafood.api.transformer.RestaurantTransformer;
 import com.algaworks.algafood.api.transformer.UserTransformer;
 import com.algaworks.algafood.domain.exception.BusinessException;
-import com.algaworks.algafood.domain.exception.CategoryNotFoundException;
-import com.algaworks.algafood.domain.exception.CityNotFoundException;
 import com.algaworks.algafood.domain.exception.ResourceInUseException;
 import com.algaworks.algafood.domain.exception.RestaurantNotFoundException;
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.repository.RestaurantRepository;
+import com.algaworks.algafood.domain.service.util.RestaurantValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -33,31 +32,28 @@ public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
 
-    private final CategoryService categoryService;
-
-    private final CityService cityService;
-
     private final PaymentMethodService paymentMethodService;
 
     private final RestaurantTransformer restaurantTransformer;
 
     private final PaymentMethodTransformer paymentMethodTransformer;
 
+    private final RestaurantValidationUtil restaurantValidationUtil;
+
     private final UserService userService;
 
     private final UserTransformer userTransformer;
 
     @Autowired
-    public RestaurantService(RestaurantRepository restaurantRepository, CategoryService categoryService,
-                             CityService cityService, PaymentMethodTransformer paymentMethodTransformer,
+    public RestaurantService(RestaurantRepository restaurantRepository, PaymentMethodTransformer paymentMethodTransformer,
                              PaymentMethodService paymentMethodService, RestaurantTransformer restaurantTransformer,
-                             UserService userService, UserTransformer userTransformer) {
+                             UserService userService, UserTransformer userTransformer,
+                             RestaurantValidationUtil restaurantValidationUtil) {
         this.restaurantRepository = restaurantRepository;
-        this.categoryService = categoryService;
-        this.cityService = cityService;
         this.paymentMethodTransformer = paymentMethodTransformer;
         this.paymentMethodService = paymentMethodService;
         this.restaurantTransformer = restaurantTransformer;
+        this.restaurantValidationUtil = restaurantValidationUtil;
         this.userService = userService;
         this.userTransformer = userTransformer;
     }
@@ -120,8 +116,8 @@ public class RestaurantService {
     public RestaurantResponse save(RestaurantRequest restaurantRequest) {
         var restaurant = restaurantTransformer.toEntity(restaurantRequest);
 
-        validateCategory(restaurant.getCategory().getId(), restaurant);
-        validateCity(restaurant.getAddress().getCity().getId(), restaurant);
+        restaurantValidationUtil.validateCategory(restaurant.getCategory().getId(), restaurant);
+        restaurantValidationUtil.validateCity(restaurant.getAddress().getCity().getId(), restaurant);
 
         return restaurantTransformer.toResponse(restaurantRepository.save(restaurant));
     }
@@ -133,8 +129,8 @@ public class RestaurantService {
 
             restaurantTransformer.copyPropertiesToEntity(restaurantRequest, existingRestaurant);
 
-            validateCategory(existingRestaurant.getCategory().getId(), existingRestaurant);
-            validateCity(existingRestaurant.getAddress().getCity().getId(), existingRestaurant);
+            restaurantValidationUtil.validateCategory(existingRestaurant.getCategory().getId(), existingRestaurant);
+            restaurantValidationUtil.validateCity(existingRestaurant.getAddress().getCity().getId(), existingRestaurant);
 
             return restaurantTransformer.toResponse(restaurantRepository.save(existingRestaurant));
         } catch (RestaurantNotFoundException e) {
@@ -232,23 +228,5 @@ public class RestaurantService {
 
     public Restaurant verifyIfExists(Long id) {
         return restaurantRepository.findById(id).orElseThrow(() -> new RestaurantNotFoundException(id));
-    }
-
-    private void validateCategory(Long categoryId, Restaurant restaurant) {
-        try {
-            var category = categoryService.verifyIfExists(categoryId);
-            restaurant.setCategory(category);
-        } catch (CategoryNotFoundException e) {
-            throw new BusinessException(e.getMessage(), e);
-        }
-    }
-
-    private void validateCity(Long cityId, Restaurant restaurant) {
-        try {
-            var city = cityService.verifyIfExists(cityId);
-            restaurant.getAddress().setCity(city);
-        } catch (CityNotFoundException e) {
-            throw new BusinessException(e.getMessage(), e);
-        }
     }
 }
