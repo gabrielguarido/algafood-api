@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.exception.handler;
 
 public final class ApiExceptionMessages {
+
     private ApiExceptionMessages() {
     }
 
