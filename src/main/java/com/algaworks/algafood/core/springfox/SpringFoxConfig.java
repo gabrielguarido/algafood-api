@@ -14,6 +14,7 @@ import static com.algaworks.algafood.core.springfox.SpringFoxProperties.API_INFO
 import static com.algaworks.algafood.core.springfox.SpringFoxProperties.API_INFO_TITLE;
 import static com.algaworks.algafood.core.springfox.SpringFoxProperties.API_INFO_VERSION;
 import static com.algaworks.algafood.core.springfox.SpringFoxProperties.BASE_PACKAGE;
+import static com.algaworks.algafood.core.springfox.SpringFoxProperties.CONTACT;
 import static com.algaworks.algafood.core.springfox.SpringFoxProperties.SWAGGER_RESOURCE_HANDLER;
 import static com.algaworks.algafood.core.springfox.SpringFoxProperties.SWAGGER_RESOURCE_LOCATION;
 import static com.algaworks.algafood.core.springfox.SpringFoxProperties.WEBJAR_RESOURCE_HANDLER;
@@ -29,7 +30,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
         return new Docket(SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage(BASE_PACKAGE))
-                .build();
+                .build()
+                .apiInfo(apiInfo());
     }
 
     public ApiInfo apiInfo() {
@@ -37,6 +39,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .title(API_INFO_TITLE)
                 .description(API_INFO_DESCRIPTION)
                 .version(API_INFO_VERSION)
+                .contact(CONTACT)
                 .build();
     }
 
