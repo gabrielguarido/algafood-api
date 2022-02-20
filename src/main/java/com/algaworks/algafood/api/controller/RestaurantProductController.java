@@ -7,6 +7,7 @@ import com.algaworks.algafood.api.model.response.ProductResponse;
 import com.algaworks.algafood.domain.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "restaurant/{restaurantId}/product", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,12 +41,16 @@ public class RestaurantProductController {
     @GetMapping
     public ResponseEntity<List<ProductResponse>> list(@PathVariable Long restaurantId,
                                                       @RequestParam(required = false) boolean includeInactive) {
-        return ResponseEntity.ok(productService.list(restaurantId, includeInactive));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(productService.list(restaurantId, includeInactive));
     }
 
     @GetMapping("/{productId}")
     public ResponseEntity<ProductResponse> find(@PathVariable Long restaurantId, @PathVariable Long productId) {
-        return ResponseEntity.ok(productService.find(restaurantId, productId));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(productService.find(restaurantId, productId));
     }
 
     @PostMapping

@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.model.request.PaymentMethodRequest;
 import com.algaworks.algafood.api.model.response.PaymentMethodResponse;
 import com.algaworks.algafood.domain.service.PaymentMethodService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "payment-method", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -31,12 +33,16 @@ public class PaymentMethodController {
 
     @GetMapping
     public ResponseEntity<List<PaymentMethodResponse>> list() {
-        return ResponseEntity.ok(paymentMethodService.list());
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(paymentMethodService.list());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PaymentMethodResponse> find(@PathVariable Long id) {
-        return ResponseEntity.ok(paymentMethodService.find(id));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(paymentMethodService.find(id));
     }
 
     @PostMapping

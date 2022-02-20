@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.model.request.StateRequest;
 import com.algaworks.algafood.api.model.response.StateResponse;
 import com.algaworks.algafood.domain.service.StateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "state", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -32,12 +34,16 @@ public class StateController {
 
     @GetMapping
     public ResponseEntity<List<StateResponse>> list() {
-        return ResponseEntity.ok(stateService.list());
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(stateService.list());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<StateResponse> find(@PathVariable Long id) {
-        return ResponseEntity.ok(stateService.find(id));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(stateService.find(id));
     }
 
     @PostMapping

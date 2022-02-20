@@ -8,6 +8,7 @@ import com.algaworks.algafood.domain.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import static com.algaworks.algafood.domain.model.enumerator.OrderStatus.CANCELED;
 import static com.algaworks.algafood.domain.model.enumerator.OrderStatus.CONFIRMED;
@@ -39,12 +41,16 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<Page<OrderModelResponse>> search(OrderFilter filter, Pageable pageable) {
-        return ResponseEntity.ok(orderService.list(filter, pageable));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(orderService.list(filter, pageable));
     }
 
     @GetMapping("/{externalKey}")
     public ResponseEntity<OrderResponse> find(@PathVariable UUID externalKey) {
-        return ResponseEntity.ok(orderService.find(externalKey));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(orderService.find(externalKey));
     }
 
     @PostMapping

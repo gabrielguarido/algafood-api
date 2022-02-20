@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.controller;
 import com.algaworks.algafood.api.model.response.PermissionResponse;
 import com.algaworks.algafood.domain.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "profile/{profileId}/permission", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -27,7 +29,9 @@ public class ProfilePermissionController {
 
     @GetMapping
     public ResponseEntity<List<PermissionResponse>> list(@PathVariable Long profileId) {
-        return ResponseEntity.ok(profileService.listPermissions(profileId));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(profileService.listPermissions(profileId));
     }
 
     @PutMapping("/{permissionId}")
