@@ -17,7 +17,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
     public Docket apiDocket() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.algaworks.algafood.api"))
                 .build();
     }
 
