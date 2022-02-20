@@ -3,6 +3,9 @@ package com.algaworks.algafood.api.controller;
 import com.algaworks.algafood.api.model.request.CityRequest;
 import com.algaworks.algafood.api.model.response.CityResponse;
 import com.algaworks.algafood.domain.service.CityService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
@@ -22,6 +25,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @RestController
+@Api(tags = "Cities")
 @RequestMapping(value = "city", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CityController {
 
@@ -33,6 +37,7 @@ public class CityController {
     }
 
     @GetMapping
+    @ApiOperation("Lists all the cities that are available to use")
     public ResponseEntity<List<CityResponse>> list() {
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
@@ -40,24 +45,29 @@ public class CityController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CityResponse> find(@PathVariable Long id) {
+    @ApiOperation("Finds a city by its ID value")
+    public ResponseEntity<CityResponse> find(@ApiParam(value = "City identifier", example = "1") @PathVariable Long id) {
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
                 .body(cityService.find(id));
     }
 
     @PostMapping
-    public ResponseEntity<CityResponse> create(@RequestBody @Valid CityRequest cityRequest) {
+    @ApiOperation("Registers a new city")
+    public ResponseEntity<CityResponse> create(@ApiParam(value = "Request body with data about the new city") @RequestBody @Valid CityRequest cityRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(cityService.save(cityRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CityResponse> update(@PathVariable Long id, @RequestBody @Valid CityRequest cityRequest) {
+    @ApiOperation("Updates an existing city with new values")
+    public ResponseEntity<CityResponse> update(@ApiParam(value = "City identifier", example = "1") @PathVariable Long id,
+                                               @ApiParam(value = "Request body with updated data about the existing city") @RequestBody @Valid CityRequest cityRequest) {
         return ResponseEntity.ok(cityService.update(id, cityRequest));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    @ApiOperation("Deletes an existing city by its ID value")
+    public ResponseEntity<Void> delete(@ApiParam(value = "City identifier", example = "1") @PathVariable Long id) {
         cityService.delete(id);
 
         return ResponseEntity.noContent().build();

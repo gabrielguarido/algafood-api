@@ -2,11 +2,15 @@ package com.algaworks.algafood.core.springfox;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Tag;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -19,19 +23,29 @@ import static com.algaworks.algafood.core.springfox.SpringFoxProperties.SWAGGER_
 import static com.algaworks.algafood.core.springfox.SpringFoxProperties.SWAGGER_RESOURCE_LOCATION;
 import static com.algaworks.algafood.core.springfox.SpringFoxProperties.WEBJAR_RESOURCE_HANDLER;
 import static com.algaworks.algafood.core.springfox.SpringFoxProperties.WEBJAR_RESOURCE_LOCATION;
-import static springfox.documentation.spi.DocumentationType.SWAGGER_2;
+import static com.algaworks.algafood.core.springfox.util.GlobalResponseMessagesUtil.globalDeleteResponseMessages;
+import static com.algaworks.algafood.core.springfox.util.GlobalResponseMessagesUtil.globalGetResponseMessages;
+import static com.algaworks.algafood.core.springfox.util.GlobalResponseMessagesUtil.globalPostPutResponseMessages;
+import static springfox.documentation.spi.DocumentationType.OAS_30;
 
 @Configuration
 @EnableSwagger2
+@Import(BeanValidatorPluginsConfiguration.class)
 public class SpringFoxConfig implements WebMvcConfigurer {
 
     @Bean
     public Docket apiDocket() {
-        return new Docket(SWAGGER_2)
+        return new Docket(OAS_30)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage(BASE_PACKAGE))
                 .build()
-                .apiInfo(apiInfo());
+                .useDefaultResponseMessages(false)
+                .globalResponses(HttpMethod.GET, globalGetResponseMessages())
+                .globalResponses(HttpMethod.POST, globalPostPutResponseMessages())
+                .globalResponses(HttpMethod.PUT, globalPostPutResponseMessages())
+                .globalResponses(HttpMethod.DELETE, globalDeleteResponseMessages())
+                .apiInfo(apiInfo())
+                .tags(new Tag("Cities", "Manages the cities"));
     }
 
     public ApiInfo apiInfo() {
