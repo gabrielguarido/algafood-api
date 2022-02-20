@@ -4,6 +4,7 @@ import com.algaworks.algafood.api.model.request.RestaurantRequest;
 import com.algaworks.algafood.api.model.response.RestaurantResponse;
 import com.algaworks.algafood.domain.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "restaurant", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -35,32 +37,44 @@ public class RestaurantController {
 
     @GetMapping
     public ResponseEntity<List<RestaurantResponse>> list() {
-        return ResponseEntity.ok(restaurantService.list());
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(restaurantService.list());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<RestaurantResponse> find(@PathVariable Long id) {
-        return ResponseEntity.ok(restaurantService.find(id));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(restaurantService.find(id));
     }
 
     @GetMapping("/by-delivery-fee")
     public ResponseEntity<List<RestaurantResponse>> listByDeliveryFee(BigDecimal initialFee, BigDecimal finalFee) {
-        return ResponseEntity.ok(restaurantService.listByDeliveryFee(initialFee, finalFee));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(restaurantService.listByDeliveryFee(initialFee, finalFee));
     }
 
     @GetMapping("/by-name")
     public ResponseEntity<List<RestaurantResponse>> listByName(String name) {
-        return ResponseEntity.ok(restaurantService.listByName(name));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(restaurantService.listByName(name));
     }
 
     @GetMapping("/first-by-name")
     public ResponseEntity<RestaurantResponse> findFirstByName(String name) {
-        return ResponseEntity.ok(restaurantService.findFirstByName(name));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(restaurantService.findFirstByName(name));
     }
 
     @GetMapping("/top2-by-name")
     public ResponseEntity<List<RestaurantResponse>> findTop2ByName(String name) {
-        return ResponseEntity.ok(restaurantService.findTop2ByName(name));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(restaurantService.findTop2ByName(name));
     }
 
     @GetMapping("/custom")
@@ -75,12 +89,16 @@ public class RestaurantController {
 
     @GetMapping("/free-delivery")
     public ResponseEntity<List<RestaurantResponse>> findWithFreeDelivery(String name) {
-        return ResponseEntity.ok(restaurantService.findWithFreeDelivery(name));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(restaurantService.findWithFreeDelivery(name));
     }
 
     @GetMapping("/first")
     public ResponseEntity<RestaurantResponse> findFirst() {
-        return ResponseEntity.ok(restaurantService.findFirst());
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(restaurantService.findFirst());
     }
 
     @PostMapping

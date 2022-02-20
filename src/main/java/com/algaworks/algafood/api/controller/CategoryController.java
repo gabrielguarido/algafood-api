@@ -6,6 +6,7 @@ import com.algaworks.algafood.domain.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "category", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -35,17 +37,23 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<Page<CategoryResponse>> list(Pageable pageable) {
-        return ResponseEntity.ok(categoryService.list(pageable));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(categoryService.list(pageable));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponse> find(@PathVariable Long id) {
-        return ResponseEntity.ok(categoryService.find(id));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(categoryService.find(id));
     }
 
     @GetMapping("/by-type")
     public ResponseEntity<CategoryResponse> findByType(@RequestParam String type) {
-        return ResponseEntity.ok(categoryService.findByType(type));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(categoryService.findByType(type));
     }
 
     @GetMapping("/exists")
