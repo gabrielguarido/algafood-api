@@ -1,16 +1,19 @@
 package com.algaworks.algafood.core.springfox.util;
 
 import org.springframework.stereotype.Component;
+import springfox.documentation.builders.RepresentationBuilder;
 import springfox.documentation.builders.ResponseBuilder;
 import springfox.documentation.service.Response;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Component
 public final class GlobalResponseMessagesUtil {
@@ -28,6 +31,8 @@ public final class GlobalResponseMessagesUtil {
                 new ResponseBuilder()
                         .code(String.valueOf(INTERNAL_SERVER_ERROR.value()))
                         .description(INTERNAL_SERVER_ERROR_MESSAGE)
+                        .representation(APPLICATION_JSON)
+                        .apply(getErrorModelReference())
                         .build(),
                 new ResponseBuilder()
                         .code(String.valueOf(NOT_ACCEPTABLE.value()))
@@ -41,10 +46,14 @@ public final class GlobalResponseMessagesUtil {
                 new ResponseBuilder()
                         .code(String.valueOf(BAD_REQUEST.value()))
                         .description(BAD_REQUEST_MESSAGE)
+                        .representation(APPLICATION_JSON)
+                        .apply(getErrorModelReference())
                         .build(),
                 new ResponseBuilder()
                         .code(String.valueOf(INTERNAL_SERVER_ERROR.value()))
                         .description(INTERNAL_SERVER_ERROR_MESSAGE)
+                        .representation(APPLICATION_JSON)
+                        .apply(getErrorModelReference())
                         .build(),
                 new ResponseBuilder()
                         .code(String.valueOf(NOT_ACCEPTABLE.value()))
@@ -53,6 +62,8 @@ public final class GlobalResponseMessagesUtil {
                 new ResponseBuilder()
                         .code(String.valueOf(UNSUPPORTED_MEDIA_TYPE.value()))
                         .description(UNSUPPORTED_MEDIA_TYPE_MESSAGE)
+                        .representation(APPLICATION_JSON)
+                        .apply(getErrorModelReference())
                         .build()
         );
     }
@@ -62,11 +73,23 @@ public final class GlobalResponseMessagesUtil {
                 new ResponseBuilder()
                         .code(String.valueOf(BAD_REQUEST.value()))
                         .description(BAD_REQUEST_MESSAGE)
+                        .representation(APPLICATION_JSON)
+                        .apply(getErrorModelReference())
                         .build(),
                 new ResponseBuilder()
                         .code(String.valueOf(INTERNAL_SERVER_ERROR.value()))
                         .description(INTERNAL_SERVER_ERROR_MESSAGE)
+                        .representation(APPLICATION_JSON)
+                        .apply(getErrorModelReference())
                         .build()
+        );
+    }
+
+    private static Consumer<RepresentationBuilder> getErrorModelReference() {
+        return representation -> representation.model(model -> model.name("Error")
+                .referenceModel(reference -> reference.key(key -> key.qualifiedModelName(
+                        qualified -> qualified.name("Error").namespace("com.algaworks.algafood.api.exception")))
+                )
         );
     }
 }
