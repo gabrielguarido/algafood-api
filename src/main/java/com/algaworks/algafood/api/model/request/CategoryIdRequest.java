@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.model.request;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -8,5 +9,6 @@ import javax.validation.constraints.NotNull;
 public class CategoryIdRequest {
 
     @NotNull
+    @ApiModelProperty(example = "1")
     private Long id;
 }

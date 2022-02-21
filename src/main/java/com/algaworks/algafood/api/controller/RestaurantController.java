@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.controller.documentation.RestaurantControllerDocumentation;
 import com.algaworks.algafood.api.model.request.RestaurantRequest;
 import com.algaworks.algafood.api.model.response.RestaurantResponse;
 import com.algaworks.algafood.domain.service.RestaurantService;
@@ -26,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "restaurant", produces = MediaType.APPLICATION_JSON_VALUE)
-public class RestaurantController {
+public class RestaurantController implements RestaurantControllerDocumentation {
 
     private final RestaurantService restaurantService;
 

@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.model.request;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.Valid;
@@ -12,10 +13,12 @@ import java.math.BigDecimal;
 public class RestaurantRequest {
 
     @NotBlank
+    @ApiModelProperty(example = "McDonald's")
     private String name;
 
     @NotNull
     @PositiveOrZero
+    @ApiModelProperty(example = "5.90")
     private BigDecimal deliveryFee;
 
     @Valid
