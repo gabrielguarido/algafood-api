@@ -1,5 +1,7 @@
 package com.algaworks.algafood.core.springfox;
 
+import com.algaworks.algafood.api.exception.Error;
+import com.fasterxml.classmate.TypeResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -35,6 +37,8 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 
     @Bean
     public Docket apiDocket() {
+        var typeResolver = new TypeResolver();
+
         return new Docket(OAS_30)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage(BASE_PACKAGE))
@@ -44,6 +48,7 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                 .globalResponses(HttpMethod.POST, globalPostPutResponseMessages())
                 .globalResponses(HttpMethod.PUT, globalPostPutResponseMessages())
                 .globalResponses(HttpMethod.DELETE, globalDeleteResponseMessages())
+                .additionalModels(typeResolver.resolve(Error.class))
                 .apiInfo(apiInfo())
                 .tags(new Tag("Cities", "Manages the cities"));
     }
