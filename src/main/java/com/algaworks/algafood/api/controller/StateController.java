@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.controller.documentation.StateControllerDocumentation;
 import com.algaworks.algafood.api.model.request.StateRequest;
 import com.algaworks.algafood.api.model.response.StateResponse;
 import com.algaworks.algafood.domain.service.StateService;
@@ -23,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "state", produces = MediaType.APPLICATION_JSON_VALUE)
-public class StateController {
+public class StateController implements StateControllerDocumentation {
 
     private final StateService stateService;
 
