@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.controller.documentation.ProfileControllerDocumentation;
 import com.algaworks.algafood.api.model.request.ProfileRequest;
 import com.algaworks.algafood.api.model.response.ProfileResponse;
 import com.algaworks.algafood.domain.service.ProfileService;
@@ -23,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "profile", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ProfileController {
+public class ProfileController implements ProfileControllerDocumentation {
 
     private final ProfileService profileService;
 
