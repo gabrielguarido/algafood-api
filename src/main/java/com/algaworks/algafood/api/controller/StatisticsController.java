@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.controller.documentation.StatisticsControllerDocumentation;
 import com.algaworks.algafood.domain.model.dashboard.DailySales;
 import com.algaworks.algafood.domain.repository.filter.DailySalesFilter;
 import com.algaworks.algafood.domain.service.query.DailySalesQueryService;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/statistics")
-public class StatisticsController {
+public class StatisticsController implements StatisticsControllerDocumentation {
 
     private final DailySalesQueryService dailySalesQueryService;
 
