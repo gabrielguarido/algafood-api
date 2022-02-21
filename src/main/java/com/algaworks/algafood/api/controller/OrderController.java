@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.controller.documentation.OrderControllerDocumentation;
 import com.algaworks.algafood.api.model.request.OrderRequest;
 import com.algaworks.algafood.api.model.response.OrderModelResponse;
 import com.algaworks.algafood.api.model.response.OrderResponse;
@@ -30,7 +31,7 @@ import static com.algaworks.algafood.domain.model.enumerator.OrderStatus.DELIVER
 
 @RestController
 @RequestMapping(value = "order", produces = MediaType.APPLICATION_JSON_VALUE)
-public class OrderController {
+public class OrderController implements OrderControllerDocumentation {
 
     private final OrderService orderService;
 

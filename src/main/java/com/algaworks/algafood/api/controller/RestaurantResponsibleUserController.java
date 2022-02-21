@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.controller.documentation.RestaurantResponsibleUserControllerDocumentation;
 import com.algaworks.algafood.api.model.response.UserResponse;
 import com.algaworks.algafood.domain.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "restaurant/{restaurantId}/responsible-user", produces = MediaType.APPLICATION_JSON_VALUE)
-public class RestaurantResponsibleUserController {
+public class RestaurantResponsibleUserController implements RestaurantResponsibleUserControllerDocumentation {
 
     private final RestaurantService restaurantService;
 

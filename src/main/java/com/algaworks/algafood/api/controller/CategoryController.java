@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.controller.documentation.CategoryControllerDocumentation;
 import com.algaworks.algafood.api.model.request.CategoryRequest;
 import com.algaworks.algafood.api.model.response.CategoryResponse;
 import com.algaworks.algafood.domain.service.CategoryService;
@@ -26,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "category", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CategoryController {
+public class CategoryController implements CategoryControllerDocumentation {
 
     private final CategoryService categoryService;
 

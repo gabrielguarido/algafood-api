@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.controller.documentation.UserProfileControllerDocumentation;
 import com.algaworks.algafood.api.model.response.ProfileResponse;
 import com.algaworks.algafood.domain.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "user/{userId}/profile", produces = MediaType.APPLICATION_JSON_VALUE)
-public class UserProfileController {
+public class UserProfileController implements UserProfileControllerDocumentation {
 
     private final UserService userService;
 

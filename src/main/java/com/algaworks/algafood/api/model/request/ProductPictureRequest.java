@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.model.request;
 
 import com.algaworks.algafood.core.validation.FileContentType;
 import com.algaworks.algafood.core.validation.FileSize;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,6 +16,7 @@ public class ProductPictureRequest {
 
     @NotNull
     @FileSize(max = "500KB")
+    @ApiModelProperty(required = true)
     @FileContentType(allowed = {IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE})
     MultipartFile file;
 }

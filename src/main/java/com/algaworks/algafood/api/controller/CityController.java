@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.controller.documentation.CityControllerDocumentation;
 import com.algaworks.algafood.api.model.request.CityRequest;
 import com.algaworks.algafood.api.model.response.CityResponse;
 import com.algaworks.algafood.domain.service.CityService;
@@ -23,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "city", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CityController {
+public class CityController implements CityControllerDocumentation {
 
     private final CityService cityService;
 

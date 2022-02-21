@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.controller.documentation.ProfilePermissionControllerDocumentation;
 import com.algaworks.algafood.api.model.response.PermissionResponse;
 import com.algaworks.algafood.domain.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "profile/{profileId}/permission", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ProfilePermissionController {
+public class ProfilePermissionController implements ProfilePermissionControllerDocumentation {
 
     private final ProfileService profileService;
 
