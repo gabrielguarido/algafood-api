@@ -9,6 +9,6 @@ import javax.validation.constraints.NotBlank;
 public class CategoryRequest {
 
     @NotBlank
-    @ApiModelProperty(example = "Burger")
+    @ApiModelProperty(example = "Burger", required = true)
     private String type;
 }

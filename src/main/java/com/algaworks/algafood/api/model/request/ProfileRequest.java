@@ -9,6 +9,6 @@ import javax.validation.constraints.NotBlank;
 public class ProfileRequest {
 
     @NotBlank
-    @ApiModelProperty(example = "Admin")
+    @ApiModelProperty(example = "Admin", required = true)
     private String name;
 }

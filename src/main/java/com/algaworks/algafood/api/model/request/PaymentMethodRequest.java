@@ -9,6 +9,6 @@ import javax.validation.constraints.NotBlank;
 public class PaymentMethodRequest {
 
     @NotBlank
-    @ApiModelProperty(example = "CREDIT CARD")
+    @ApiModelProperty(example = "CREDIT CARD", required = true)
     private String method;
 }
