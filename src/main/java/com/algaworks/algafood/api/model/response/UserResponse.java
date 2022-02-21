@@ -12,6 +12,6 @@ public class UserResponse {
     @ApiModelProperty(example = "Gabriel Oliveira")
     private String name;
 
-    @ApiModelProperty(example = "gabrielguarido.oliveira@gmail.com")
+    @ApiModelProperty(example = "gabriel@gmail.com")
     private String email;
 }

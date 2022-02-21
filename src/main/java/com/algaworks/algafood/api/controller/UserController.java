@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.controller.documentation.UserControllerDocumentation;
 import com.algaworks.algafood.api.model.request.PasswordRequest;
 import com.algaworks.algafood.api.model.request.UserRequest;
 import com.algaworks.algafood.api.model.request.UserWithPasswordRequest;
@@ -24,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "user", produces = MediaType.APPLICATION_JSON_VALUE)
-public class UserController {
+public class UserController implements UserControllerDocumentation {
 
     private final UserService userService;
 
@@ -58,7 +59,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/password")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid PasswordRequest passwordRequest) {
+    public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody @Valid PasswordRequest passwordRequest) {
         userService.updatePassword(id, passwordRequest);
 
         return ResponseEntity.noContent().build();
