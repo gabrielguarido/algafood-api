@@ -37,7 +37,7 @@ public interface CityControllerDocumentation {
             @ApiResponse(code = 404, message = "City not found", response = Error.class)
     })
     ResponseEntity<CityResponse> update(@ApiParam(value = "City identifier", example = "1") Long id,
-                                               @ApiParam(value = "Request body with updated data about the existing city") CityRequest cityRequest);
+                                        @ApiParam(value = "Request body with updated data about the existing city") CityRequest cityRequest);
 
     @ApiOperation("Deletes an existing city by its ID value")
     @ApiResponses({
