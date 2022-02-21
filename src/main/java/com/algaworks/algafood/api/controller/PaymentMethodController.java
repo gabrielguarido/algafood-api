@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.controller;
 
+import com.algaworks.algafood.api.controller.documentation.PaymentMethodControllerDocumentation;
 import com.algaworks.algafood.api.model.request.PaymentMethodRequest;
 import com.algaworks.algafood.api.model.response.PaymentMethodResponse;
 import com.algaworks.algafood.domain.service.PaymentMethodService;
@@ -22,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "payment-method", produces = MediaType.APPLICATION_JSON_VALUE)
-public class PaymentMethodController {
+public class PaymentMethodController implements PaymentMethodControllerDocumentation {
 
     private final PaymentMethodService paymentMethodService;
 
