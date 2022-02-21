@@ -15,7 +15,7 @@ import java.util.List;
 @Api(tags = "Payment Methods")
 public interface PaymentMethodControllerDocumentation {
 
-    @ApiOperation("Lists all the payment methods that are available to use for a specific restaurant")
+    @ApiOperation("Lists all the payment methods that are available to use")
     ResponseEntity<List<PaymentMethodResponse>> list();
 
     @ApiOperation("Finds a payment method by its ID value")
