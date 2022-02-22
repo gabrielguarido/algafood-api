@@ -1,12 +1,15 @@
 package com.algaworks.algafood.util;
 
+import lombok.experimental.UtilityClass;
 import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-public abstract class ResourceUtil {
+@UtilityClass
+public class ResourceUtil {
+
     public static String getContentFromResource(String resourceName) {
         try {
             InputStream stream = ResourceUtil.class.getResourceAsStream(resourceName);
