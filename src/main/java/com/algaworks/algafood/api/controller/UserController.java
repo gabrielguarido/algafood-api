@@ -8,7 +8,6 @@ import com.algaworks.algafood.api.model.response.UserResponse;
 import com.algaworks.algafood.domain.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static com.algaworks.algafood.api.controller.util.ResourceUriUtil.composeUri;
 
 @RestController
 @RequestMapping(value = "user", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -50,7 +51,9 @@ public class UserController implements UserControllerDocumentation {
 
     @PostMapping
     public ResponseEntity<UserResponse> create(@RequestBody @Valid UserWithPasswordRequest userWithPasswordRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(userWithPasswordRequest));
+        var newUser = userService.save(userWithPasswordRequest);
+
+        return ResponseEntity.created(composeUri(newUser.getId())).body(newUser);
     }
 
     @PutMapping("/{id}")

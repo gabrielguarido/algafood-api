@@ -6,7 +6,6 @@ import com.algaworks.algafood.api.model.response.ProfileResponse;
 import com.algaworks.algafood.domain.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static com.algaworks.algafood.api.controller.util.ResourceUriUtil.composeUri;
 
 @RestController
 @RequestMapping(value = "profile", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -49,7 +50,9 @@ public class ProfileController implements ProfileControllerDocumentation {
 
     @PostMapping
     public ResponseEntity<ProfileResponse> create(@RequestBody @Valid ProfileRequest profileRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(profileService.save(profileRequest));
+        var newProfile = profileService.save(profileRequest);
+
+        return ResponseEntity.created(composeUri(newProfile.getId())).body(newProfile);
     }
 
     @PutMapping("/{id}")

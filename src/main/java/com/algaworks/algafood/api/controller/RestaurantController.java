@@ -25,6 +25,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static com.algaworks.algafood.api.controller.util.ResourceUriUtil.composeUri;
+
 @RestController
 @RequestMapping(value = "restaurant", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantController implements RestaurantControllerDocumentation {
@@ -105,7 +107,9 @@ public class RestaurantController implements RestaurantControllerDocumentation {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<RestaurantResponse> create(@RequestBody @Valid RestaurantRequest restaurantRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.save(restaurantRequest));
+        var newRestaurant = restaurantService.save(restaurantRequest);
+
+        return ResponseEntity.created(composeUri(newRestaurant.getId())).body(newRestaurant);
     }
 
     @PutMapping("/{id}")
