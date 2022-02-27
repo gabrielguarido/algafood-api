@@ -21,6 +21,8 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static com.algaworks.algafood.api.controller.util.ResourceUriUtil.composeUri;
+
 @RestController
 @RequestMapping(value = "payment-method", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PaymentMethodController implements PaymentMethodControllerDocumentation {
@@ -48,7 +50,9 @@ public class PaymentMethodController implements PaymentMethodControllerDocumenta
 
     @PostMapping
     public ResponseEntity<PaymentMethodResponse> create(@RequestBody @Valid PaymentMethodRequest paymentMethodRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(paymentMethodService.save(paymentMethodRequest));
+        var newPaymentMethod = paymentMethodService.save(paymentMethodRequest);
+
+        return ResponseEntity.created(composeUri(newPaymentMethod.getId())).body(newPaymentMethod);
     }
 
     @DeleteMapping("/{id}")

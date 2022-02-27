@@ -1,6 +1,6 @@
 package com.algaworks.algafood.core.springfox.util;
 
-import org.springframework.stereotype.Component;
+import lombok.experimental.UtilityClass;
 import springfox.documentation.builders.RepresentationBuilder;
 import springfox.documentation.builders.ResponseBuilder;
 import springfox.documentation.service.Response;
@@ -15,16 +15,13 @@ import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
-@Component
-public final class GlobalResponseMessagesUtil {
+@UtilityClass
+public class GlobalResponseMessagesUtil {
 
     private static final String INTERNAL_SERVER_ERROR_MESSAGE = "Internal server error";
     private static final String BAD_REQUEST_MESSAGE = "Invalid request (client-side error)";
     private static final String UNSUPPORTED_MEDIA_TYPE_MESSAGE = "Request refused due to unsupported request body format";
     private static final String NOT_ACCEPTABLE_MESSAGE = "The resource does not have a representation that can be accepted by the consumer";
-
-    private GlobalResponseMessagesUtil() {
-    }
 
     public static List<Response> globalGetResponseMessages() {
         return Arrays.asList(

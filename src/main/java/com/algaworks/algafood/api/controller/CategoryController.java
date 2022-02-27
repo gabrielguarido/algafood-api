@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.concurrent.TimeUnit;
 
+import static com.algaworks.algafood.api.controller.util.ResourceUriUtil.composeUri;
+
 @RestController
 @RequestMapping(value = "category", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CategoryController implements CategoryControllerDocumentation {
@@ -70,7 +72,9 @@ public class CategoryController implements CategoryControllerDocumentation {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CategoryResponse> create(@RequestBody @Valid CategoryRequest categoryRequest) {
-        return new ResponseEntity<>(categoryService.save(categoryRequest), HttpStatus.CREATED);
+        var newCategory = categoryService.save(categoryRequest);
+
+        return ResponseEntity.created(composeUri(newCategory.getId())).body(newCategory);
     }
 
     @PutMapping("/{id}")
