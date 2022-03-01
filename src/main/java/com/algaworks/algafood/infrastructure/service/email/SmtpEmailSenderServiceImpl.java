@@ -5,6 +5,7 @@ import com.algaworks.algafood.domain.service.email.EmailSenderService;
 import com.algaworks.algafood.infrastructure.exception.EmailException;
 import freemarker.template.Configuration;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -14,6 +15,7 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+@Slf4j
 @Service
 @NoArgsConstructor
 public class SmtpEmailSenderServiceImpl implements EmailSenderService {
@@ -32,6 +34,8 @@ public class SmtpEmailSenderServiceImpl implements EmailSenderService {
         try {
             var mimeMessage = createMimeMessage(message);
 
+            log.info("Sending e-mail with subject {} to {}", message.getSubject(), message.getRecipients());
+
             mailSender.send(mimeMessage);
         } catch (Exception e) {
             throw new EmailException(e);
@@ -49,12 +53,15 @@ public class SmtpEmailSenderServiceImpl implements EmailSenderService {
         helper.setText(body, true);
         helper.setTo(message.getRecipients().toArray(new String[0]));
         helper.setFrom(emailProperties.getSender());
+
         return mimeMessage;
     }
 
     private String processHtmlTemplate(Message message) {
         try {
             var template = configuration.getTemplate(message.getBody());
+
+            log.info("Processing HTML e-mail template");
 
             return FreeMarkerTemplateUtils.processTemplateIntoString(template, message.getVariables());
         } catch (Exception e) {

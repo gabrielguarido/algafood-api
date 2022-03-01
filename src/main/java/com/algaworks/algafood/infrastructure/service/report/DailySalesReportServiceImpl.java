@@ -4,17 +4,17 @@ import com.algaworks.algafood.domain.repository.filter.DailySalesFilter;
 import com.algaworks.algafood.domain.service.query.DailySalesQueryService;
 import com.algaworks.algafood.domain.service.report.DailySalesReportService;
 import com.algaworks.algafood.infrastructure.exception.ReportException;
-import net.sf.jasperreports.engine.JRException;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Locale;
 
+@Slf4j
 @Service
 public class DailySalesReportServiceImpl implements DailySalesReportService {
 
@@ -41,6 +41,8 @@ public class DailySalesReportServiceImpl implements DailySalesReportService {
             var dataSource = new JRBeanCollectionDataSource(dailySales);
 
             var jasperPrint = JasperFillManager.fillReport(inputStream, parameters, dataSource);
+
+            log.info("Generating the daily sales report file");
 
             return JasperExportManager.exportReportToPdf(jasperPrint);
         } catch (Exception e) {

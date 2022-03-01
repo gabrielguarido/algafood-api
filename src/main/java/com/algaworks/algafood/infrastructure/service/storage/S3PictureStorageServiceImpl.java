@@ -9,10 +9,12 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URL;
 
+@Slf4j
 @NoArgsConstructor
 public class S3PictureStorageServiceImpl implements PictureStorageService {
 
@@ -39,6 +41,8 @@ public class S3PictureStorageServiceImpl implements PictureStorageService {
             var request = new PutObjectRequest(bucket, key, inputStream, objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead);
 
+            log.info("Storing the file {} in the Amazon S3 bucket {}", picture.getFileName(), bucket);
+
             amazonS3.putObject(request);
         } catch (Exception e) {
             throw new StorageException(String.format(STORE_EXCEPTION_MESSAGE, picture.getFileName()), e);
@@ -53,6 +57,8 @@ public class S3PictureStorageServiceImpl implements PictureStorageService {
 
             var request = new DeleteObjectRequest(bucket, filePath);
 
+            log.info("Removing the file {} from the Amazon S3 bucket {}", fileName, bucket);
+
             amazonS3.deleteObject(request);
         } catch (Exception e) {
             throw new StorageException(String.format(REMOVE_EXCEPTION_MESSAGE, fileName), e);
@@ -66,6 +72,8 @@ public class S3PictureStorageServiceImpl implements PictureStorageService {
             var filePath = getFilePath(fileName);
 
             URL url = amazonS3.getUrl(bucket, filePath);
+
+            log.info("Retrieving the file {} from the Amazon S3 bucket {}", fileName, bucket);
 
             return PictureResponse.builder()
                     .url(url.toString())
