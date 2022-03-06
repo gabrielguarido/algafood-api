@@ -21,6 +21,7 @@
         <jasper.version>6.18.1</jasper.version>
         <aws-s3.version>1.12.159</aws-s3.version>
         <springfox.version>3.0.0</springfox.version>
+        <oauth2-oidc-sdk.version>9.27</oauth2-oidc-sdk.version>
     </properties>
 
     <dependencyManagement>
@@ -171,6 +172,12 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>oauth2-oidc-sdk</artifactId>
+            <version>${oauth2-oidc-sdk.version}</version>
         </dependency>
     </dependencies>
 
