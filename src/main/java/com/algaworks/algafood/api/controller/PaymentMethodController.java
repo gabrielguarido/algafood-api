@@ -6,7 +6,6 @@ import com.algaworks.algafood.api.model.response.PaymentMethodResponse;
 import com.algaworks.algafood.domain.service.PaymentMethodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
