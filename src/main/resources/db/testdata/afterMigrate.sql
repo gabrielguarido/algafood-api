@@ -272,9 +272,9 @@ VALUES (1, 1),
 
 -- POPULATE USER TABLE
 INSERT IGNORE INTO algafood.user (user.id, user.created, user.email, user.name, user.password)
-VALUES (1, utc_timestamp, 'gabrielguarido.oliveira@gmail.com', 'Gabriel Oliveira', '$2a$12$SdfRgHK3B9UTlspTQlpEEebMMOgBOGYq4zXGT3L0V9ElaiHUjTiUi');
+VALUES (1, utc_timestamp, 'gabrielguarido.oliveira@gmail.com', 'Gabriel Oliveira', '$2a$12$aJnt5tJQIcK8ervIxhoMLeVZbI.IHNEuXbsowLhbKv9cWt0zoKwl6');
 INSERT IGNORE INTO algafood.user (user.id, user.created, user.email, user.name, user.password)
-VALUES (2, utc_timestamp, 'qa@gmail.com', 'QA Team', '$2a$12$SdfRgHK3B9UTlspTQlpEEebMMOgBOGYq4zXGT3L0V9ElaiHUjTiUi');
+VALUES (2, utc_timestamp, 'qa@gmail.com', 'QA Team', '$2a$12$aJnt5tJQIcK8ervIxhoMLeVZbI.IHNEuXbsowLhbKv9cWt0zoKwl6');
 
 
 -- POPULATE USER_PROFILE TABLE
