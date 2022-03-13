@@ -22,6 +22,8 @@
         <aws-s3.version>1.12.159</aws-s3.version>
         <springfox.version>3.0.0</springfox.version>
         <oauth2-oidc-sdk.version>9.27</oauth2-oidc-sdk.version>
+        <spring-security-oauth2.version>2.5.1.RELEASE</spring-security-oauth2.version>
+        <spring-security-jwt.version>1.1.1.RELEASE</spring-security-jwt.version>
     </properties>
 
     <dependencyManagement>
@@ -101,8 +103,15 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+            <version>${spring-security-oauth2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-jwt</artifactId>
+            <version>${spring-security-jwt.version}</version>
         </dependency>
 
         <dependency>
