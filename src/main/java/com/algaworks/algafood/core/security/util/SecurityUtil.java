@@ -1,5 +1,6 @@
 package com.algaworks.algafood.core.security.util;
 
+import com.algaworks.algafood.domain.repository.OrderRepository;
 import com.algaworks.algafood.domain.repository.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -12,9 +13,12 @@ public class SecurityUtil {
 
     private final RestaurantRepository restaurantRepository;
 
+    private final OrderRepository orderRepository;
+
     @Autowired
-    public SecurityUtil(RestaurantRepository restaurantRepository) {
+    public SecurityUtil(RestaurantRepository restaurantRepository, OrderRepository orderRepository) {
         this.restaurantRepository = restaurantRepository;
+        this.orderRepository = orderRepository;
     }
 
     public Authentication getAuthentication() {
@@ -29,5 +33,9 @@ public class SecurityUtil {
 
     public boolean managesOperation(Long restaurantId) {
         return restaurantRepository.existsResponsibleUser(restaurantId, getLoggedUserId());
+    }
+
+    public boolean orderIsManagedBy(String orderId) {
+        return orderRepository.isManagedBy(orderId, getLoggedUserId());
     }
 }

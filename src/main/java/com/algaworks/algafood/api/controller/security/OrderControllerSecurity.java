@@ -21,7 +21,7 @@ public interface OrderControllerSecurity {
     @HasAuthority.Order.Find
     ResponseEntity<OrderResponse> find(UUID externalKey);
 
-    @HasAuthority.Order.Manage
+    @HasAuthority.Order.Issue
     ResponseEntity<OrderResponse> issueOrder(OrderRequest orderRequest);
 
     @HasAuthority.Order.Manage

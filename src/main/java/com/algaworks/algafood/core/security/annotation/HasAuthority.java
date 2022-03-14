@@ -96,7 +96,13 @@ public @interface HasAuthority {
 
         @Target(METHOD)
         @Retention(RUNTIME)
-        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('MANAGE_ORDER')")
+        @PreAuthorize("hasAuthority('SCOPE_WRITE')")
+        @interface Issue {
+        }
+
+        @Target(METHOD)
+        @Retention(RUNTIME)
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('MANAGE_ORDER') and @securityUtil.orderIsManagedBy(#orderId)")
         @interface Manage {
         }
 
