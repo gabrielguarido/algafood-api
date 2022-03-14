@@ -35,7 +35,7 @@ public class SecurityUtil {
         return restaurantRepository.existsResponsibleUser(restaurantId, getLoggedUserId());
     }
 
-    public boolean orderIsManagedBy(String orderId) {
-        return orderRepository.isManagedBy(orderId, getLoggedUserId());
+    public boolean orderIsManagedBy(String orderExternalKey) {
+        return orderRepository.isManagedBy(orderExternalKey, getLoggedUserId());
     }
 }

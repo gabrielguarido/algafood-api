@@ -26,7 +26,7 @@ public interface RestaurantProductControllerSecurity {
     @HasAuthority.Restaurant.Product.Manage
     ResponseEntity<Void> updatePicture(Long restaurantId, Long productId, ProductPictureRequest request) throws IOException;
 
-    @HasAuthority.Restaurant.Product.Manage
+    @HasAuthority.Restaurant.Product.Query
     ResponseEntity<?> retrievePicture(Long restaurantId, Long productId);
 
     @HasAuthority.Restaurant.Product.Manage

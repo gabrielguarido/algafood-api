@@ -11,9 +11,9 @@ public interface UserProfileControllerSecurity {
     @HasAuthority.User.Profile.Query
     ResponseEntity<List<ProfileResponse>> list(Long userId);
 
-    @HasAuthority.User.Profile.Manage
+    @HasAuthority.User.Profile.ManageOperation
     ResponseEntity<Void> addProfile(Long userId, Long profileId);
 
-    @HasAuthority.User.Profile.Manage
+    @HasAuthority.User.Profile.ManageOperation
     ResponseEntity<Void> removeProfile(Long userId, Long profileId);
 }

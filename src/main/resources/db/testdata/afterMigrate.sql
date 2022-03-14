@@ -307,7 +307,11 @@ VALUES (1, 1),
 INSERT IGNORE INTO algafood.restaurant_responsible_user (restaurant_responsible_user.restaurant_id,
                                                          restaurant_responsible_user.user_id)
 VALUES (1, 1),
-       (2, 2);
+       (2, 1),
+       (3, 1),
+       (4, 2),
+       (5, 2),
+       (6, 2);
 
 
 -- POPULATE ORDER TABLE

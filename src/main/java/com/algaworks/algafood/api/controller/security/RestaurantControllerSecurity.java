@@ -43,21 +43,21 @@ public interface RestaurantControllerSecurity {
     @HasAuthority.Restaurant.Manage
     ResponseEntity<RestaurantResponse> create(RestaurantRequest restaurantRequest);
 
-    @HasAuthority.Restaurant.Manage
-    ResponseEntity<RestaurantResponse> update(Long id, RestaurantRequest restaurantRequest);
+    @HasAuthority.Restaurant.ManageOperation
+    ResponseEntity<RestaurantResponse> update(Long restaurantId, RestaurantRequest restaurantRequest);
 
     @HasAuthority.Restaurant.ManageOperation
-    ResponseEntity<Void> activate(Long id);
+    ResponseEntity<Void> activate(Long restaurantId);
 
     @HasAuthority.Restaurant.ManageOperation
-    ResponseEntity<Void> deactivate(Long id);
+    ResponseEntity<Void> deactivate(Long restaurantId);
 
     @HasAuthority.Restaurant.ManageOperation
-    ResponseEntity<Void> open(Long id);
+    ResponseEntity<Void> open(Long restaurantId);
 
     @HasAuthority.Restaurant.ManageOperation
-    ResponseEntity<Void> close(Long id);
+    ResponseEntity<Void> close(Long restaurantId);
 
     @HasAuthority.Restaurant.ManageOperation
-    ResponseEntity<Void> delete(Long id);
+    ResponseEntity<Void> delete(Long restaurantId);
 }

@@ -9,6 +9,9 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+@Target(METHOD)
+@Retention(RUNTIME)
+@PreAuthorize("isAuthenticated()")
 public @interface HasAuthority {
 
     @interface Category {
@@ -36,7 +39,7 @@ public @interface HasAuthority {
 
         @Target(METHOD)
         @Retention(RUNTIME)
-        @PreAuthorize("hasAuthority('SCOPE_WRITE') and (hasAuthority('MANAGE_RESTAURANT') or @securityUtil.managesOperation(#restaurantId))")
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('MANAGE_RESTAURANT') and @securityUtil.managesOperation(#restaurantId)")
         @interface ManageOperation {
         }
 
@@ -50,7 +53,7 @@ public @interface HasAuthority {
 
             @Target(METHOD)
             @Retention(RUNTIME)
-            @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('MANAGE_PRODUCT')")
+            @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('MANAGE_PRODUCT') and @securityUtil.managesOperation(#restaurantId)")
             @interface Manage {
             }
 
@@ -71,6 +74,12 @@ public @interface HasAuthority {
 
             @Target(METHOD)
             @Retention(RUNTIME)
+            @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('MANAGE_PAYMENT_METHOD') and @securityUtil.managesOperation(#restaurantId)")
+            @interface ManageOperation {
+            }
+
+            @Target(METHOD)
+            @Retention(RUNTIME)
             @PreAuthorize("hasAuthority('SCOPE_READ')")
             @interface Query {
             }
@@ -80,7 +89,7 @@ public @interface HasAuthority {
 
             @Target(METHOD)
             @Retention(RUNTIME)
-            @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('MANAGE_RESPONSIBLE_USER')")
+            @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('MANAGE_RESPONSIBLE_USER') and @securityUtil.managesOperation(#restaurantId)")
             @interface Manage {
             }
 
@@ -102,7 +111,7 @@ public @interface HasAuthority {
 
         @Target(METHOD)
         @Retention(RUNTIME)
-        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('MANAGE_ORDER') and @securityUtil.orderIsManagedBy(#orderId)")
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('MANAGE_ORDER') and @securityUtil.orderIsManagedBy(#externalKey)")
         @interface Manage {
         }
 
@@ -115,7 +124,7 @@ public @interface HasAuthority {
         @Target(METHOD)
         @Retention(RUNTIME)
         @PreAuthorize("hasAuthority('SCOPE_READ')")
-        @PostAuthorize("@securityUtil.loggedUserId == returnObject.client.id or @securityUtil.managesOperation(returnObject.restaurant.id)")
+        @PostAuthorize("@securityUtil.loggedUserId == returnObject.getBody().client.id or @securityUtil.managesOperation(returnObject.getBody().restaurant.id)")
         @interface Find {
         }
     }
@@ -176,6 +185,12 @@ public @interface HasAuthority {
             @Retention(RUNTIME)
             @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('MANAGE_PROFILE')")
             @interface Manage {
+            }
+
+            @Target(METHOD)
+            @Retention(RUNTIME)
+            @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('MANAGE_PROFILE') and @securityUtil.loggedUserId == #userId")
+            @interface ManageOperation {
             }
 
             @Target(METHOD)

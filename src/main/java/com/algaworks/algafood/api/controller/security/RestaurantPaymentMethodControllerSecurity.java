@@ -11,11 +11,9 @@ public interface RestaurantPaymentMethodControllerSecurity {
     @HasAuthority.Restaurant.PaymentMethod.Query
     ResponseEntity<List<PaymentMethodResponse>> list(Long restaurantId);
 
-    @HasAuthority.Restaurant.ManageOperation
-    @HasAuthority.Restaurant.PaymentMethod.Manage
+    @HasAuthority.Restaurant.PaymentMethod.ManageOperation
     ResponseEntity<Void> add(Long restaurantId, Long paymentMethodId);
 
-    @HasAuthority.Restaurant.ManageOperation
-    @HasAuthority.Restaurant.PaymentMethod.Manage
+    @HasAuthority.Restaurant.PaymentMethod.ManageOperation
     ResponseEntity<Void> remove(Long restaurantId, Long paymentMethodId);
 }

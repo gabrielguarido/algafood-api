@@ -139,7 +139,7 @@ public class UserService {
     }
 
     private void validateCurrentPassword(User existingUser, PasswordRequest passwordRequest) {
-        if (!passwordEncoder.matches(existingUser.getPassword(), passwordRequest.getCurrentPassword())) {
+        if (!passwordEncoder.matches(passwordRequest.getCurrentPassword(), existingUser.getPassword())) {
             throw new BusinessException(INVALID_PASSWORD_EXCEPTION_MESSAGE);
         }
     }
