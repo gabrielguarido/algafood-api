@@ -119,4 +119,34 @@ public @interface HasAuthority {
         @interface Find {
         }
     }
+
+    @interface City {
+
+        @Target(METHOD)
+        @Retention(RUNTIME)
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('MANAGE_CITY')")
+        @interface Manage {
+        }
+
+        @Target(METHOD)
+        @Retention(RUNTIME)
+        @PreAuthorize("hasAuthority('SCOPE_READ')")
+        @interface Query {
+        }
+    }
+
+    @interface State {
+
+        @Target(METHOD)
+        @Retention(RUNTIME)
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('MANAGE_STATE')")
+        @interface Manage {
+        }
+
+        @Target(METHOD)
+        @Retention(RUNTIME)
+        @PreAuthorize("hasAuthority('SCOPE_READ')")
+        @interface Query {
+        }
+    }
 }
