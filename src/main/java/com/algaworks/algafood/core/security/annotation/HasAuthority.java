@@ -35,6 +35,12 @@ public @interface HasAuthority {
 
         @Target(METHOD)
         @Retention(RUNTIME)
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and (hasAuthority('MANAGE_RESTAURANT') or @securityUtil.managesOperation(#restaurantId))")
+        @interface ManageOperation {
+        }
+
+        @Target(METHOD)
+        @Retention(RUNTIME)
         @PreAuthorize("hasAuthority('SCOPE_READ')")
         @interface Query {
         }

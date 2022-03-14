@@ -212,29 +212,27 @@ VALUES (2, 'MANAGE_CITY');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
 VALUES (3, 'MANAGE_PRODUCT');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (4, 'MANAGE_PRODUCT');
+VALUES (4, 'MANAGE_STATE');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (5, 'MANAGE_STATE');
+VALUES (5, 'MANAGE_PROFILE');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (6, 'MANAGE_PROFILE');
+VALUES (6, 'QUERY_PROFILE');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (7, 'QUERY_PROFILE');
+VALUES (7, 'MANAGE_PERMISSION');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (8, 'MANAGE_PERMISSION');
+VALUES (8, 'QUERY_PERMISSION');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (9, 'QUERY_PERMISSION');
+VALUES (9, 'MANAGE_PAYMENT_METHOD');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (10, 'MANAGE_PAYMENT_METHOD');
+VALUES (10, 'QUERY_RESPONSIBLE_USER');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (11, 'QUERY_RESPONSIBLE_USER');
+VALUES (11, 'QUERY_STATISTICS');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (12, 'QUERY_STATISTICS');
+VALUES (12, 'MANAGE_ORDER');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (13, 'MANAGE_ORDER');
+VALUES (13, 'MANAGE_RESTAURANT');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (14, 'MANAGE_RESTAURANT');
-INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (15, 'MANAGE_RESPONSIBLE_USER');
+VALUES (14, 'MANAGE_RESPONSIBLE_USER');
 
 
 -- POPULATE RESTAURANT_PAYMENT_METHOD TABLE
