@@ -149,4 +149,55 @@ public @interface HasAuthority {
         @interface Query {
         }
     }
+
+    @interface User {
+
+        @Target(METHOD)
+        @Retention(RUNTIME)
+        @PreAuthorize("hasAuthority('SCOPE_WRITE')")
+        @interface Manage {
+        }
+
+        @Target(METHOD)
+        @Retention(RUNTIME)
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and @securityUtil.loggedUserId == #id")
+        @interface Update {
+        }
+
+        @Target(METHOD)
+        @Retention(RUNTIME)
+        @PreAuthorize("hasAuthority('SCOPE_READ')")
+        @interface Query {
+        }
+
+        @interface Profile {
+
+            @Target(METHOD)
+            @Retention(RUNTIME)
+            @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('MANAGE_PROFILE')")
+            @interface Manage {
+            }
+
+            @Target(METHOD)
+            @Retention(RUNTIME)
+            @PreAuthorize("hasAuthority('SCOPE_READ') and hasAuthority('QUERY_PROFILE')")
+            @interface Query {
+            }
+        }
+
+        @interface Permission {
+
+            @Target(METHOD)
+            @Retention(RUNTIME)
+            @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('MANAGE_PERMISSION')")
+            @interface Manage {
+            }
+
+            @Target(METHOD)
+            @Retention(RUNTIME)
+            @PreAuthorize("hasAuthority('SCOPE_READ') and hasAuthority('QUERY_PERMISSION')")
+            @interface Query {
+            }
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.controller.documentation.UserControllerDocumentation;
+import com.algaworks.algafood.api.controller.security.UserControllerSecurity;
 import com.algaworks.algafood.api.model.request.PasswordRequest;
 import com.algaworks.algafood.api.model.request.UserRequest;
 import com.algaworks.algafood.api.model.request.UserWithPasswordRequest;
@@ -26,7 +27,7 @@ import static com.algaworks.algafood.api.controller.util.ResourceUriUtil.compose
 
 @RestController
 @RequestMapping(value = "user", produces = MediaType.APPLICATION_JSON_VALUE)
-public class UserController implements UserControllerDocumentation {
+public class UserController implements UserControllerDocumentation, UserControllerSecurity {
 
     private final UserService userService;
 
