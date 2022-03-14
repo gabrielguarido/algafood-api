@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.controller.documentation.RestaurantPaymentMethodControllerDocumentation;
+import com.algaworks.algafood.api.controller.security.RestaurantPaymentMethodControllerSecurity;
 import com.algaworks.algafood.api.model.response.PaymentMethodResponse;
 import com.algaworks.algafood.domain.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "restaurant/{restaurantId}/payment-method", produces = MediaType.APPLICATION_JSON_VALUE)
-public class RestaurantPaymentMethodController implements RestaurantPaymentMethodControllerDocumentation {
+public class RestaurantPaymentMethodController implements RestaurantPaymentMethodControllerDocumentation, RestaurantPaymentMethodControllerSecurity {
 
     private final RestaurantService restaurantService;
 

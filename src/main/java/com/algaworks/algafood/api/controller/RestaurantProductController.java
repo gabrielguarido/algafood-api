@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.controller.documentation.RestaurantProductControllerDocumentation;
+import com.algaworks.algafood.api.controller.security.RestaurantProductControllerSecurity;
 import com.algaworks.algafood.api.model.request.ProductPictureRequest;
 import com.algaworks.algafood.api.model.request.ProductRequest;
 import com.algaworks.algafood.api.model.response.ProductPictureResponse;
@@ -30,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "restaurant/{restaurantId}/product", produces = MediaType.APPLICATION_JSON_VALUE)
-public class RestaurantProductController implements RestaurantProductControllerDocumentation {
+public class RestaurantProductController implements RestaurantProductControllerDocumentation, RestaurantProductControllerSecurity {
 
     private final ProductService productService;
 

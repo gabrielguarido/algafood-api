@@ -5,10 +5,26 @@ import com.algaworks.algafood.api.model.response.CategoryResponse;
 import com.algaworks.algafood.core.security.annotation.HasAuthority;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
-@Api(tags = "Categories")
 public interface CategoryControllerSecurity {
+
+    @HasAuthority.Category.Query
+    ResponseEntity<Page<CategoryResponse>> list(Pageable pageable);
+
+    @HasAuthority.Category.Query
+    ResponseEntity<CategoryResponse> find(@ApiParam(value = "Category identifier", example = "1") Long id);
+
+    @HasAuthority.Category.Query
+    ResponseEntity<CategoryResponse> findByType(@ApiParam(value = "Category type", example = "Burger") String type);
+
+    @HasAuthority.Category.Query
+    ResponseEntity<Boolean> existsByType(@ApiParam(value = "Category type", example = "Burger") String type);
+
+    @HasAuthority.Category.Query
+    ResponseEntity<CategoryResponse> findFirst();
 
     @HasAuthority.Category.Manage
     ResponseEntity<CategoryResponse> create(@ApiParam(value = "Request body with data about the new category") CategoryRequest categoryRequest);

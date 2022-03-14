@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.controller.documentation.RestaurantControllerDocumentation;
+import com.algaworks.algafood.api.controller.security.RestaurantControllerSecurity;
 import com.algaworks.algafood.api.model.request.RestaurantRequest;
 import com.algaworks.algafood.api.model.response.RestaurantResponse;
 import com.algaworks.algafood.domain.service.RestaurantService;
@@ -29,7 +30,7 @@ import static com.algaworks.algafood.api.controller.util.ResourceUriUtil.compose
 
 @RestController
 @RequestMapping(value = "restaurant", produces = MediaType.APPLICATION_JSON_VALUE)
-public class RestaurantController implements RestaurantControllerDocumentation {
+public class RestaurantController implements RestaurantControllerDocumentation, RestaurantControllerSecurity {
 
     private final RestaurantService restaurantService;
 
