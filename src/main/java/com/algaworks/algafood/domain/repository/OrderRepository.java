@@ -16,8 +16,8 @@ public interface OrderRepository extends CustomJpaRepository<Order, Long>, JpaSp
     @Query("from Order o join fetch o.client join fetch o.restaurant r join fetch r.category")
     List<Order> findAll();
 
-    @Query("select case when count(1) > 0 then true else false end from Order order " +
+    @Query(value = "select case when count(1) > 0 then true else false end from Order order " +
             "join order.restaurant restaurant join restaurant.responsibleUsers responsibleUser " +
-            "where order.id = :orderId and responsibleUser.id = :userId")
+            "where order.id = :orderId and responsibleUser.id = :userId", nativeQuery = true)
     boolean isManagedBy(String orderId, Long userId);
 }

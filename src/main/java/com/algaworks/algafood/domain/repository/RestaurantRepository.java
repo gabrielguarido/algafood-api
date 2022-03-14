@@ -27,8 +27,8 @@ public interface RestaurantRepository extends CustomJpaRepository<Restaurant, Lo
 
     int countByCategoryId(Long categoryId);
 
-    @Query("select case when count(1) > 0 then true else false end from Restaurant restaurant " +
+    @Query(value = "select case when count > 0 then true else false end from Restaurant restaurant " +
             "join restaurant.responsibleUsers responsibleUsers " +
-            "where restaurant.id = :restaurantId and responsibleUsers.id = :userId")
+            "where restaurant.id = :restaurantId and responsibleUsers.id = :userId", nativeQuery = true)
     boolean existsResponsibleUser(Long restaurantId, Long userId);
 }
