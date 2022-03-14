@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.service.util;
 
+import com.algaworks.algafood.core.security.util.SecurityUtil;
 import com.algaworks.algafood.domain.model.Order;
 import com.algaworks.algafood.domain.model.User;
 import org.springframework.stereotype.Component;
@@ -13,8 +14,9 @@ public class OrderServiceUtil {
     }
 
     public void getLoggedUser(Order order) {
-        // TODO: Get authenticated user
-        order.setClient(new User());
-        order.getClient().setId(1L);
+        var loggedUser = new User();
+        loggedUser.setId(SecurityUtil.getLoggedUserId());
+
+        order.setClient(loggedUser);
     }
 }
