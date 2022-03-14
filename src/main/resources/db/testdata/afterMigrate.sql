@@ -206,60 +206,50 @@ VALUES (4, 'FOOD TICKET');
 
 -- POPULATE PERMISSION TABLE
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (1, 'CREATE_USER');
+VALUES (1, 'MANAGE_CATEGORY');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (2, 'UPDATE_USER');
+VALUES (2, 'MANAGE_CITY');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (3, 'UPDATE_USER_PASSWORD');
+VALUES (3, 'MANAGE_PRODUCT');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (4, 'DELETE_USER');
+VALUES (3, 'MANAGE_RESTAURANT');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (5, 'QUERY_USER');
+VALUES (4, 'MANAGE_PRODUCT');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (6, 'MANAGE_CATEGORY');
+VALUES (5, 'MANAGE_STATE');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (7, 'QUERY_CATEGORY');
+VALUES (6, 'MANAGE_PROFILE');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (8, 'MANAGE_CITY');
+VALUES (7, 'QUERY_PROFILE');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (9, 'QUERY_CITY');
+VALUES (8, 'MANAGE_PERMISSION');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (10, 'CREATE_PRODUCT');
+VALUES (9, 'QUERY_PERMISSION');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (11, 'UPDATE_PRODUCT');
+VALUES (10, 'MANAGE_PAYMENT_METHOD');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (12, 'DELETE_PRODUCT');
+VALUES (11, 'QUERY_RESPONSIBLE_USER');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (13, 'QUERY_PRODUCT');
+VALUES (12, 'QUERY_STATISTICS');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (13, 'MANAGE_ORDER');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (14, 'MANAGE_PRODUCT');
 
 
 -- POPULATE RESTAURANT_PAYMENT_METHOD TABLE
 INSERT IGNORE INTO algafood.restaurant_payment_method (restaurant_payment_method.restaurant_id,
                                                        restaurant_payment_method.payment_method_id)
-VALUES (1, 1),
-       (1, 2),
-       (1, 3),
-       (1, 4),
-       (2, 1),
-       (2, 2),
-       (2, 3),
-       (2, 4),
-       (3, 1),
-       (3, 2),
-       (3, 3),
-       (3, 4),
-       (4, 1),
-       (4, 2),
-       (4, 3),
-       (4, 4),
-       (5, 1),
-       (5, 2),
-       (5, 3),
-       (5, 4),
-       (6, 1),
-       (6, 2),
-       (6, 3),
-       (6, 4);
+SELECT 1, payment_method.id FROM algafood.payment_method;
+INSERT IGNORE INTO algafood.restaurant_payment_method (restaurant_payment_method.restaurant_id,
+                                                       restaurant_payment_method.payment_method_id)
+SELECT 2, payment_method.id FROM algafood.payment_method;
+INSERT IGNORE INTO algafood.restaurant_payment_method (restaurant_payment_method.restaurant_id,
+                                                       restaurant_payment_method.payment_method_id)
+SELECT 3, payment_method.id FROM algafood.payment_method;
+INSERT IGNORE INTO algafood.restaurant_payment_method (restaurant_payment_method.restaurant_id,
+                                                       restaurant_payment_method.payment_method_id)
+SELECT 4, payment_method.id FROM algafood.payment_method;
 
 
 -- POPULATE PRODUCT TABLE
@@ -288,7 +278,7 @@ VALUES (2, 'QA');
 INSERT IGNORE INTO algafood.profile_permission (profile_permission.profile_id, profile_permission.permission_id)
 SELECT 1, permission.id FROM algafood.permission;
 INSERT IGNORE INTO algafood.profile_permission (profile_permission.profile_id, profile_permission.permission_id)
-SELECT 2, permission.id FROM algafood.permission WHERE permission.role LIKE '%QUERY_%';
+SELECT 2, permission.id FROM algafood.permission;
 
 
 -- POPULATE USER TABLE
