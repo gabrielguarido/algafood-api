@@ -45,20 +45,20 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
-                .withClient("algafood-web")
-                .secret(passwordEncoder.encode("web123"))
-                .authorizedGrantTypes("password", "refresh_token")
-                .scopes("write", "read")
-                .accessTokenValiditySeconds(SIX_HOURS_IN_SECONDS)
-                .refreshTokenValiditySeconds(TEN_DAYS_IN_SECONDS)
+                    .withClient("algafood-web")
+                    .secret(passwordEncoder.encode("web123"))
+                    .authorizedGrantTypes("password", "refresh_token")
+                    .scopes("WRITE", "READ")
+                    .accessTokenValiditySeconds(SIX_HOURS_IN_SECONDS)
+                    .refreshTokenValiditySeconds(TEN_DAYS_IN_SECONDS)
                 .and()
-                .withClient("algafood-client")
-                .secret(passwordEncoder.encode("client123"))
-                .authorizedGrantTypes("client_credentials")
-                .scopes("write", "read")
+                    .withClient("algafood-client")
+                    .secret(passwordEncoder.encode("client123"))
+                    .authorizedGrantTypes("client_credentials")
+                    .scopes("WRITE", "READ")
                 .and()
-                .withClient("check_token")
-                .secret(passwordEncoder.encode("p8WTwkYFuQ85J2c2"));
+                    .withClient("check_token")
+                    .secret(passwordEncoder.encode("p8WTwkYFuQ85J2c2"));
     }
 
     @Override
