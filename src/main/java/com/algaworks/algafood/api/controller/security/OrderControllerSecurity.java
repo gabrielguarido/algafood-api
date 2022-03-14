@@ -5,7 +5,6 @@ import com.algaworks.algafood.api.model.response.OrderModelResponse;
 import com.algaworks.algafood.api.model.response.OrderResponse;
 import com.algaworks.algafood.core.security.annotation.HasAuthority;
 import com.algaworks.algafood.domain.repository.filter.OrderFilter;
-import io.swagger.annotations.Api;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;

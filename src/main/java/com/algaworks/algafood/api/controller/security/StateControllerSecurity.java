@@ -3,7 +3,6 @@ package com.algaworks.algafood.api.controller.security;
 import com.algaworks.algafood.api.model.request.StateRequest;
 import com.algaworks.algafood.api.model.response.StateResponse;
 import com.algaworks.algafood.core.security.annotation.HasAuthority;
-import io.swagger.annotations.Api;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;

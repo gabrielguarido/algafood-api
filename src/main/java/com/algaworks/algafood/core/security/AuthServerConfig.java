@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -16,16 +15,14 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
+import javax.sql.DataSource;
 import java.util.Arrays;
 
 @Configuration
 @EnableAuthorizationServer
 public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    private static final int SIX_HOURS_IN_SECONDS = (6 * 60 * 60);
-    private static final int TEN_DAYS_IN_SECONDS = (10 * 24 * 60 * 60);
-
-    private final PasswordEncoder passwordEncoder;
+    private final DataSource dataSource;
 
     private final AuthenticationManager authenticationManager;
 
@@ -34,9 +31,9 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     private final JwtKeyStoreProperties jwtKeyStoreProperties;
 
     @Autowired
-    public AuthServerConfig(PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
+    public AuthServerConfig(DataSource dataSource, AuthenticationManager authenticationManager,
                             UserDetailsService userDetailsService, JwtKeyStoreProperties jwtKeyStoreProperties) {
-        this.passwordEncoder = passwordEncoder;
+        this.dataSource = dataSource;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.jwtKeyStoreProperties = jwtKeyStoreProperties;
@@ -44,21 +41,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory()
-                    .withClient("algafood-web")
-                    .secret(passwordEncoder.encode("web123"))
-                    .authorizedGrantTypes("password", "refresh_token")
-                    .scopes("WRITE", "READ")
-                    .accessTokenValiditySeconds(SIX_HOURS_IN_SECONDS)
-                    .refreshTokenValiditySeconds(TEN_DAYS_IN_SECONDS)
-                .and()
-                    .withClient("algafood-client")
-                    .secret(passwordEncoder.encode("client123"))
-                    .authorizedGrantTypes("client_credentials")
-                    .scopes("WRITE", "READ")
-                .and()
-                    .withClient("check_token")
-                    .secret(passwordEncoder.encode("p8WTwkYFuQ85J2c2"));
+        clients.jdbc(dataSource);
     }
 
     @Override
