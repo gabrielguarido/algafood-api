@@ -200,4 +200,13 @@ public @interface HasAuthority {
             }
         }
     }
+
+    @interface Statistics {
+
+        @Target(METHOD)
+        @Retention(RUNTIME)
+        @PreAuthorize("hasAuthority('SCOPE_READ') and hasAuthority('QUERY_STATISTICS')")
+        @interface Query {
+        }
+    }
 }
