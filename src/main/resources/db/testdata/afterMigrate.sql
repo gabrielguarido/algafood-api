@@ -206,9 +206,31 @@ VALUES (4, 'FOOD TICKET');
 
 -- POPULATE PERMISSION TABLE
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (1, 'CREATE');
+VALUES (1, 'CREATE_USER');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (2, 'UPDATE');
+VALUES (2, 'UPDATE_USER');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (3, 'UPDATE_USER_PASSWORD');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (4, 'DELETE_USER');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (5, 'QUERY_USER');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (6, 'MANAGE_CATEGORY');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (7, 'QUERY_CATEGORY');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (8, 'MANAGE_CITY');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (9, 'QUERY_CITY');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (10, 'CREATE_PRODUCT');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (11, 'UPDATE_PRODUCT');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (12, 'DELETE_PRODUCT');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (13, 'QUERY_PRODUCT');
 
 
 -- POPULATE RESTAURANT_PAYMENT_METHOD TABLE
@@ -264,10 +286,9 @@ VALUES (2, 'QA');
 
 -- POPULATE PROFILE_PERMISSION TABLE
 INSERT IGNORE INTO algafood.profile_permission (profile_permission.profile_id, profile_permission.permission_id)
-VALUES (1, 1),
-       (1, 2),
-       (2, 1),
-       (2, 2);
+SELECT 1, permission.id FROM algafood.permission;
+INSERT IGNORE INTO algafood.profile_permission (profile_permission.profile_id, profile_permission.permission_id)
+SELECT 2, permission.id FROM algafood.permission WHERE permission.role LIKE '%QUERY_%';
 
 
 -- POPULATE USER TABLE
