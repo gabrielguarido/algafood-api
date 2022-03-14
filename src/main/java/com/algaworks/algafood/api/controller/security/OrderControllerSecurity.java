@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.UUID;
 
-@Api(tags = "Orders")
 public interface OrderControllerSecurity {
 
     @HasAuthority.Order.Query

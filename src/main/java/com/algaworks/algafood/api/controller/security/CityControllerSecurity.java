@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-@Api(tags = "Cities")
 public interface CityControllerSecurity {
 
     @HasAuthority.City.Query
