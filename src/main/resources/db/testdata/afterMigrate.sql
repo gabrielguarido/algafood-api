@@ -350,5 +350,5 @@ INSERT IGNORE INTO algafood.oauth_client_details (client_id, resource_ids, clien
                                                   scope, authorized_grant_types, web_server_redirect_uri, authorities,
                                                   access_token_validity, refresh_token_validity, autoapprove)
 VALUES ('algafood-web', null, '$2a$12$T5swsdenBDnHLST6quROmOXXWzqYGV3oVn1jdnfXRAK3cJjaWOoT2',
-        'READ,WRITE', 'password', null, null,
+        'READ,WRITE', 'password,refresh_token', null, null,
         60 * 60 * 6, 60 * 24 * 60 * 60, null);
