@@ -10,6 +10,7 @@ public enum ErrorType {
     PAYLOAD_MALFORMED("Payload malformed"),
     INVALID_PAYLOAD("Invalid payload"),
     INVALID_PARAMETER("Invalid parameter"),
+    ACCESS_DENIED("Access denied"),
     INTERNAL_SERVER_ERROR("Internal server error");
 
     private final String type;
