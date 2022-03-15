@@ -7,7 +7,6 @@ import com.algaworks.algafood.api.transformer.PermissionTransformer;
 import com.algaworks.algafood.api.transformer.ProfileTransformer;
 import com.algaworks.algafood.domain.exception.BusinessException;
 import com.algaworks.algafood.domain.exception.ProfileNotFoundException;
-import com.algaworks.algafood.domain.model.Permission;
 import com.algaworks.algafood.domain.model.Profile;
 import com.algaworks.algafood.domain.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.controller.documentation.CityControllerDocumentation;
+import com.algaworks.algafood.api.controller.security.CityControllerSecurity;
 import com.algaworks.algafood.api.model.request.CityRequest;
 import com.algaworks.algafood.api.model.response.CityResponse;
 import com.algaworks.algafood.domain.service.CityService;
@@ -25,7 +26,7 @@ import static com.algaworks.algafood.api.controller.util.ResourceUriUtil.compose
 
 @RestController
 @RequestMapping(value = "city", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CityController implements CityControllerDocumentation {
+public class CityController implements CityControllerDocumentation, CityControllerSecurity {
 
     private final CityService cityService;
 

@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.controller.documentation.CategoryControllerDocumentation;
+import com.algaworks.algafood.api.controller.security.CategoryControllerSecurity;
 import com.algaworks.algafood.api.model.request.CategoryRequest;
 import com.algaworks.algafood.api.model.response.CategoryResponse;
 import com.algaworks.algafood.domain.service.CategoryService;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.CacheControl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -29,7 +28,7 @@ import static com.algaworks.algafood.api.controller.util.ResourceUriUtil.compose
 
 @RestController
 @RequestMapping(value = "category", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CategoryController implements CategoryControllerDocumentation {
+public class CategoryController implements CategoryControllerDocumentation, CategoryControllerSecurity {
 
     private final CategoryService categoryService;
 
@@ -70,7 +69,6 @@ public class CategoryController implements CategoryControllerDocumentation {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CategoryResponse> create(@RequestBody @Valid CategoryRequest categoryRequest) {
         var newCategory = categoryService.save(categoryRequest);
 

@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.controller.documentation.ProfileControllerDocumentation;
+import com.algaworks.algafood.api.controller.security.ProfileControllerSecurity;
 import com.algaworks.algafood.api.model.request.ProfileRequest;
 import com.algaworks.algafood.api.model.response.ProfileResponse;
 import com.algaworks.algafood.domain.service.ProfileService;
@@ -25,7 +26,7 @@ import static com.algaworks.algafood.api.controller.util.ResourceUriUtil.compose
 
 @RestController
 @RequestMapping(value = "profile", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ProfileController implements ProfileControllerDocumentation {
+public class ProfileController implements ProfileControllerDocumentation, ProfileControllerSecurity {
 
     private final ProfileService profileService;
 

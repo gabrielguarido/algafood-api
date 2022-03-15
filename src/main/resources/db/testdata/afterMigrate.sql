@@ -31,6 +31,8 @@ DELETE
 FROM user_profile;
 DELETE
 FROM restaurant_responsible_user;
+DELETE
+FROM oauth_client_details;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -206,38 +208,52 @@ VALUES (4, 'FOOD TICKET');
 
 -- POPULATE PERMISSION TABLE
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (1, 'CREATE');
+VALUES (1, 'MANAGE_CATEGORY');
 INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
-VALUES (2, 'UPDATE');
+VALUES (2, 'MANAGE_CITY');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (3, 'MANAGE_PRODUCT');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (4, 'MANAGE_STATE');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (5, 'MANAGE_PROFILE');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (6, 'QUERY_PROFILE');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (7, 'MANAGE_PERMISSION');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (8, 'QUERY_PERMISSION');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (9, 'MANAGE_PAYMENT_METHOD');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (10, 'QUERY_RESPONSIBLE_USER');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (11, 'QUERY_STATISTICS');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (12, 'MANAGE_ORDER');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (13, 'MANAGE_RESTAURANT');
+INSERT IGNORE INTO algafood.permission (permission.id, permission.role)
+VALUES (14, 'MANAGE_RESPONSIBLE_USER');
 
 
 -- POPULATE RESTAURANT_PAYMENT_METHOD TABLE
 INSERT IGNORE INTO algafood.restaurant_payment_method (restaurant_payment_method.restaurant_id,
                                                        restaurant_payment_method.payment_method_id)
-VALUES (1, 1),
-       (1, 2),
-       (1, 3),
-       (1, 4),
-       (2, 1),
-       (2, 2),
-       (2, 3),
-       (2, 4),
-       (3, 1),
-       (3, 2),
-       (3, 3),
-       (3, 4),
-       (4, 1),
-       (4, 2),
-       (4, 3),
-       (4, 4),
-       (5, 1),
-       (5, 2),
-       (5, 3),
-       (5, 4),
-       (6, 1),
-       (6, 2),
-       (6, 3),
-       (6, 4);
+SELECT 1, payment_method.id
+FROM algafood.payment_method;
+INSERT IGNORE INTO algafood.restaurant_payment_method (restaurant_payment_method.restaurant_id,
+                                                       restaurant_payment_method.payment_method_id)
+SELECT 2, payment_method.id
+FROM algafood.payment_method;
+INSERT IGNORE INTO algafood.restaurant_payment_method (restaurant_payment_method.restaurant_id,
+                                                       restaurant_payment_method.payment_method_id)
+SELECT 3, payment_method.id
+FROM algafood.payment_method;
+INSERT IGNORE INTO algafood.restaurant_payment_method (restaurant_payment_method.restaurant_id,
+                                                       restaurant_payment_method.payment_method_id)
+SELECT 4, payment_method.id
+FROM algafood.payment_method;
 
 
 -- POPULATE PRODUCT TABLE
@@ -264,17 +280,19 @@ VALUES (2, 'QA');
 
 -- POPULATE PROFILE_PERMISSION TABLE
 INSERT IGNORE INTO algafood.profile_permission (profile_permission.profile_id, profile_permission.permission_id)
-VALUES (1, 1),
-       (1, 2),
-       (2, 1),
-       (2, 2);
+SELECT 1, permission.id
+FROM algafood.permission;
+INSERT IGNORE INTO algafood.profile_permission (profile_permission.profile_id, profile_permission.permission_id)
+SELECT 2, permission.id
+FROM algafood.permission;
 
 
 -- POPULATE USER TABLE
 INSERT IGNORE INTO algafood.user (user.id, user.created, user.email, user.name, user.password)
-VALUES (1, utc_timestamp, 'gabrielguarido.oliveira@gmail.com', 'Gabriel Oliveira', '123');
+VALUES (1, utc_timestamp, 'gabrielguarido.oliveira@gmail.com', 'Gabriel Oliveira',
+        '$2a$12$aJnt5tJQIcK8ervIxhoMLeVZbI.IHNEuXbsowLhbKv9cWt0zoKwl6');
 INSERT IGNORE INTO algafood.user (user.id, user.created, user.email, user.name, user.password)
-VALUES (2, utc_timestamp, 'qa@gmail.com', 'QA Team', '123');
+VALUES (2, utc_timestamp, 'qa@gmail.com', 'QA Team', '$2a$12$aJnt5tJQIcK8ervIxhoMLeVZbI.IHNEuXbsowLhbKv9cWt0zoKwl6');
 
 
 -- POPULATE USER_PROFILE TABLE
@@ -289,7 +307,11 @@ VALUES (1, 1),
 INSERT IGNORE INTO algafood.restaurant_responsible_user (restaurant_responsible_user.restaurant_id,
                                                          restaurant_responsible_user.user_id)
 VALUES (1, 1),
-       (2, 2);
+       (2, 1),
+       (3, 1),
+       (4, 2),
+       (5, 2),
+       (6, 2);
 
 
 -- POPULATE ORDER TABLE
@@ -325,3 +347,12 @@ VALUES (2, 1, 8.90, 8.90, null, 1, 3);
 INSERT IGNORE INTO algafood.order_item (order_item.id, order_item.amount, order_item.unit_price, order_item.total_price,
                                         order_item.observation, order_item.order_id, order_item.product_id)
 VALUES (3, 1, 33.50, 33.50, 'Medium rare steak', 2, 1);
+
+
+-- POPULATE OAUTH_CLIENT_DETAILS TABLE
+INSERT IGNORE INTO algafood.oauth_client_details (client_id, resource_ids, client_secret,
+                                                  scope, authorized_grant_types, web_server_redirect_uri, authorities,
+                                                  access_token_validity, refresh_token_validity, autoapprove)
+VALUES ('algafood-web', null, '$2a$12$T5swsdenBDnHLST6quROmOXXWzqYGV3oVn1jdnfXRAK3cJjaWOoT2',
+        'READ,WRITE', 'password,refresh_token', null, null,
+        60 * 60 * 6, 60 * 24 * 60 * 60, null);

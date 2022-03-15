@@ -12,6 +12,7 @@ import com.algaworks.algafood.domain.exception.UserNotFoundException;
 import com.algaworks.algafood.domain.model.User;
 import com.algaworks.algafood.domain.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,13 +34,16 @@ public class UserService {
 
     private final ProfileTransformer profileTransformer;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
     public UserService(UserRepository userRepository, UserTransformer userTransformer, ProfileService profileService,
-                       ProfileTransformer profileTransformer) {
+                       ProfileTransformer profileTransformer, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userTransformer = userTransformer;
         this.profileService = profileService;
         this.profileTransformer = profileTransformer;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UserResponse> list() {
@@ -55,6 +59,8 @@ public class UserService {
         var user = userTransformer.toEntity(userWithPasswordRequest);
 
         validateEmail(user.getEmail());
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         return userTransformer.toResponse(userRepository.save(user));
     }
@@ -80,7 +86,7 @@ public class UserService {
 
         validatePassword(existingUser, passwordRequest);
 
-        existingUser.setPassword(passwordRequest.getNewPassword());
+        existingUser.setPassword(passwordEncoder.encode(passwordRequest.getNewPassword()));
     }
 
     public List<ProfileResponse> listProfiles(Long userId) {
@@ -133,7 +139,7 @@ public class UserService {
     }
 
     private void validateCurrentPassword(User existingUser, PasswordRequest passwordRequest) {
-        if (!existingUser.getPassword().equals(passwordRequest.getCurrentPassword())) {
+        if (!passwordEncoder.matches(passwordRequest.getCurrentPassword(), existingUser.getPassword())) {
             throw new BusinessException(INVALID_PASSWORD_EXCEPTION_MESSAGE);
         }
     }

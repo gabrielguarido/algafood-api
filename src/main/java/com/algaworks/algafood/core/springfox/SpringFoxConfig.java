@@ -13,10 +13,18 @@ import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.AuthorizationScope;
+import springfox.documentation.service.OAuth2Scheme;
+import springfox.documentation.service.SecurityReference;
+import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.service.Tag;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.json.JacksonModuleRegistrar;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static com.algaworks.algafood.core.springfox.SpringFoxProperties.API_INFO_DESCRIPTION;
 import static com.algaworks.algafood.core.springfox.SpringFoxProperties.API_INFO_TITLE;
@@ -68,7 +76,9 @@ public class SpringFoxConfig implements WebMvcConfigurer {
                         new Tag("Products", "Manages the products for specific restaurants"),
                         new Tag("Users", "Manages the users"),
                         new Tag("Statistics", "Provides statistics about the business side")
-                );
+                )
+                .securitySchemes(List.of(securityScheme()))
+                .securityContexts(List.of(securityContext()));
     }
 
     public ApiInfo apiInfo() {
@@ -87,5 +97,32 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 
         registry.addResourceHandler(WEBJAR_RESOURCE_HANDLER)
                 .addResourceLocations(WEBJAR_RESOURCE_LOCATION);
+    }
+
+    private SecurityScheme securityScheme() {
+        return OAuth2Scheme.OAUTH2_PASSWORD_FLOW_BUILDER
+                .name("AlgaFood")
+                .scopes(authorizationScopes())
+                .tokenUrl("/oauth/token")
+                .build();
+    }
+
+    private List<AuthorizationScope> authorizationScopes() {
+        return Arrays.asList(
+                new AuthorizationScope("READ", "Read access to resources"),
+                new AuthorizationScope("WRITE", "Write access to resources")
+        );
+    }
+
+    private SecurityContext securityContext() {
+        var securityReference = SecurityReference.builder()
+                .reference("AlgaFood")
+                .scopes(authorizationScopes().toArray(new AuthorizationScope[0]))
+                .build();
+
+        return SecurityContext.builder()
+                .securityReferences(List.of(securityReference))
+                .operationSelector(operationContext -> true)
+                .build();
     }
 }

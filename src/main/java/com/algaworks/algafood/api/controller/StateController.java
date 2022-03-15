@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.controller.documentation.StateControllerDocumentation;
+import com.algaworks.algafood.api.controller.security.StateControllerSecurity;
 import com.algaworks.algafood.api.model.request.StateRequest;
 import com.algaworks.algafood.api.model.response.StateResponse;
 import com.algaworks.algafood.domain.service.StateService;
@@ -25,7 +26,7 @@ import static com.algaworks.algafood.api.controller.util.ResourceUriUtil.compose
 
 @RestController
 @RequestMapping(value = "state", produces = MediaType.APPLICATION_JSON_VALUE)
-public class StateController implements StateControllerDocumentation {
+public class StateController implements StateControllerDocumentation, StateControllerSecurity {
 
     private final StateService stateService;
 

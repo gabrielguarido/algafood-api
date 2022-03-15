@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
@@ -28,6 +29,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.Objects;
 
+import static com.algaworks.algafood.api.exception.ErrorType.ACCESS_DENIED;
 import static com.algaworks.algafood.api.exception.ErrorType.BUSINESS_RULE_VIOLATION;
 import static com.algaworks.algafood.api.exception.ErrorType.INTERNAL_SERVER_ERROR;
 import static com.algaworks.algafood.api.exception.ErrorType.INVALID_PARAMETER;
@@ -47,6 +49,7 @@ import static com.algaworks.algafood.api.exception.util.ExceptionHandlerUtil.bui
 import static com.algaworks.algafood.api.exception.util.ExceptionHandlerUtil.joinPath;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
@@ -90,6 +93,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         var error = buildError(BAD_REQUEST, BUSINESS_RULE_VIOLATION, ex.getMessage());
 
         return handleExceptionInternal(ex, error, new HttpHeaders(), BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+        var error = buildError(FORBIDDEN, ACCESS_DENIED, ex.getMessage());
+
+        return handleExceptionInternal(ex, error, new HttpHeaders(), FORBIDDEN, request);
     }
 
     @ExceptionHandler(ValidationException.class)

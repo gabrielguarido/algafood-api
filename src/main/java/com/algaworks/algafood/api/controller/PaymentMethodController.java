@@ -1,12 +1,12 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.controller.documentation.PaymentMethodControllerDocumentation;
+import com.algaworks.algafood.api.controller.security.PaymentMethodControllerSecurity;
 import com.algaworks.algafood.api.model.request.PaymentMethodRequest;
 import com.algaworks.algafood.api.model.response.PaymentMethodResponse;
 import com.algaworks.algafood.domain.service.PaymentMethodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +25,7 @@ import static com.algaworks.algafood.api.controller.util.ResourceUriUtil.compose
 
 @RestController
 @RequestMapping(value = "payment-method", produces = MediaType.APPLICATION_JSON_VALUE)
-public class PaymentMethodController implements PaymentMethodControllerDocumentation {
+public class PaymentMethodController implements PaymentMethodControllerDocumentation, PaymentMethodControllerSecurity {
 
     private final PaymentMethodService paymentMethodService;
 

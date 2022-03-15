@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.controller.documentation.OrderControllerDocumentation;
+import com.algaworks.algafood.api.controller.security.OrderControllerSecurity;
 import com.algaworks.algafood.api.model.request.OrderRequest;
 import com.algaworks.algafood.api.model.response.OrderModelResponse;
 import com.algaworks.algafood.api.model.response.OrderResponse;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -31,7 +31,7 @@ import static com.algaworks.algafood.domain.model.enumerator.OrderStatus.DELIVER
 
 @RestController
 @RequestMapping(value = "order", produces = MediaType.APPLICATION_JSON_VALUE)
-public class OrderController implements OrderControllerDocumentation {
+public class OrderController implements OrderControllerDocumentation, OrderControllerSecurity {
 
     private final OrderService orderService;
 

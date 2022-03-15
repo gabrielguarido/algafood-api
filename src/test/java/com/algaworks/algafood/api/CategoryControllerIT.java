@@ -16,9 +16,9 @@ import static com.algaworks.algafood.util.ApiTestUtil.buildRequestSpecification;
 import static io.restassured.RestAssured.enableLoggingOfRequestAndResponseIfValidationFails;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
-import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestPropertySource("/application-test.properties")

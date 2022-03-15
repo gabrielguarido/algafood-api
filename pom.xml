@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.algaworks</groupId>
     <artifactId>algafood-api</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.2.1-SNAPSHOT</version>
     <name>algafood-api</name>
     <description>Food Delivery API - Spring REST Specialist Training</description>
     <properties>
@@ -21,6 +21,9 @@
         <jasper.version>6.18.1</jasper.version>
         <aws-s3.version>1.12.159</aws-s3.version>
         <springfox.version>3.0.0</springfox.version>
+        <oauth2-oidc-sdk.version>9.27</oauth2-oidc-sdk.version>
+        <spring-security-oauth2.version>2.5.1.RELEASE</spring-security-oauth2.version>
+        <spring-security-jwt.version>1.1.1.RELEASE</spring-security-jwt.version>
     </properties>
 
     <dependencyManagement>
@@ -39,6 +42,16 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
 
         <dependency>
@@ -87,6 +100,18 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-hateoas</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+            <version>${spring-security-oauth2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-jwt</artifactId>
+            <version>${spring-security-jwt.version}</version>
         </dependency>
 
         <dependency>
@@ -161,6 +186,12 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>oauth2-oidc-sdk</artifactId>
+            <version>${oauth2-oidc-sdk.version}</version>
         </dependency>
     </dependencies>
 

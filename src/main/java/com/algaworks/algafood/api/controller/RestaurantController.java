@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.api.controller.documentation.RestaurantControllerDocumentation;
+import com.algaworks.algafood.api.controller.security.RestaurantControllerSecurity;
 import com.algaworks.algafood.api.model.request.RestaurantRequest;
 import com.algaworks.algafood.api.model.response.RestaurantResponse;
 import com.algaworks.algafood.domain.service.RestaurantService;
@@ -29,7 +30,7 @@ import static com.algaworks.algafood.api.controller.util.ResourceUriUtil.compose
 
 @RestController
 @RequestMapping(value = "restaurant", produces = MediaType.APPLICATION_JSON_VALUE)
-public class RestaurantController implements RestaurantControllerDocumentation {
+public class RestaurantController implements RestaurantControllerDocumentation, RestaurantControllerSecurity {
 
     private final RestaurantService restaurantService;
 
@@ -112,42 +113,42 @@ public class RestaurantController implements RestaurantControllerDocumentation {
         return ResponseEntity.created(composeUri(newRestaurant.getId())).body(newRestaurant);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<RestaurantResponse> update(@PathVariable Long id, @RequestBody @Valid RestaurantRequest restaurantRequest) {
-        return ResponseEntity.ok(restaurantService.update(id, restaurantRequest));
+    @PutMapping("/{restaurantId}")
+    public ResponseEntity<RestaurantResponse> update(@PathVariable Long restaurantId, @RequestBody @Valid RestaurantRequest restaurantRequest) {
+        return ResponseEntity.ok(restaurantService.update(restaurantId, restaurantRequest));
     }
 
-    @PutMapping("/{id}/activate")
-    public ResponseEntity<Void> activate(@PathVariable Long id) {
-        restaurantService.activate(id);
+    @PutMapping("/{restaurantId}/activate")
+    public ResponseEntity<Void> activate(@PathVariable Long restaurantId) {
+        restaurantService.activate(restaurantId);
 
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{id}/deactivate")
-    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
-        restaurantService.deactivate(id);
+    @DeleteMapping("/{restaurantId}/deactivate")
+    public ResponseEntity<Void> deactivate(@PathVariable Long restaurantId) {
+        restaurantService.deactivate(restaurantId);
 
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/open")
-    public ResponseEntity<Void> open(@PathVariable Long id) {
-        restaurantService.open(id);
+    @PutMapping("/{restaurantId}/open")
+    public ResponseEntity<Void> open(@PathVariable Long restaurantId) {
+        restaurantService.open(restaurantId);
 
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/close")
-    public ResponseEntity<Void> close(@PathVariable Long id) {
-        restaurantService.close(id);
+    @PutMapping("/{restaurantId}/close")
+    public ResponseEntity<Void> close(@PathVariable Long restaurantId) {
+        restaurantService.close(restaurantId);
 
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        restaurantService.delete(id);
+    @DeleteMapping("/{restaurantId}")
+    public ResponseEntity<Void> delete(@PathVariable Long restaurantId) {
+        restaurantService.delete(restaurantId);
 
         return ResponseEntity.noContent().build();
     }
