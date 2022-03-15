@@ -23,15 +23,15 @@ $ ./mvnw verify
 $ ./mvnw clean package
 ```
 
+### Postman
+[This is the Postman Collection](https://www.getpostman.com/collections/e01b9cf7fd91bc8ef457) used to test this project's APIs, you can import it to your workspace and start testing as well.
+
 ## :computer: Technology Stack
 - Java 11
 - Spring Framework (Boot, Data JPA, Security, JWT)
 - Maven
 - Docker
 - MySQL
-
-## :white_check_mark: Testing
-[This is the Postman Collection](https://www.getpostman.com/collections/e01b9cf7fd91bc8ef457) used to test this project's APIs, you can import it to your workspace and start testing as well.
 
 ## :clipboard: License
 This project is under MIT License, see the [LICENSE](LICENSE) file for more information.
