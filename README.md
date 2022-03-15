@@ -34,7 +34,7 @@ $ ./mvnw clean package
 - MySQL
 
 ## :notebook_with_decorative_cover: Documentation
-To access the API resources detailed documentation, go to `http://localhost:8080/swagger-ui/#/`.
+To access the API resources detailed documentation, go to [Swagger UI](http://localhost:8080/swagger-ui/#/).
 
 ## :clipboard: License
 This project is under MIT License, see the [LICENSE](LICENSE) file for more information.
