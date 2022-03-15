@@ -88,7 +88,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     }
 
     private KeyPair keyPair() {
-        var jksResource = new ClassPathResource(jwtKeyStoreProperties.getPath());
+        var jksResource = jwtKeyStoreProperties.getPath();
         var keyStorePass = jwtKeyStoreProperties.getPassword();
         var keyPairAlias = jwtKeyStoreProperties.getKeypairAlias();
 
