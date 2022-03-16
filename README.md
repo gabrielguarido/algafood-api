@@ -16,6 +16,9 @@ $ ./mvnw clean package
 $ docker-compose up --scale algafood-api=2
 ```
 
+### Testing
+After spinning up your docker container, go to [localhost/swagger-ui/#/](http://localhost/swagger-ui/#/). While testing the application's resources on Docker, remember not to specify a port in the URL, the nginx server will redirect you automatically.
+
 ### Turn off container
 ```
 $ docker-compose down --volumes
