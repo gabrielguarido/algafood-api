@@ -1,6 +1,11 @@
 -- RESET TABLES
 SET FOREIGN_KEY_CHECKS = 0;
 
+LOCK TABLES state WRITE, city WRITE, category WRITE, restaurant WRITE, payment_method WRITE, permission WRITE,
+    profile WRITE, product WRITE, `order` WRITE, order_item WRITE, restaurant_payment_method WRITE,
+    profile_permission WRITE, user WRITE, user_profile WRITE, restaurant_responsible_user WRITE,
+    oauth_client_details WRITE;
+
 DELETE
 FROM state;
 DELETE
@@ -356,3 +361,5 @@ INSERT IGNORE INTO algafood.oauth_client_details (client_id, resource_ids, clien
 VALUES ('algafood-web', null, '$2a$12$T5swsdenBDnHLST6quROmOXXWzqYGV3oVn1jdnfXRAK3cJjaWOoT2',
         'READ,WRITE', 'password,refresh_token', null, null,
         60 * 60 * 6, 60 * 24 * 60 * 60, null);
+
+UNLOCK TABLES;

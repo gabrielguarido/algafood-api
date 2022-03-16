@@ -10,7 +10,7 @@ public final class SpringFoxProperties {
     public static final String BASE_PACKAGE = "com.algaworks.algafood.api";
     public static final String API_INFO_TITLE = "AlgaFood API";
     public static final String API_INFO_DESCRIPTION = "Open API for clients and restaurants to order and manage food delivery";
-    public static final String API_INFO_VERSION = "1.2.1";
+    public static final String API_INFO_VERSION = "1.2.2";
 
     public static final String SWAGGER_RESOURCE_HANDLER = "swagger-ui.html";
     public static final String SWAGGER_RESOURCE_LOCATION = "classpath:/META-INF/resources/";
