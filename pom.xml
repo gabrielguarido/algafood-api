@@ -17,9 +17,9 @@
         <java.version>11</java.version>
         <junit.version>5.8.2</junit.version>
         <failsafe.version>3.0.0-M5</failsafe.version>
-        <modelmapper.version>2.4.5</modelmapper.version>
-        <jasper.version>6.18.1</jasper.version>
-        <aws-s3.version>1.12.159</aws-s3.version>
+        <modelmapper.version>3.0.0</modelmapper.version>
+        <jasper.version>6.19.0</jasper.version>
+        <aws-s3.version>1.12.173</aws-s3.version>
         <springfox.version>3.0.0</springfox.version>
         <oauth2-oidc-sdk.version>9.27</oauth2-oidc-sdk.version>
         <spring-security-oauth2.version>2.5.1.RELEASE</spring-security-oauth2.version>
